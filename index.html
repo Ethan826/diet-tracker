@@ -1,32 +1,51 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Always Hungry Tracker</title>
+        <style>
+         * {
+             color: #fdf6e3 !important;
+         }
+         body {
+             background-color: #073642 !important;
+             color: #fdf6e3 !important;
+         }
+         .btn-primary {
+             color: #b58900 !important;
+             background-color: #073642 !important;
+         }
+         .btn-default {
+             background-color: #2aa198 !important;
+         }
+        </style>
+        <script src="node_modules/es6-shim/es6-shim.min.js"></script>
+        <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
 
-<head>
-  <meta charset="utf-8">
-  <title></title>
-  <script src="node_modules/es6-shim/es6-shim.min.js"></script>
-  <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
+        <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
+        <script src="node_modules/systemjs/dist/system.src.js"></script>
+        <script src="node_modules/rxjs/bundles/Rx.js"></script>
+        <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+        <script>
+         System.config({
+             packages: {
+                 app: {
+                     format: 'register',
+                     defaultExtension: 'js'
+                 }
+             }
+         });
+         System.import('app/main')
+               .then(null, console.error.bind(console));
+        </script>
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+    </head>
 
-  <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-  <script src="node_modules/systemjs/dist/system.src.js"></script>
-  <script src="node_modules/rxjs/bundles/Rx.js"></script>
-  <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
-  <script>
-    System.config({
-      packages: {
-        app: {
-          format: 'register',
-          defaultExtension: 'js'
-        }
-      }
-    });
-    System.import('app/main')
-      .then(null, console.error.bind(console));
-  </script>
-</head>
-
-<body>
-  <app>Loading...</app>
-</body>
-
+    <body>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <app>Loading...</app>
+            </div>
+        </div>
+    </body>
 </html>

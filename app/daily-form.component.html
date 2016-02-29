@@ -21,11 +21,26 @@
                 <label class="sr-only">{{subForm.subjectiveText}}</label>
                 <input class="form-control"
                        type="text"
-                       placeholder="{{subForm.subjectiveText}}"
-                       [(ngModel)]="subForm.enteredText"/>
+                       placeholder="{{subForm.textEntry.prompt}}"
+                       [(ngModel)]="subForm.textEntry.userEntry"/>
             </div>
         </fieldset>
     </div>
+
+    <legend>Activities</legend>
+    <div class="form-group">
+        <div *ngFor="#checklist of checklists" class="form-group">
+            <label><input type="checkbox"
+                          [(ngModel)]="checklist.answer"/>&emsp;{{checklist.question}}</label>
+            <div *ngIf="checklist.textEntry && checklist.answer === true">
+                <label class="sr-only">{{checklist.textEntry.prompt}}</label>
+                <input class="form-control"
+                       type="text"
+                       placeholder="{{checklist.textEntry.prompt}}"/>
+            </div>
+        </div>
+    </div>
+
 
     <br/>
 

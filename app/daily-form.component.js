@@ -16,7 +16,7 @@ System.register(["angular2/core"], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var SubForm, DailyForm, HungerControl, CravingControl, Satiety, EnergyLevel, WellBeing;
+    var SubForm, DailyForm, HungerControl, CravingControl, Satiety, EnergyLevel, WellBeing, ProcessedCarbs, stressReductionAM, stressReductionPM, walks, movement, bedtime;
     return {
         setters:[
             function (core_1_1) {
@@ -27,7 +27,6 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                 function SubForm() {
                     this.score = null;
                     this.selection = null;
-                    this.enteredText = "";
                 }
                 SubForm.prototype.onSelect = function (option) {
                     this.selection = option;
@@ -38,6 +37,7 @@ System.register(["angular2/core"], function(exports_1, context_1) {
             DailyForm = (function () {
                 function DailyForm() {
                     this.subForms = [];
+                    this.checklists = [];
                     this.totalScore = 0;
                     this.enableSubmit = false;
                     this.subForms.push(new HungerControl);
@@ -45,6 +45,12 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.subForms.push(new Satiety);
                     this.subForms.push(new EnergyLevel);
                     this.subForms.push(new WellBeing);
+                    this.subForms.push(new ProcessedCarbs);
+                    this.checklists.push(stressReductionAM);
+                    this.checklists.push(stressReductionPM);
+                    this.checklists.push(walks);
+                    this.checklists.push(movement);
+                    this.checklists.push(bedtime);
                 }
                 DailyForm.prototype.onSelect = function (option, classType) {
                     var classInstance = this.getMatchingClassInstance(classType);
@@ -52,14 +58,14 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     classInstance.onSelect(option);
                     this.totalScore = this.getScore();
                     this.enableSubmit = this.getEnableSubmit();
-                    console.log(this.subForms);
                 };
-                ;
                 DailyForm.prototype.handleSubmit = function () {
                     if (!this.getEnableSubmit()) {
                         alert("You must select an answer for each category.");
                     }
                     else {
+                        console.log(this.subForms);
+                        console.log(this.checklists);
                     }
                 };
                 DailyForm.prototype.getMatchingClassInstance = function (classType) {
@@ -73,9 +79,11 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                 };
                 DailyForm.prototype.getScore = function () {
                     var score = 0;
-                    for (var form in this.subForms) {
-                        score += this.subForms[form].score;
-                    }
+                    this.subForms.forEach(function (form) {
+                        if (form.contributesToScore) {
+                            score += form.score;
+                        }
+                    });
                     return score;
                 };
                 DailyForm.prototype.getEnableSubmit = function () {
@@ -112,7 +120,11 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.classType = "HungerControl";
                     this.categoryName = "Hunger Control";
                     this.explanatoryText = "Today, I felt";
-                    this.subjectiveText = "I felt hungriest these times";
+                    this.textEntry = {
+                        prompt: "I felt hungriest these times",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = true;
                 }
                 return HungerControl;
             }(SubForm));
@@ -130,7 +142,11 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.classType = "CravingControl";
                     this.categoryName = "Craving Control";
                     this.explanatoryText = "Today, my cravings were";
-                    this.subjectiveText = "I craved the following foods";
+                    this.textEntry = {
+                        prompt: "I craved the following foods",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = true;
                 }
                 return CravingControl;
             }(SubForm));
@@ -148,7 +164,11 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.classType = "Satiety";
                     this.categoryName = "Satiety";
                     this.explanatoryText = "I felt satisfied after eating";
-                    this.subjectiveText = "I felt most satisfied after the following meals";
+                    this.textEntry = {
+                        prompt: "I felt most satisfied after the following meals",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = true;
                 }
                 return Satiety;
             }(SubForm));
@@ -166,7 +186,11 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.classType = "EnergyLevel";
                     this.categoryName = "Energy Level";
                     this.explanatoryText = "Today, my overall energy level was";
-                    this.subjectiveText = "Comments";
+                    this.textEntry = {
+                        prompt: "Comments",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = true;
                 }
                 return EnergyLevel;
             }(SubForm));
@@ -184,10 +208,62 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.classType = "WellBeing";
                     this.categoryName = "Well Being";
                     this.explanatoryText = "Today, my overall level of well-being was";
-                    this.subjectiveText = "Comments";
+                    this.textEntry = {
+                        prompt: "Comments",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = true;
                 }
                 return WellBeing;
             }(SubForm));
+            ProcessedCarbs = (function (_super) {
+                __extends(ProcessedCarbs, _super);
+                function ProcessedCarbs() {
+                    _super.apply(this, arguments);
+                    this.options = [
+                        { text: "0 to 1 servings", points: 0 },
+                        { text: "2 servings", points: 1 },
+                        { text: "3 or more servings", points: 2 }
+                    ];
+                    this.classType = "ProcessedCarbs";
+                    this.categoryName = "Processed Carbs";
+                    this.explanatoryText = "I had the following number of processed carbohydrates today";
+                    this.textEntry = {
+                        prompt: "I had the following kinds of processed carbohydrates today",
+                        userEntry: ""
+                    };
+                    this.contributesToScore = false;
+                }
+                return ProcessedCarbs;
+            }(SubForm));
+            stressReductionAM = {
+                question: "I did my five-minute stress reduction in the AM",
+                answer: null
+            };
+            stressReductionPM = {
+                question: "I did my five-minute stress reduction in the PM",
+                answer: null
+            };
+            walks = {
+                question: "I did my after-meal walks",
+                answer: null
+            };
+            movement = {
+                question: "I did my joyful movement",
+                answer: null,
+                textEntry: {
+                    prompt: "What kind?",
+                    userEntry: ""
+                }
+            };
+            bedtime = {
+                question: "I did my pre-bedtime routine",
+                answer: null,
+                textEntry: {
+                    prompt: "Describe",
+                    userEntry: ""
+                }
+            };
         }
     }
 });

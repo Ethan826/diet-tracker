@@ -5,20 +5,31 @@ interface IFormOption {
     points: number;
 }
 
+interface ITextEntry {
+    prompt: string;
+    userEntry: string;
+}
+
 abstract class SubForm {
     score: number = null;
+    contributesToScore: boolean;
     selection: IFormOption = null;
-    enteredText = "";   // remember to cleanse this.
+    textEntry: ITextEntry;
     options: IFormOption[];
     classType: string;
     categoryName: string;
     explanatoryText: string;
-    subjectiveText: string;
 
     onSelect(option: IFormOption) {
         this.selection = option;
         this.score = option.points;
     }
+}
+
+interface IChecklistItem {
+    question: string;
+    answer: boolean;
+    textEntry?: ITextEntry;
 }
 
 @Component({
@@ -27,6 +38,7 @@ abstract class SubForm {
 })
 export class DailyForm {
     private subForms: SubForm[] = [];
+    private checklists: IChecklistItem[] = [];
     private totalScore = 0;
     private enableSubmit = false;
 
@@ -36,6 +48,12 @@ export class DailyForm {
         this.subForms.push(new Satiety);
         this.subForms.push(new EnergyLevel);
         this.subForms.push(new WellBeing);
+        this.subForms.push(new ProcessedCarbs);
+        this.checklists.push(stressReductionAM);
+        this.checklists.push(stressReductionPM);
+        this.checklists.push(walks);
+        this.checklists.push(movement);
+        this.checklists.push(bedtime);
     }
 
     onSelect(option: IFormOption, classType: string) {
@@ -44,16 +62,14 @@ export class DailyForm {
         classInstance.onSelect(option);
         this.totalScore = this.getScore();
         this.enableSubmit = this.getEnableSubmit();
-
-        // Get rid of this vvvvvvvv
-        console.log(this.subForms);
-    };
+    }
 
     handleSubmit() {
         if (!this.getEnableSubmit()) {
             alert("You must select an answer for each category.");
         } else {
-            // noop;
+            console.log(this.subForms);
+            console.log(this.checklists);
         }
     }
 
@@ -69,9 +85,11 @@ export class DailyForm {
 
     private getScore() {
         let score = 0;
-        for (let form in this.subForms) {
-            score += this.subForms[form].score;
-        }
+        this.subForms.forEach((form) => {
+            if (form.contributesToScore) {
+                score += form.score;
+            }
+        });
         return score;
     }
 
@@ -99,7 +117,11 @@ class HungerControl extends SubForm {
     classType = "HungerControl"; // Poor man's reflection
     categoryName = "Hunger Control";
     explanatoryText = "Today, I felt";
-    subjectiveText = "I felt hungriest these times";
+    textEntry = {
+        prompt: "I felt hungriest these times",
+        userEntry: ""
+    };
+    contributesToScore = true;
 }
 
 class CravingControl extends SubForm {
@@ -114,7 +136,11 @@ class CravingControl extends SubForm {
     classType = "CravingControl";
     categoryName = "Craving Control";
     explanatoryText = "Today, my cravings were";
-    subjectiveText = "I craved the following foods";
+    textEntry = {
+        prompt: "I craved the following foods",
+        userEntry: ""
+    };
+    contributesToScore = true;
 }
 
 class Satiety extends SubForm {
@@ -129,7 +155,11 @@ class Satiety extends SubForm {
     classType = "Satiety";
     categoryName = "Satiety";
     explanatoryText = "I felt satisfied after eating";
-    subjectiveText = "I felt most satisfied after the following meals";
+    textEntry = {
+        prompt: "I felt most satisfied after the following meals",
+        userEntry: ""
+    };
+    contributesToScore = true;
 }
 
 class EnergyLevel extends SubForm {
@@ -144,7 +174,11 @@ class EnergyLevel extends SubForm {
     classType = "EnergyLevel";
     categoryName = "Energy Level";
     explanatoryText = "Today, my overall energy level was";
-    subjectiveText = "Comments";
+    textEntry = {
+        prompt: "Comments",
+        userEntry: ""
+    };
+    contributesToScore = true;
 }
 
 class WellBeing extends SubForm {
@@ -159,5 +193,58 @@ class WellBeing extends SubForm {
     classType = "WellBeing";
     categoryName = "Well Being";
     explanatoryText = "Today, my overall level of well-being was";
-    subjectiveText = "Comments";
+    textEntry = {
+        prompt: "Comments",
+        userEntry: ""
+    };
+    contributesToScore = true;
 }
+
+class ProcessedCarbs extends SubForm {
+    options = [
+        { text: "0 to 1 servings", points: 0 },
+        { text: "2 servings", points: 1 },
+        { text: "3 or more servings", points: 2 }
+    ];
+    classType = "ProcessedCarbs";
+    categoryName = "Processed Carbs";
+    explanatoryText = "I had the following number of processed carbohydrates today";
+    textEntry = {
+        prompt: "I had the following kinds of processed carbohydrates today",
+        userEntry: ""
+    };
+    contributesToScore = false;
+}
+
+let stressReductionAM: IChecklistItem = {
+    question: "I did my five-minute stress reduction in the AM",
+    answer: null
+};
+
+let stressReductionPM: IChecklistItem = {
+    question: "I did my five-minute stress reduction in the PM",
+    answer: null
+};
+
+let walks: IChecklistItem = {
+    question: "I did my after-meal walks",
+    answer: null
+};
+
+let movement: IChecklistItem = {
+    question: "I did my joyful movement",
+    answer: null,
+    textEntry: {
+        prompt: "What kind?",
+        userEntry: ""
+    }
+};
+
+let bedtime: IChecklistItem = {
+    question: "I did my pre-bedtime routine",
+    answer: null,
+    textEntry: {
+        prompt: "Describe",
+        userEntry: ""
+    }
+};

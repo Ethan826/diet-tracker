@@ -13,6 +13,11 @@ app.get("/", (req, res) => {
   res.sendFile("/index.html", {"root": __dirname + "/../"});
 });
 
+app.get("/.well-known", (req, res) => {
+  res.sendFile("/.well-known")
+});
+
+
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });

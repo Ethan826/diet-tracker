@@ -8,6 +8,9 @@ var PORT = 8080;
 app.get("/", function (req, res) {
     res.sendFile("/index.html", { "root": __dirname + "/../" });
 });
+app.get("/.well-known", function (req, res) {
+    res.sendFile("/.well-known");
+});
 app.listen(PORT, function () {
     console.log("Listening on " + PORT);
 });

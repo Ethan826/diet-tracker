@@ -113,7 +113,6 @@ class HungerControl extends SubForm {
         { text: "Slightly Hungry", points: 3 },
         { text: "No Hunger", points: 4 }
     ];
-
     classType = "HungerControl"; // Poor man's reflection
     categoryName = "Hunger Control";
     explanatoryText = "Today, I felt";
@@ -132,7 +131,6 @@ class CravingControl extends SubForm {
         { text: "Below Average", points: 3 },
         { text: "Absent", points: 4 }
     ];
-
     classType = "CravingControl";
     categoryName = "Craving Control";
     explanatoryText = "Today, my cravings were";
@@ -151,7 +149,6 @@ class Satiety extends SubForm {
         { text: "Most of the Time", points: 3 },
         { text: "Until the Next Meal", points: 4 }
     ];
-
     classType = "Satiety";
     categoryName = "Satiety";
     explanatoryText = "I felt satisfied after eating";
@@ -170,7 +167,6 @@ class EnergyLevel extends SubForm {
         { text: "Above Average", points: 3 },
         { text: "High", points: 4 }
     ];
-
     classType = "EnergyLevel";
     categoryName = "Energy Level";
     explanatoryText = "Today, my overall energy level was";
@@ -189,7 +185,6 @@ class WellBeing extends SubForm {
         { text: "Above Average", points: 3 },
         { text: "High", points: 4 }
     ];
-
     classType = "WellBeing";
     categoryName = "Well Being";
     explanatoryText = "Today, my overall level of well-being was";

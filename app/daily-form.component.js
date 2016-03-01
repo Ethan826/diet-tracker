@@ -16,13 +16,17 @@ System.register(["angular2/core"], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var SubForm, DailyForm, HungerControl, CravingControl, Satiety, EnergyLevel, WellBeing, ProcessedCarbs, stressReductionAM, stressReductionPM, walks, movement, bedtime;
+    var MONTHS, SubForm, DailyForm, HungerControl, CravingControl, Satiety, EnergyLevel, WellBeing, ProcessedCarbs, stressReductionAM, stressReductionPM, walks, movement, bedtime;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
+            MONTHS = {
+                0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul",
+                7: "Aug", 8: "Sep", 9: "Oct", 10: "Nov", 11: "Dec"
+            };
             SubForm = (function () {
                 function SubForm() {
                     this.score = null;
@@ -40,6 +44,7 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.checklists = [];
                     this.totalScore = 0;
                     this.enableSubmit = false;
+                    this.date = new Date;
                     this.subForms.push(new HungerControl);
                     this.subForms.push(new CravingControl);
                     this.subForms.push(new Satiety);
@@ -93,7 +98,6 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                             result = false;
                         }
                     });
-                    console.log(result);
                     return result;
                 };
                 DailyForm = __decorate([

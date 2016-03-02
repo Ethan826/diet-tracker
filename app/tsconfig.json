@@ -32,6 +32,7 @@
   "files": [
     "app.component.ts",
     "daily-form.component.ts",
-    "main.ts"
+    "main.ts",
+    "nav.component.ts"
   ]
 }

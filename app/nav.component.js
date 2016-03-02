@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common", "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/common"], function(exports_1, contex
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1;
+    var core_1, common_1, router_1;
     var NAV_OPTIONS, NavComponent;
     return {
         setters:[
@@ -19,13 +19,17 @@ System.register(["angular2/core", "angular2/common"], function(exports_1, contex
             },
             function (common_1_1) {
                 common_1 = common_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
             }],
         execute: function() {
-            NAV_OPTIONS = [
-                { text: "Daily Tracker", available: true, active: false },
-                { text: "Monthly View", available: true, active: false },
-                { text: "Account Info", available: true, active: false }
-            ];
+            exports_1("NAV_OPTIONS", NAV_OPTIONS = [
+                { text: "Daily Tracker", available: true, active: false, route: "DailyForm" },
+                { text: "Monthly View", available: true, active: false, route: "MonthlyForm" },
+                { text: "Account Info", available: true, active: false, route: "AccountInfo" },
+                { text: "Admin Panel", available: false, active: false, route: "AdminPanel" }
+            ]);
             NavComponent = (function () {
                 function NavComponent() {
                     this.navOptions = NAV_OPTIONS;
@@ -35,15 +39,12 @@ System.register(["angular2/core", "angular2/common"], function(exports_1, contex
                         o.active = false;
                     });
                     option.active = true;
-                    this.navOptions.forEach(function (o) {
-                        console.log(o.text + " is " + o.active);
-                    });
                 };
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
                         templateUrl: "app/nav.component.html",
-                        directives: [common_1.NgClass]
+                        directives: [common_1.NgClass, router_1.ROUTER_DIRECTIVES]
                     }), 
                     __metadata('design:paramtypes', [])
                 ], NavComponent);

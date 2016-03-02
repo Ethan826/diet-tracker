@@ -1,4 +1,3 @@
-/// <reference path="../typings/main/ambient/underscore/underscore.d.ts"/>
 import {Component} from "angular2/core";
 
 interface IFormOption {

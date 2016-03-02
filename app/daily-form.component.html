@@ -1,8 +1,9 @@
 <h2>Daily Tracker</h2>
 
 <form>
-  <legend>Date</legend>
+
   <fieldset class="form-inline">
+    <legend>Date</legend>
     <select class="form-control">
       <option *ngFor="#month of MONTHS" [value]="month.number" [selected]="date.getMonth() === month.number">{{month.name}}</option>
     </select>

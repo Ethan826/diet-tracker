@@ -5,6 +5,7 @@
   "ambientDependencies": {
     "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#4de74cb527395c13ba20b438c3a7a419ad931f1c",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#470954c4f427e0805a2d633636a7c6aa7170def8",
+    "jqueryui": "github:DefinitelyTyped/DefinitelyTyped/jqueryui/jqueryui.d.ts#a3a5cd5554dc2c0ff8955d1db0673879af3095bc",
     "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#b090bcf9ba9f756ec8ff53e7707269729172a325",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff",
     "systemjs": "github:DefinitelyTyped/DefinitelyTyped/systemjs/systemjs.d.ts#83af898254689400de8fb6495c34119ae57ec3fe",

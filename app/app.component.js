@@ -30,6 +30,7 @@ System.register(["angular2/core", "./daily-form.component", "./nav.component"], 
                 AppComponent = __decorate([
                     core_1.Component({
                         selector: "app",
+                        inputs: [],
                         directives: [nav_component_1.NavComponent, daily_form_component_1.DailyForm],
                         template: "<nav-component></nav-component><daily-form></daily-form>"
                     }), 

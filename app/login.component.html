@@ -1,0 +1,15 @@
+<h1>Login</h1>
+<br>
+<form [ngFormModel]="loginForm" (submit)="doLogin($event)">
+  <div class="form-group">
+    <input ngControl="username" class="form-control" type="text" placeholder="Username">
+    <br>
+    <input ngControl="password" class="form-control" type="password" placeholder="Password">
+    <div *ngIf="loginForm.password.dirty"> // NOT WORKING
+      <p>Hello</p>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
+</form>
+<h2>{{username}}</h2>

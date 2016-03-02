@@ -10,10 +10,11 @@ interface NavOption {
 }
 
 export let NAV_OPTIONS: NavOption[] = [
-  {text: "Daily Tracker", available: true, active:  false, route: "DailyForm"},
-  {text: "Monthly View", available: true, active: false, route: "MonthlyForm"},
-  {text: "Account Info", available: true, active: false, route: "AccountInfo"},
-  {text: "Admin Panel", available: false, active: false, route: "AdminPanel"}
+  { text: "Daily Tracker", available: true, active: false, route: "DailyForm" },
+  { text: "Monthly View", available: true, active: false, route: "MonthlyForm" },
+  { text: "Login", available: true, active: false, route: "Login" },
+  { text: "Account Info", available: true, active: false, route: "AccountInfo" },
+  { text: "Admin Panel", available: false, active: false, route: "AdminPanel" }
 ];
 
 @Component({

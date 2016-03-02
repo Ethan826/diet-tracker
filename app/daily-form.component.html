@@ -2,7 +2,19 @@
 
 <form>
   <legend>Date</legend>
-  
+  <fieldset class="form-inline">
+    <select class="form-control">
+      <option *ngFor="#month of MONTHS" [value]="month.number" [selected]="date.getMonth() === month.number">{{month.name}}</option>
+    </select>
+    <select class="form-control">
+      <option *ngFor="#day of DAYS" [value]="day" [selected]="date.getDate() === day">{{day}}</option>
+    </select>
+    <select class="form-control">
+      <option *ngFor="#year of YEARS" [value]="year" [selected]="date.getFullYear() === year">{{year}}</option>
+    </select>
+  </fieldset>
+  <br>
+
   <div *ngFor="#subForm of subForms">
     <fieldset>
       <legend>{{subForm.categoryName}}</legend>
@@ -44,4 +56,5 @@
   <button type="submit" [ngClass]="{disabled: !enableSubmit, 'btn btn-primary': true}" (click)="handleSubmit()">
     Submit
   </button>
+  <br><br>
 </form>

@@ -3,3 +3,4 @@
 /// <reference path="main/ambient/moment/moment.d.ts" />
 /// <reference path="main/ambient/node/node.d.ts" />
 /// <reference path="main/ambient/systemjs/systemjs.d.ts" />
+/// <reference path="main/ambient/underscore/underscore.d.ts" />

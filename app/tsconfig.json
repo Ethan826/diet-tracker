@@ -31,7 +31,6 @@
   },
   "files": [
     "app.component.ts",
-    "cal.component.ts",
     "daily-form.component.ts",
     "main.ts"
   ]

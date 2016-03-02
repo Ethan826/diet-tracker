@@ -23,10 +23,20 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            MONTHS = {
-                0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul",
-                7: "Aug", 8: "Sep", 9: "Oct", 10: "Nov", 11: "Dec"
-            };
+            MONTHS = [
+                { number: 0, name: "Jan" },
+                { number: 1, name: "Feb" },
+                { number: 2, name: "Mar" },
+                { number: 3, name: "Apr" },
+                { number: 4, name: "May" },
+                { number: 5, name: "Jun" },
+                { number: 6, name: "Jul" },
+                { number: 7, name: "Aug" },
+                { number: 8, name: "Sep" },
+                { number: 9, name: "Oct" },
+                { number: 10, name: "Nov" },
+                { number: 11, name: "Dec" }
+            ];
             SubForm = (function () {
                 function SubForm() {
                     this.score = null;
@@ -40,11 +50,15 @@ System.register(["angular2/core"], function(exports_1, context_1) {
             }());
             DailyForm = (function () {
                 function DailyForm() {
+                    this.MONTHS = MONTHS;
+                    this.DAYS = [];
+                    this.YEARS = [];
                     this.subForms = [];
                     this.checklists = [];
                     this.totalScore = 0;
                     this.enableSubmit = false;
                     this.date = new Date;
+                    this.setUpDate();
                     this.subForms.push(new HungerControl);
                     this.subForms.push(new CravingControl);
                     this.subForms.push(new Satiety);
@@ -57,6 +71,17 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                     this.checklists.push(movement);
                     this.checklists.push(bedtime);
                 }
+                DailyForm.prototype.setUpDate = function () {
+                    var today = new Date();
+                    this.date = today;
+                    for (var i = 1; i <= 31; ++i) {
+                        this.DAYS.push(i);
+                    }
+                    var currentYear = new Date().getFullYear();
+                    for (var i = currentYear - 4; i < currentYear + 5; ++i) {
+                        this.YEARS.push(i);
+                    }
+                };
                 DailyForm.prototype.onSelect = function (option, classType) {
                     var classInstance = this.getMatchingClassInstance(classType);
                     classInstance.selection = option;

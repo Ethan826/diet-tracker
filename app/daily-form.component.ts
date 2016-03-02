@@ -1,3 +1,4 @@
+/// <reference path="../typings/main/ambient/underscore/underscore.d.ts"/>
 import {Component} from "angular2/core";
 
 interface IFormOption {
@@ -10,10 +11,25 @@ interface ITextEntry {
   userEntry: string;
 }
 
-let MONTHS = {
-  0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul",
-  7: "Aug", 8: "Sep", 9: "Oct", 10: "Nov", 11: "Dec"
+interface IMonth {
+  name: string;
+  number: number;
 }
+
+let MONTHS: IMonth[] = [
+  { number: 0, name: "Jan" },
+  { number: 1, name: "Feb" },
+  { number: 2, name: "Mar" },
+  { number: 3, name: "Apr" },
+  { number: 4, name: "May" },
+  { number: 5, name: "Jun" },
+  { number: 6, name: "Jul" },
+  { number: 7, name: "Aug" },
+  { number: 8, name: "Sep" },
+  { number: 9, name: "Oct" },
+  { number: 10, name: "Nov" },
+  { number: 11, name: "Dec" }
+]
 
 abstract class SubForm {
   score: number = null;
@@ -42,6 +58,9 @@ interface IChecklistItem {
   templateUrl: "app/daily-form.component.html"
 })
 export class DailyForm {
+  private MONTHS = MONTHS;
+  private DAYS: number[] = [];
+  private YEARS: number[] = [];
   private subForms: SubForm[] = [];
   private checklists: IChecklistItem[] = [];
   private totalScore = 0;
@@ -49,6 +68,7 @@ export class DailyForm {
   private date = new Date;
 
   constructor() {
+    this.setUpDate();
     this.subForms.push(new HungerControl);
     this.subForms.push(new CravingControl);
     this.subForms.push(new Satiety);
@@ -60,6 +80,14 @@ export class DailyForm {
     this.checklists.push(walks);
     this.checklists.push(movement);
     this.checklists.push(bedtime);
+  }
+
+  private setUpDate() {
+    let today = new Date();
+    this.date = today;
+    for (let i = 1; i <= 31; ++i) { this.DAYS.push(i); }
+    let currentYear = new Date().getFullYear();
+    for (let i = currentYear - 4; i < currentYear + 5; ++i) { this.YEARS.push(i); }
   }
 
   onSelect(option: IFormOption, classType: string) {

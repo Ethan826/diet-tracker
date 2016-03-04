@@ -1,9 +1,12 @@
 import {Component, EventEmitter} from "angular2/core";
+import {FORM_DIRECTIVES, FormBuilder, Control} from "angular2/common";
 import {IButton, IButtonField} from "./interfaces";
 
 @Component({
   selector: "button-field",
+  directives: [FORM_DIRECTIVES],
   inputs: ["btn"],
+  outputs: ["onDataEntered"],
   template: `
     <div>
       <fieldset>
@@ -23,7 +26,10 @@ import {IButton, IButtonField} from "./interfaces";
         <div class="form-group">
           <label class="sr-only">Subjective Text</label>
           <input class="form-control"
-                 type="text" placeholder="{{btn.placeholderText}}">
+                 type="text"
+                 placeholder="{{btn.placeholderText}}"
+                 [ngFormControl]="inputTextControl"
+                 (keyup)=dataEntered()>
         </div>
       </fieldset>
       <br>
@@ -31,21 +37,26 @@ import {IButton, IButtonField} from "./interfaces";
   `
 })
 export class ButtonField {
-  private score: number;
+  onDataEntered: EventEmitter<IButtonField>;
   private btn: IButtonField;
-  private selected: IButton;
-  private onButtonClicked: EventEmitter<IButton>;
+  private inputTextControl: Control;
 
   constructor() {
-    this.onButtonClicked = new EventEmitter();
+    this.onDataEntered = new EventEmitter();
+    this.inputTextControl = new Control();
   }
 
   private clicked(b: IButton) {
-    this.selected = b;
-    this.onButtonClicked.emit(b);
+    this.btn.selection = b;
+    this.dataEntered();
+  }
+
+  private dataEntered(): void {
+    this.btn.inputText = this.inputTextControl.value;
+    this.onDataEntered.emit(this.btn);
   }
 
   private isSelected(b: IButton) {
-    return this.selected && this.selected === b ? true : false;
+    return this.btn.selection && this.btn.selection === b ? true : false;
   }
 }

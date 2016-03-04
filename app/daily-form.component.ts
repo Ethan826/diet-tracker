@@ -11,14 +11,26 @@ import {buttonForms} from "./button-data";
     <br>
     <button-field
       *ngFor="#b of buttonForms"
-      [btn]="b">
+      [btn]="b"
+      (onDataEntered)="dataEntered($event)">
     </button-field>
   `
 })
 export class DailyForm {
-  buttonForms: IButtonField[];
+  private buttonForms: IButtonField[];
+  private score: number;
 
   constructor() {
+    this.score = 0;
     this.buttonForms = buttonForms;
+    this.buttonForms.forEach((b, i) => {
+      b["index"] = i;
+    });
+  }
+
+  private dataEntered(event: IButtonField) {
+    let i = event["index"];
+    this.buttonForms[i] = event;
+    console.log(this.buttonForms[i]);
   }
 }

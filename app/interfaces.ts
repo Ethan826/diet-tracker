@@ -8,4 +8,6 @@ export interface IButtonField {
   explanatoryText: string;
   placeholderText: string;
   buttons: IButton[];
+  selection: IButton;
+  inputText: string;
 }

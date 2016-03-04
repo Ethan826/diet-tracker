@@ -1,4 +1,4 @@
-System.register(["angular2/core"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,30 +10,40 @@ System.register(["angular2/core"], function(exports_1, context_1) {
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1;
+    var core_1, common_1;
     var ButtonField;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (common_1_1) {
+                common_1 = common_1_1;
             }],
         execute: function() {
             ButtonField = (function () {
                 function ButtonField() {
-                    this.onButtonClicked = new core_1.EventEmitter();
+                    this.onDataEntered = new core_1.EventEmitter();
+                    this.inputTextControl = new common_1.Control();
                 }
                 ButtonField.prototype.clicked = function (b) {
-                    this.selected = b;
-                    this.onButtonClicked.emit(b);
+                    this.btn.selection = b;
+                    this.dataEntered();
+                };
+                ButtonField.prototype.dataEntered = function () {
+                    this.btn.inputText = this.inputTextControl.value;
+                    this.onDataEntered.emit(this.btn);
                 };
                 ButtonField.prototype.isSelected = function (b) {
-                    return this.selected && this.selected === b ? true : false;
+                    return this.btn.selection && this.btn.selection === b ? true : false;
                 };
                 ButtonField = __decorate([
                     core_1.Component({
                         selector: "button-field",
+                        directives: [common_1.FORM_DIRECTIVES],
                         inputs: ["btn"],
-                        template: "\n    <div>\n      <fieldset>\n        <legend>{{btn.legend}}</legend>\n        <label>{{btn.explanatoryText}}</label>\n        <div class=\"form-group\">\n          <div *ngFor=\"#b of btn.buttons\"\n               class=\"btn-group\">\n            <button type=\"button\"\n                    class=\"btn btn-default\"\n                    (click)=\"clicked(b)\"\n                    [class.btn-primary]=\"isSelected(b)\">\n              {{b.buttonText}}\n            </button>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"sr-only\">Subjective Text</label>\n          <input class=\"form-control\"\n                 type=\"text\" placeholder=\"{{btn.placeholderText}}\">\n        </div>\n      </fieldset>\n      <br>\n    </div>\n  "
+                        outputs: ["onDataEntered"],
+                        template: "\n    <div>\n      <fieldset>\n        <legend>{{btn.legend}}</legend>\n        <label>{{btn.explanatoryText}}</label>\n        <div class=\"form-group\">\n          <div *ngFor=\"#b of btn.buttons\"\n               class=\"btn-group\">\n            <button type=\"button\"\n                    class=\"btn btn-default\"\n                    (click)=\"clicked(b)\"\n                    [class.btn-primary]=\"isSelected(b)\">\n              {{b.buttonText}}\n            </button>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"sr-only\">Subjective Text</label>\n          <input class=\"form-control\"\n                 type=\"text\"\n                 placeholder=\"{{btn.placeholderText}}\"\n                 [ngFormControl]=\"inputTextControl\"\n                 (keyup)=dataEntered()>\n        </div>\n      </fieldset>\n      <br>\n    </div>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], ButtonField);

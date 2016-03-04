@@ -26,13 +26,22 @@ System.register(["angular2/core", "./button-field.component", "./button-data"], 
         execute: function() {
             DailyForm = (function () {
                 function DailyForm() {
+                    this.score = 0;
                     this.buttonForms = button_data_1.buttonForms;
+                    this.buttonForms.forEach(function (b, i) {
+                        b["index"] = i;
+                    });
                 }
+                DailyForm.prototype.dataEntered = function (event) {
+                    var i = event["index"];
+                    this.buttonForms[i] = event;
+                    console.log(this.buttonForms[i]);
+                };
                 DailyForm = __decorate([
                     core_1.Component({
                         selector: "daily-form",
                         directives: [button_field_component_1.ButtonField],
-                        template: "\n    <h1>Daily Tracker</h1>\n    <br>\n    <button-field\n      *ngFor=\"#b of buttonForms\"\n      [btn]=\"b\">\n    </button-field>\n  "
+                        template: "\n    <h1>Daily Tracker</h1>\n    <br>\n    <button-field\n      *ngFor=\"#b of buttonForms\"\n      [btn]=\"b\"\n      (onDataEntered)=\"dataEntered($event)\">\n    </button-field>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], DailyForm);

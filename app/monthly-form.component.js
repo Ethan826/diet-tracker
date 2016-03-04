@@ -23,7 +23,7 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                 }
                 MonthlyForm = __decorate([
                     core_1.Component({
-                        templateUrl: "app/monthly-form.component.html"
+                        template: ""
                     }), 
                     __metadata('design:paramtypes', [])
                 ], MonthlyForm);

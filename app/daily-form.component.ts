@@ -54,7 +54,69 @@ interface IChecklistItem {
 
 @Component({
   selector: "daily-form",
-  templateUrl: "app/daily-form.component.html"
+  template: `
+    <h1>Daily Tracker</h1>
+
+    <form>
+
+      <fieldset class="form-inline">
+        <legend>Date</legend>
+        <select class="form-control">
+          <option *ngFor="#month of MONTHS" [value]="month.number" [selected]="date.getMonth() === month.number">{{month.name}}</option>
+        </select>
+        <select class="form-control">
+          <option *ngFor="#day of DAYS" [value]="day" [selected]="date.getDate() === day">{{day}}</option>
+        </select>
+        <select class="form-control">
+          <option *ngFor="#year of YEARS" [value]="year" [selected]="date.getFullYear() === year">{{year}}</option>
+        </select>
+      </fieldset>
+      <br>
+
+      <div *ngFor="#subForm of subForms">
+        <fieldset>
+          <legend>{{subForm.categoryName}}</legend>
+          <label>{{subForm.explanatoryText}}</label>
+          <div class="form-group">
+            <div class="btn-group">
+              <button
+                type="button"
+                [ngClass]="{
+                  'btn': true,
+                  'btn-primary': option === subForm.selection,
+                  'btn-default': option !== subForm.selection}"
+                *ngFor="#option of subForm.options"
+                (click)="onSelect(option, subForm.classType)">
+                {{option.text}}
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="sr-only">{{subForm.subjectiveText}}</label>
+            <input class="form-control" type="text" placeholder="{{subForm.textEntry.prompt}}" [(ngModel)]="subForm.textEntry.userEntry"/>
+          </div>
+        </fieldset>
+      </div>
+
+      <legend>Activities</legend>
+      <div class="form-group">
+        <div *ngFor="#checklist of checklists" class="form-group">
+          <label><input type="checkbox" [(ngModel)]="checklist.answer"/>&emsp;{{checklist.question}}</label>
+          <div *ngIf="checklist.textEntry && checklist.answer === true">
+            <label class="sr-only">{{checklist.textEntry.prompt}}</label>
+            <input class="form-control" type="text" placeholder="{{checklist.textEntry.prompt}}"/>
+          </div>
+        </div>
+      </div>
+
+      <br/>
+
+      <button type="submit" [ngClass]="{disabled: !enableSubmit, 'btn btn-primary': true}" (click)="handleSubmit()">
+        Submit
+      </button>
+      <br><br>
+    </form>
+  `
 })
 export class DailyForm {
   private MONTHS = MONTHS;

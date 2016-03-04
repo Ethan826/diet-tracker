@@ -11,7 +11,7 @@ import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router"
   inputs: [],
   directives: [NavComponent, DailyForm, MonthlyForm, ROUTER_DIRECTIVES],
   providers: [ROUTER_PROVIDERS],
-  template: "<nav-component></nav-component><router-outlet></router-outlet>"
+  template: `<nav-component></nav-component><router-outlet></router-outlet>`
 })
 @RouteConfig([
   { path: "/diet/daily", name: "DailyForm", component: DailyForm },

@@ -11,25 +11,15 @@ System.register(["angular2/core"], function(exports_1, context_1) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1;
-    var tester, ButtonField;
+    var ButtonField;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             }],
         execute: function() {
-            tester = {
-                legend: "Legendary",
-                explanatoryText: "Explainy",
-                placeholderText: "Place",
-                buttons: [
-                    { buttonText: "Foo", buttonPoints: 0 },
-                    { buttonText: "Bar", buttonPoints: 1 }
-                ]
-            };
             ButtonField = (function () {
                 function ButtonField() {
-                    this.buttonField = tester;
                     this.onButtonClicked = new core_1.EventEmitter();
                 }
                 ButtonField.prototype.clicked = function (b) {
@@ -42,7 +32,8 @@ System.register(["angular2/core"], function(exports_1, context_1) {
                 ButtonField = __decorate([
                     core_1.Component({
                         selector: "button-field",
-                        template: "\n    <div>\n      <fieldset>\n        <legend>{{buttonField.legend}}</legend>\n        <label>{{buttonField.explanatoryText}}</label>\n        <div class=\"form-group\">\n          <div *ngFor=\"#b of buttonField.buttons\"\n               class=\"btn-group\">\n            <button type=\"button\"\n                    class=\"btn btn-default\"\n                    (click)=\"clicked(b)\"\n                    [class.btn-primary]=\"isSelected(b)\">\n              {{b.buttonText}}\n            </button>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"sr-only\">Subjective Text</label>\n          <input class=\"form-control\"\n                 type=\"text\" placeholder=\"{{buttonField.placeholderText}}\">\n        </div>\n      </fieldset>\n    </div>\n  "
+                        inputs: ["btn"],
+                        template: "\n    <div>\n      <fieldset>\n        <legend>{{btn.legend}}</legend>\n        <label>{{btn.explanatoryText}}</label>\n        <div class=\"form-group\">\n          <div *ngFor=\"#b of btn.buttons\"\n               class=\"btn-group\">\n            <button type=\"button\"\n                    class=\"btn btn-default\"\n                    (click)=\"clicked(b)\"\n                    [class.btn-primary]=\"isSelected(b)\">\n              {{b.buttonText}}\n            </button>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"sr-only\">Subjective Text</label>\n          <input class=\"form-control\"\n                 type=\"text\" placeholder=\"{{btn.placeholderText}}\">\n        </div>\n      </fieldset>\n      <br>\n    </div>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], ButtonField);

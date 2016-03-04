@@ -1,36 +1,16 @@
 import {Component, EventEmitter} from "angular2/core";
-
-interface IButton {
-  buttonText: string;
-  buttonPoints: number;
-}
-
-interface IButtonField {
-  legend: string;
-  explanatoryText: string;
-  placeholderText: string;
-  buttons: IButton[];
-}
-
-let tester: IButtonField = {
-  legend: "Legendary",
-  explanatoryText: "Explainy",
-  placeholderText: "Place",
-  buttons: [
-    { buttonText: "Foo", buttonPoints: 0 },
-    { buttonText: "Bar", buttonPoints: 1 }
-  ]
-}
+import {IButton, IButtonField} from "./interfaces";
 
 @Component({
   selector: "button-field",
+  inputs: ["btn"],
   template: `
     <div>
       <fieldset>
-        <legend>{{buttonField.legend}}</legend>
-        <label>{{buttonField.explanatoryText}}</label>
+        <legend>{{btn.legend}}</legend>
+        <label>{{btn.explanatoryText}}</label>
         <div class="form-group">
-          <div *ngFor="#b of buttonField.buttons"
+          <div *ngFor="#b of btn.buttons"
                class="btn-group">
             <button type="button"
                     class="btn btn-default"
@@ -43,20 +23,20 @@ let tester: IButtonField = {
         <div class="form-group">
           <label class="sr-only">Subjective Text</label>
           <input class="form-control"
-                 type="text" placeholder="{{buttonField.placeholderText}}">
+                 type="text" placeholder="{{btn.placeholderText}}">
         </div>
       </fieldset>
+      <br>
     </div>
   `
 })
 export class ButtonField {
   private score: number;
-  private buttonField: IButtonField;
+  private btn: IButtonField;
   private selected: IButton;
   private onButtonClicked: EventEmitter<IButton>;
 
   constructor() {
-    this.buttonField = tester;
     this.onButtonClicked = new EventEmitter();
   }
 

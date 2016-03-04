@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./button-field.component", "./button-data"], function(exports_1, context_1) {
+System.register(["angular2/core", "./button-questions.component", "./checkbox-questions.component", "./question-data"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,38 +10,48 @@ System.register(["angular2/core", "./button-field.component", "./button-data"], 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, button_field_component_1, button_data_1;
+    var core_1, button_questions_component_1, checkbox_questions_component_1, question_data_1;
     var DailyForm;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (button_field_component_1_1) {
-                button_field_component_1 = button_field_component_1_1;
+            function (button_questions_component_1_1) {
+                button_questions_component_1 = button_questions_component_1_1;
             },
-            function (button_data_1_1) {
-                button_data_1 = button_data_1_1;
+            function (checkbox_questions_component_1_1) {
+                checkbox_questions_component_1 = checkbox_questions_component_1_1;
+            },
+            function (question_data_1_1) {
+                question_data_1 = question_data_1_1;
             }],
         execute: function() {
             DailyForm = (function () {
                 function DailyForm() {
                     this.score = 0;
-                    this.buttonForms = button_data_1.buttonForms;
-                    this.buttonForms.forEach(function (b, i) {
+                    this.buttonQuestions = question_data_1.buttonQuestions;
+                    this.checkboxQuestions = question_data_1.checkboxQuestions;
+                    this.buttonQuestions.forEach(function (b, i) {
                         b["index"] = i;
                     });
+                    this.checkboxQuestions.forEach(function (c, i) {
+                        c["index"] = i;
+                    });
                 }
-                DailyForm.prototype.dataEntered = function (event) {
+                DailyForm.prototype.buttonDataEntered = function (event) {
                     var i = event["index"];
-                    this.buttonForms[i] = event;
-                    console.log(this.buttonForms[i]);
+                    this.buttonQuestions[i] = event;
+                };
+                DailyForm.prototype.checkboxDataEntered = function (event) {
+                    var i = event["index"];
+                    this.checkboxQuestions[i] = event;
                 };
                 DailyForm = __decorate([
                     core_1.Component({
                         selector: "daily-form",
-                        directives: [button_field_component_1.ButtonField],
-                        template: "\n    <h1>Daily Tracker</h1>\n    <br>\n    <button-field\n      *ngFor=\"#b of buttonForms\"\n      [btn]=\"b\"\n      (onDataEntered)=\"dataEntered($event)\">\n    </button-field>\n  "
+                        directives: [button_questions_component_1.ButtonQuestions, checkbox_questions_component_1.CheckboxQuestions],
+                        template: "\n    <h1>Daily Tracker</h1>\n    <br>\n    <button-questions\n      *ngFor=\"#b of buttonQuestions\"\n      [btn]=\"b\"\n      (onDataEntered)=\"buttonDataEntered($event)\">\n    </button-questions>\n    <checkbox-questions\n      *ngFor=\"#c of checkboxQuestions\"\n      [cbox]=\"c\"\n      (onDataEntered)=\"checkboxDataEntered($event)\">\n    </checkbox-questions>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], DailyForm);

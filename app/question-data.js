@@ -1,11 +1,11 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var buttonForms;
+    var buttonQuestions, checkboxQuestions;
     return {
         setters:[],
         execute: function() {
-            exports_1("buttonForms", buttonForms = [
+            exports_1("buttonQuestions", buttonQuestions = [
                 {
                     legend: "Hunger Control",
                     placeholderText: "I felt hungriest these times",
@@ -16,7 +16,9 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "Moderately Hungry", buttonPoints: 2 },
                         { buttonText: "Slightly Hungry", buttonPoints: 3 },
                         { buttonText: "No Hunger", buttonPoints: 4 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
                 }, {
                     legend: "Craving Control",
                     placeholderText: "I craved the following foods",
@@ -27,7 +29,9 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "Average", buttonPoints: 2 },
                         { buttonText: "Below Average", buttonPoints: 3 },
                         { buttonText: "Absent", buttonPoints: 4 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
                 }, {
                     legend: "Satiety",
                     placeholderText: "I felt most satisfied after the following meals",
@@ -38,7 +42,9 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "A Couple Hours", buttonPoints: 2 },
                         { buttonText: "Most of the Time", buttonPoints: 3 },
                         { buttonText: "Until the Next Meal", buttonPoints: 4 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
                 }, {
                     legend: "Energy Level",
                     placeholderText: "Comments",
@@ -49,7 +55,9 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "Average", buttonPoints: 2 },
                         { buttonText: "Above Average", buttonPoints: 3 },
                         { buttonText: "High", buttonPoints: 4 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
                 }, {
                     legend: "Well Being",
                     placeholderText: "Comments",
@@ -60,7 +68,9 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "Average", buttonPoints: 2 },
                         { buttonText: "Above Average", buttonPoints: 3 },
                         { buttonText: "High", buttonPoints: 4 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
                 }, {
                     legend: "Processed Carbs",
                     placeholderText: "I had the following kinds of processed carbohydrates today",
@@ -69,7 +79,31 @@ System.register([], function(exports_1, context_1) {
                         { buttonText: "0 to 1 servings", buttonPoints: 0 },
                         { buttonText: "2 servings", buttonPoints: 0 },
                         { buttonText: "3 or more servings", buttonPoints: 0 }
-                    ]
+                    ],
+                    selection: null,
+                    inputText: null
+                }
+            ]);
+            exports_1("checkboxQuestions", checkboxQuestions = [
+                {
+                    checkboxPrompt: "I did my five-minute stress reduction in the AM",
+                    checkboxInput: null
+                }, {
+                    checkboxPrompt: "I did my five-minute stress reduction in the PM",
+                    checkboxInput: null
+                }, {
+                    checkboxPrompt: "I did my after-meal walks",
+                    checkboxInput: null
+                }, {
+                    checkboxPrompt: "I did my joyful movement",
+                    checkboxInput: null,
+                    textPrompt: "What kind?",
+                    textInput: null
+                }, {
+                    checkboxPrompt: "I did my pre-bedtime routine",
+                    checkboxInput: null,
+                    textPrompt: "Describe",
+                    textInput: null
                 }
             ]);
         }

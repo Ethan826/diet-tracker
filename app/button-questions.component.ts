@@ -1,9 +1,9 @@
 import {Component, EventEmitter} from "angular2/core";
 import {FORM_DIRECTIVES, FormBuilder, Control} from "angular2/common";
-import {IButton, IButtonField} from "./interfaces";
+import {IButtonQuestion, IButtonQuestionField} from "./interfaces";
 
 @Component({
-  selector: "button-field",
+  selector: "button-questions",
   directives: [FORM_DIRECTIVES],
   inputs: ["btn"],
   outputs: ["onDataEntered"],
@@ -36,9 +36,9 @@ import {IButton, IButtonField} from "./interfaces";
     </div>
   `
 })
-export class ButtonField {
-  onDataEntered: EventEmitter<IButtonField>;
-  private btn: IButtonField;
+export class ButtonQuestions {
+  onDataEntered: EventEmitter<IButtonQuestionField>;
+  private btn: IButtonQuestionField;
   private inputTextControl: Control;
 
   constructor() {
@@ -46,7 +46,7 @@ export class ButtonField {
     this.inputTextControl = new Control();
   }
 
-  private clicked(b: IButton) {
+  private clicked(b: IButtonQuestion) {
     this.btn.selection = b;
     this.dataEntered();
   }
@@ -56,7 +56,7 @@ export class ButtonField {
     this.onDataEntered.emit(this.btn);
   }
 
-  private isSelected(b: IButton) {
+  private isSelected(b: IButtonQuestion) {
     return this.btn.selection && this.btn.selection === b ? true : false;
   }
 }

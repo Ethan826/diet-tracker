@@ -1,36 +1,51 @@
 import {Component} from "angular2/core";
-import {IButton, IButtonField} from "./interfaces";
-import {ButtonField} from "./button-field.component";
-import {buttonForms} from "./button-data";
+import {IButtonQuestion, IButtonQuestionField, ICheckboxQuestion} from "./interfaces";
+import {ButtonQuestions} from "./button-questions.component";
+import {CheckboxQuestions} from "./checkbox-questions.component";
+import {buttonQuestions, checkboxQuestions} from "./question-data";
 
 @Component({
   selector: "daily-form",
-  directives: [ButtonField],
+  directives: [ButtonQuestions, CheckboxQuestions],
   template: `
     <h1>Daily Tracker</h1>
     <br>
-    <button-field
-      *ngFor="#b of buttonForms"
+    <button-questions
+      *ngFor="#b of buttonQuestions"
       [btn]="b"
-      (onDataEntered)="dataEntered($event)">
-    </button-field>
+      (onDataEntered)="buttonDataEntered($event)">
+    </button-questions>
+    <checkbox-questions
+      *ngFor="#c of checkboxQuestions"
+      [cbox]="c"
+      (onDataEntered)="checkboxDataEntered($event)">
+    </checkbox-questions>
   `
 })
 export class DailyForm {
-  private buttonForms: IButtonField[];
+  private buttonQuestions: IButtonQuestionField[];
+  private checkboxQuestions: ICheckboxQuestion[];
   private score: number;
 
   constructor() {
     this.score = 0;
-    this.buttonForms = buttonForms;
-    this.buttonForms.forEach((b, i) => {
+    this.buttonQuestions = buttonQuestions;
+    this.checkboxQuestions = checkboxQuestions;
+    this.buttonQuestions.forEach((b, i) => {
       b["index"] = i;
+    });
+    this.checkboxQuestions.forEach((c, i) => {
+      c["index"] = i;
     });
   }
 
-  private dataEntered(event: IButtonField) {
+  private buttonDataEntered(event: IButtonQuestionField) {
     let i = event["index"];
-    this.buttonForms[i] = event;
-    console.log(this.buttonForms[i]);
+    this.buttonQuestions[i] = event;
+  }
+
+  private checkboxDataEntered(event: ICheckboxQuestion) {
+    let i = event["index"];
+    this.checkboxQuestions[i] = event;
   }
 }

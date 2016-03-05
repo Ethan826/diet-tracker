@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common"], function(exports_1, context_1) {
+System.register(["angular2/core"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,33 +10,24 @@ System.register(["angular2/core", "angular2/common"], function(exports_1, contex
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1;
+    var core_1;
     var CheckboxQuestions;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (common_1_1) {
-                common_1 = common_1_1;
             }],
         execute: function() {
             CheckboxQuestions = (function () {
                 function CheckboxQuestions() {
                     this.onDataEntered = new core_1.EventEmitter();
-                    if (typeof this.cbox.textPrompt == undefined) {
-                        this.inputTextControl = null;
-                    }
-                    else {
-                        this.inputTextControl = new common_1.Control;
-                    }
+                    this.hasText = false;
                 }
+                CheckboxQuestions.prototype.ngOnInit = function () {
+                    this.hasText = this.cbox.textPrompt ? true : false;
+                };
                 CheckboxQuestions.prototype.clicked = function () {
                     this.cbox.checkboxInput = !this.cbox.checkboxInput;
-                    this.dataEntered();
-                    console.log(this.cbox.checkboxInput);
-                };
-                CheckboxQuestions.prototype.dataEntered = function () {
                     this.onDataEntered.emit(this.cbox);
                 };
                 CheckboxQuestions = __decorate([
@@ -44,7 +35,7 @@ System.register(["angular2/core", "angular2/common"], function(exports_1, contex
                         inputs: ["cbox"],
                         outputs: ["onDataEntered"],
                         selector: "checkbox-questions",
-                        template: "\n    <div>\n      <label>\n        <input type=\"checkbox\"\n               (change)=\"clicked()\">\n          &emsp;\n          {{cbox.checkboxPrompt}}\n      </label>\n    </div>\n    <div *ngIf=\"cbox.checkboxInput && cbox.textPrompt\"\n         [ngFormControl]=\"inputTextControl\"\n         (keyup)=dataEntered()>\n      {{cbox.textPrompt}}\n    </div>\n  "
+                        template: "\n    <div>\n      <label>\n        <input type=\"checkbox\"\n               (change)=\"clicked()\">\n          &emsp;\n          {{cbox.checkboxPrompt}}\n      </label>\n    </div>\n    <div *ngIf=\"hasText && cbox.checkboxInput\" class=\"form-group\">\n      <input type=\"text\"\n             placeholder=\"{{cbox.textPrompt}}\"\n             class=\"form-control\">\n    </div>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], CheckboxQuestions);

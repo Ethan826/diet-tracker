@@ -1,4 +1,4 @@
-import {Component, EventEmitter} from "angular2/core";
+import {Component, EventEmitter, OnInit} from "angular2/core";
 import {Control} from "angular2/common"
 import {ICheckboxQuestion} from "./interfaces";
 
@@ -15,34 +15,29 @@ import {ICheckboxQuestion} from "./interfaces";
           {{cbox.checkboxPrompt}}
       </label>
     </div>
-    <div *ngIf="cbox.checkboxInput && cbox.textPrompt"
-         [ngFormControl]="inputTextControl"
-         (keyup)=dataEntered()>
-      {{cbox.textPrompt}}
+    <div *ngIf="hasText && cbox.checkboxInput" class="form-group">
+      <input type="text"
+             placeholder="{{cbox.textPrompt}}"
+             class="form-control">
     </div>
   `
 })
-export class CheckboxQuestions {
+export class CheckboxQuestions implements OnInit {
+  cbox: ICheckboxQuestion;
   onDataEntered: EventEmitter<ICheckboxQuestion>;
-  private cbox: ICheckboxQuestion;
-  private inputTextControl: Control;
+  hasText: boolean;
 
   constructor() {
     this.onDataEntered = new EventEmitter();
-    if(typeof this.cbox.textPrompt == undefined) { // Not working
-      this.inputTextControl = null;
-    } else {
-      this.inputTextControl = new Control;
-    }
+    this.hasText = false;
   }
 
-  private clicked() {
+  ngOnInit() {
+    this.hasText = this.cbox.textPrompt ? true : false;
+  }
+
+  clicked() {
     this.cbox.checkboxInput = !this.cbox.checkboxInput;
-    this.dataEntered();
-    console.log(this.cbox.checkboxInput);
-  }
-
-  private dataEntered() {
     this.onDataEntered.emit(this.cbox);
   }
 }

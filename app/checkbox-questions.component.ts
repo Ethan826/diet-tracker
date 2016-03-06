@@ -18,6 +18,8 @@ import {ICheckboxQuestion} from "./interfaces";
     <div *ngIf="hasText && cbox.checkboxInput" class="form-group">
       <input type="text"
              placeholder="{{cbox.textPrompt}}"
+             [ngFormControl]="inputTextControl"
+             (keyup)="dataEntered()"
              class="form-control">
     </div>
   `
@@ -26,9 +28,11 @@ export class CheckboxQuestions implements OnInit {
   cbox: ICheckboxQuestion;
   onDataEntered: EventEmitter<ICheckboxQuestion>;
   hasText: boolean;
+  inputTextControl: Control;
 
   constructor() {
     this.onDataEntered = new EventEmitter();
+    this.inputTextControl = new Control();
     this.hasText = false;
   }
 
@@ -38,6 +42,11 @@ export class CheckboxQuestions implements OnInit {
 
   clicked() {
     this.cbox.checkboxInput = !this.cbox.checkboxInput;
+    this.dataEntered();
+  }
+
+  private dataEntered() {
+    this.cbox.textInput = this.inputTextControl.value;
     this.onDataEntered.emit(this.cbox);
   }
 }

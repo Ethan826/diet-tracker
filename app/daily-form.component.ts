@@ -26,6 +26,8 @@ import {buttonQuestions, checkboxQuestions} from "./question-data";
         [cbox]="c"
         (onDataEntered)="checkboxDataEntered($event)">
       </checkbox-questions>
+      <br>
+      <input type="submit" value="Submit" class="btn btn-primary">
     </form>
   `
 })

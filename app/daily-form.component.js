@@ -57,7 +57,7 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
                     core_1.Component({
                         selector: "daily-form",
                         directives: [button_questions_component_1.ButtonQuestions, checkbox_questions_component_1.CheckboxQuestions, date_picker_component_1.DatePicker],
-                        template: "\n    <form>\n      <h1>Daily Tracker</h1>\n      <br>\n      <legend>Date</legend>\n      <date-picker (onDataEntered)=\"dateDataEntered($event)\"></date-picker>\n      <br>\n      <br>\n      <button-questions\n        *ngFor=\"#b of buttonQuestions\"\n        [btn]=\"b\"\n        (onDataEntered)=\"buttonDataEntered($event)\">\n      </button-questions>\n      <checkbox-questions\n        *ngFor=\"#c of checkboxQuestions\"\n        [cbox]=\"c\"\n        (onDataEntered)=\"checkboxDataEntered($event)\">\n      </checkbox-questions>\n    </form>\n  "
+                        template: "\n    <form>\n      <h1>Daily Tracker</h1>\n      <br>\n      <legend>Date</legend>\n      <date-picker (onDataEntered)=\"dateDataEntered($event)\"></date-picker>\n      <br>\n      <br>\n      <button-questions\n        *ngFor=\"#b of buttonQuestions\"\n        [btn]=\"b\"\n        (onDataEntered)=\"buttonDataEntered($event)\">\n      </button-questions>\n      <checkbox-questions\n        *ngFor=\"#c of checkboxQuestions\"\n        [cbox]=\"c\"\n        (onDataEntered)=\"checkboxDataEntered($event)\">\n      </checkbox-questions>\n      <br>\n      <input type=\"submit\" value=\"Submit\" class=\"btn btn-primary\">\n    </form>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], DailyForm);

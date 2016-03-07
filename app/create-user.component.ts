@@ -10,24 +10,53 @@ declare let zxcvbn: any;
     <br>
     <form [ngFormModel]="createUserForm" (ngSubmit)="handleSubmit(createUserForm)">
     <div class="form-group">
-      <input id="usernameInput"
-             class="form-control"
-             type="text"
-             placeholder="Username"
-             [ngFormControl]="usernameControl">
+      <div [class.has-error]="!usernameControl.valid && usernameControl.touched"
+           [class.has-success]="usernameControl.valid">
+        <input id="usernameInput"
+               [ngFormControl]="usernameControl"
+               class="form-control"
+               type="text"
+               placeholder="Username">
+      </div>
       <br>
-      <input id="passwordInput"
-             class="form-control"
-             type="password"
-             placeholder="Password"
-             [ngFormControl]="passwordControl">
+      <div *ngIf="usernameControl.hasError('required') && usernameControl.touched"
+           class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Username cannot be blank.
+      </div>
+      <div [class.has-error]="!passwordControl.valid && passwordControl.touched"
+           [class.has-success]="passwordControl.valid">
+        <input id="passwordInput"
+               class="form-control"
+               type="password"
+               placeholder="Password"
+               [ngFormControl]="passwordControl">
+      </div>
       <br>
-      <input id="confirmPasswordInput"
-             class="form-control"
-             type="password"
-             placeholder="Confirm Password"
-             [ngFormControl]="confirmPasswordControl">
+      <div *ngIf="passwordControl.hasError('required') && passwordControl.touched"
+           class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Password cannot be blank.
+      </div>
+      <div *ngIf="passwordControl.hasError('weakPassword') && passwordControl.touched"
+           class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Password is too weak
+      </div>
+      <div [class.has-error]="!confirmPasswordControl.valid && confirmPasswordControl.touched"
+           [class.has-success]="confirmPasswordControl.valid && confirmPasswordControl.touched">
+        <input id="confirmPasswordInput"
+               class="form-control"
+               type="password"
+               placeholder="Confirm Password"
+               [ngFormControl]="confirmPasswordControl">
+      </div>
       <br>
+      <div *ngIf="confirmPasswordControl.hasError('passwordMismatch') && confirmPasswordControl.touched"
+           class="alert alert-danger">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        Passwords do not match
+      </div>
       <input type="submit"
              value="Submit"
              class="btn btn-primary"

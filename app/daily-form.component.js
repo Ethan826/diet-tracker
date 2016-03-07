@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./button-questions.component", "./checkbox-questions.component", "./question-data"], function(exports_1, context_1) {
+System.register(["angular2/core", "./date-picker.component", "./button-questions.component", "./checkbox-questions.component", "./question-data"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,12 +10,15 @@ System.register(["angular2/core", "./button-questions.component", "./checkbox-qu
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, button_questions_component_1, checkbox_questions_component_1, question_data_1;
+    var core_1, date_picker_component_1, button_questions_component_1, checkbox_questions_component_1, question_data_1;
     var DailyForm;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
+            },
+            function (date_picker_component_1_1) {
+                date_picker_component_1 = date_picker_component_1_1;
             },
             function (button_questions_component_1_1) {
                 button_questions_component_1 = button_questions_component_1_1;
@@ -39,6 +42,9 @@ System.register(["angular2/core", "./button-questions.component", "./checkbox-qu
                         c["index"] = i;
                     });
                 }
+                DailyForm.prototype.dateDataEntered = function (event) {
+                    console.log(event);
+                };
                 DailyForm.prototype.buttonDataEntered = function (event) {
                     var i = event["index"];
                     this.buttonQuestions[i] = event;
@@ -50,8 +56,8 @@ System.register(["angular2/core", "./button-questions.component", "./checkbox-qu
                 DailyForm = __decorate([
                     core_1.Component({
                         selector: "daily-form",
-                        directives: [button_questions_component_1.ButtonQuestions, checkbox_questions_component_1.CheckboxQuestions],
-                        template: "\n    <h1>Daily Tracker</h1>\n    <br>\n    <button-questions\n      *ngFor=\"#b of buttonQuestions\"\n      [btn]=\"b\"\n      (onDataEntered)=\"buttonDataEntered($event)\">\n    </button-questions>\n    <checkbox-questions\n      *ngFor=\"#c of checkboxQuestions\"\n      [cbox]=\"c\"\n      (onDataEntered)=\"checkboxDataEntered($event)\">\n    </checkbox-questions>\n  "
+                        directives: [button_questions_component_1.ButtonQuestions, checkbox_questions_component_1.CheckboxQuestions, date_picker_component_1.DatePicker],
+                        template: "\n    <form>\n      <h1>Daily Tracker</h1>\n      <br>\n      <legend>Date</legend>\n      <date-picker (onDataEntered)=\"dateDataEntered($event)\"></date-picker>\n      <br>\n      <br>\n      <button-questions\n        *ngFor=\"#b of buttonQuestions\"\n        [btn]=\"b\"\n        (onDataEntered)=\"buttonDataEntered($event)\">\n      </button-questions>\n      <checkbox-questions\n        *ngFor=\"#c of checkboxQuestions\"\n        [cbox]=\"c\"\n        (onDataEntered)=\"checkboxDataEntered($event)\">\n      </checkbox-questions>\n    </form>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], DailyForm);

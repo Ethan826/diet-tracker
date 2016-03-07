@@ -1,7 +1,6 @@
 import {Component} from "angular2/core";
-import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators} from "angular2/common";
+import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from "angular2/common";
 
-declare let zxcvbn: any;
 
 let MIN_LENGTH = 8;
 
@@ -43,27 +42,24 @@ let MIN_LENGTH = 8;
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       Password must be at least ${MIN_LENGTH} characters.
     </div>
-    <div *ngIf="password.hasError('weakPassword') && username.touched" class="alert alert-danger">
-      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-      Password is too weak.
-    </div>
     <br>
-    <button type="submit"
-            class="btn btn-primary"
-            [class.disabled]="!loginForm.valid">Submit</button>
+    <input type="submit"
+           class="btn btn-primary"
+           value="Submit"
+           [class.disabled]="!loginForm.valid">Submit</button>
   </div>
 </form>
 `
 })
 export class Login {
   private loginForm: ControlGroup;
-  private username: any; // Actually it's AbstractControl, but error
-  private password: any;
+  private username: AbstractControl;
+  private password: AbstractControl;
 
   constructor(fb: FormBuilder) {
     this.loginForm = fb.group({
       "username": ["", Validators.required],
-      "password": ["", Validators.compose([Validators.required, Validators.minLength(MIN_LENGTH), this.passwordValidator])]
+      "password": ["", Validators.compose([Validators.required, Validators.minLength(MIN_LENGTH)])]
     });
 
     this.username = this.loginForm.controls["username"];
@@ -78,9 +74,4 @@ export class Login {
     }
   }
 
-  private passwordValidator(control: Control): { [s: string]: boolean } {
-    if (zxcvbn(control.value).score < 2) {
-      return { weakPassword: true }
-    }
-  }
 }

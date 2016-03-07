@@ -28,6 +28,7 @@ System.register(["angular2/core", "angular2/common", "angular2/router"], functio
                 { text: "Daily Tracker", available: true, active: false, route: "DailyForm" },
                 { text: "Monthly View", available: true, active: false, route: "MonthlyForm" },
                 { text: "Login", available: true, active: false, route: "Login" },
+                { text: "New User", available: true, active: false, route: "CreateUser" },
                 { text: "Account Info", available: true, active: false, route: "AccountInfo" },
                 { text: "Admin Panel", available: false, active: false, route: "AdminPanel" }
             ]);

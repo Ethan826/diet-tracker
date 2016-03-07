@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./daily-form.component", "./monthly-form.component", "./login.component", "./account-info.component", "./nav.component", "angular2/router"], function(exports_1, context_1) {
+System.register(["angular2/core", "./daily-form.component", "./monthly-form.component", "./login.component", "./create-user.component", "./account-info.component", "./nav.component", "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, daily_form_component_1, monthly_form_component_1, login_component_1, account_info_component_1, nav_component_1, router_1;
+    var core_1, daily_form_component_1, monthly_form_component_1, login_component_1, create_user_component_1, account_info_component_1, nav_component_1, router_1;
     var AppComponent;
     return {
         setters:[
@@ -25,6 +25,9 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
             },
             function (login_component_1_1) {
                 login_component_1 = login_component_1_1;
+            },
+            function (create_user_component_1_1) {
+                create_user_component_1 = create_user_component_1_1;
             },
             function (account_info_component_1_1) {
                 account_info_component_1 = account_info_component_1_1;
@@ -43,7 +46,7 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                     core_1.Component({
                         selector: "app",
                         inputs: [],
-                        directives: [nav_component_1.NavComponent, daily_form_component_1.DailyForm, monthly_form_component_1.MonthlyForm, router_1.ROUTER_DIRECTIVES],
+                        directives: [nav_component_1.NavComponent, daily_form_component_1.DailyForm, monthly_form_component_1.MonthlyForm, router_1.ROUTER_DIRECTIVES, create_user_component_1.CreateUser],
                         providers: [router_1.ROUTER_PROVIDERS],
                         template: "<nav-component></nav-component><router-outlet></router-outlet>"
                     }),
@@ -51,7 +54,8 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                         { path: "/diet/daily", name: "DailyForm", component: daily_form_component_1.DailyForm },
                         { path: "/diet/monthly", name: "MonthlyForm", component: monthly_form_component_1.MonthlyForm },
                         { path: "/diet/account", name: "AccountInfo", component: account_info_component_1.AccountInfo },
-                        { path: "/diet/login", name: "Login", component: login_component_1.Login }
+                        { path: "/diet/login", name: "Login", component: login_component_1.Login },
+                        { path: "/diet/createuser", name: "CreateUser", component: create_user_component_1.CreateUser }
                     ]), 
                     __metadata('design:paramtypes', [])
                 ], AppComponent);

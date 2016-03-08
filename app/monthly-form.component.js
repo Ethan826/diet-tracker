@@ -21,9 +21,41 @@ System.register(["angular2/core"], function(exports_1, context_1) {
             MonthlyForm = (function () {
                 function MonthlyForm() {
                 }
+                MonthlyForm.prototype.ngOnInit = function () {
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(this.drawChart);
+                    window.onresize = this.drawChart;
+                };
+                MonthlyForm.prototype.drawChart = function () {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('date', 'Date');
+                    data.addColumn('number', 'Total Score');
+                    data.addRows([
+                        [new Date(2015, 5, 7), 4],
+                        [new Date(2015, 5, 8), 5],
+                        [new Date(2015, 5, 9), 8],
+                        [new Date(2015, 5, 10), 7],
+                        [new Date(2015, 5, 11), 1],
+                        [new Date(2015, 5, 12), 14],
+                        [new Date(2015, 5, 13), 8],
+                        [new Date(2015, 5, 14), 4]
+                    ]);
+                    var options = {
+                        'title': "Diet Tracker",
+                        "vAxis": {
+                            viewWindowMode: "explicit",
+                            viewWindow: {
+                                min: 0,
+                                max: 20
+                            }
+                        }
+                    };
+                    var chart = new google.visualization.LineChart(document.getElementById("chart"));
+                    chart.draw(data, options);
+                };
                 MonthlyForm = __decorate([
                     core_1.Component({
-                        template: ""
+                        template: "\n    <div id=\"chart-fixer\">\n      <div id=\"chart\"></div>\n    </div>\n  "
                     }), 
                     __metadata('design:paramtypes', [])
                 ], MonthlyForm);

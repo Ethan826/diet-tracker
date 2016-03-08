@@ -1,9 +1,6 @@
 import {Component} from "angular2/core";
 import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from "angular2/common";
 
-
-let MIN_LENGTH = 8;
-
 @Component({
   directives: [FORM_DIRECTIVES],
   template: `
@@ -34,19 +31,16 @@ let MIN_LENGTH = 8;
              [ngFormControl]="loginForm.controls['password']">
     </div>
     <br>
-    <div *ngIf="password.hasError('required') && username.touched" class="alert alert-danger">
+    <div *ngIf="password.hasError('required') && username.touched"
+         class="alert alert-danger">
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       Password cannot be blank.
-    </div>
-    <div *ngIf="password.hasError('minlength') && username.touched" class="alert alert-danger">
-      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-      Password must be at least ${MIN_LENGTH} characters.
     </div>
     <br>
     <input type="submit"
            class="btn btn-primary"
            value="Submit"
-           [class.disabled]="!loginForm.valid">Submit</button>
+           [class.disabled]="!loginForm.valid">
   </div>
 </form>
 `
@@ -59,7 +53,7 @@ export class Login {
   constructor(fb: FormBuilder) {
     this.loginForm = fb.group({
       "username": ["", Validators.required],
-      "password": ["", Validators.compose([Validators.required, Validators.minLength(MIN_LENGTH)])]
+      "password": ["", Validators.required]
     });
 
     this.username = this.loginForm.controls["username"];

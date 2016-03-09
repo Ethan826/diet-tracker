@@ -1,35 +1,42 @@
 "use strict";
 var crypto = require("crypto");
 var es6_promise_1 = require("es6-promise");
+var HASHING_CONSTANTS = {
+    HASH_LENGTH: 128,
+    ITERATIONS: 50000,
+    KEYLEN: 512,
+    DIGEST: "sha512",
+};
 var Credentials = (function () {
     function Credentials() {
     }
-    Credentials.getHashedPassword = function (password, salt) {
-        crypto;
+    Credentials.hashNewCredentials = function (username, password) {
+        var salt = this.makeSalt();
+        return this.pbkdf2(username, password, salt);
     };
-    Credentials.passwordHelper = function (password, salt) {
+    Credentials.getHashedPassword = function (username, password, salt) {
+        return this.pbkdf2(username, password, salt);
+    };
+    Credentials.pbkdf2 = function (username, password, salt) {
         var _this = this;
         return new es6_promise_1.Promise(function (resolve, reject) {
-            crypto.pbkdf2(password, salt, _this.ITERATIONS, _this.KEYLEN, _this.DIGEST, function (err, key) {
-                if (err) {
+            crypto.pbkdf2(password, salt, _this.HASHING_CONSTANTS.ITERATIONS, _this.HASHING_CONSTANTS.KEYLEN, _this.HASHING_CONSTANTS.DIGEST, function (err, key) {
+                if (err)
                     reject(err);
-                }
-                else {
-                    resolve(key.toString("hex"));
-                }
+                else
+                    resolve({
+                        username: username,
+                        password: password,
+                        salt: salt,
+                        hash: key.toString("Hex")
+                    });
             });
         });
     };
     Credentials.makeSalt = function () {
-        return crypto.randomBytes(this.HASH_LENGTH).toString("hex");
+        return crypto.randomBytes(this.HASHING_CONSTANTS.HASH_LENGTH).toString("hex");
     };
-    Credentials.HASH_LENGTH = 128;
-    Credentials.ITERATIONS = 50000;
-    Credentials.KEYLEN = 512;
-    Credentials.DIGEST = "sha512";
+    Credentials.HASHING_CONSTANTS = HASHING_CONSTANTS;
     return Credentials;
 }());
 exports.Credentials = Credentials;
-Credentials.hashNewPassword("Happy")
-    .then(function (key) { console.log(key); })
-    .catch(function (err) { console.log(err); });

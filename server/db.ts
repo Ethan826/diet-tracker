@@ -17,18 +17,29 @@ export class DB {
   }
 
   static addUser(username: string, password: string) {
-    let db = new Database(DB_PATH);
+    console.log("Getting to db.ts");
 
-    // TODO: Catch error messages and relay to page to raise errors for duplicate logins, etc.
-    db.serialize(() => {
-      let hashResult = Credentials.hashNewCredentials(username, password);
-      hashResult.then(data => {
-        let s = db.prepare(
+    Credentials.hashNewCredentials(username, password)
+      .then(data => {
+        return this.promiseDBRun(
           "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
-          [data.username, data.salt, data.hash]);
-        s.run();
-      })
-        .catch(err => console.error(err));
+          [data.username, data.salt, data.password]);
+    })
+      .catch(err => {
+      console.error(err);
+    });
+  }
+
+  private static promiseDBRun(sqlStatement: string, params: string[]): Promise<any> {
+    let db = new Database(DB_PATH);
+    return new Promise((resolve, reject) => {
+      db.run(sqlStatement, params, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
     });
   }
 
@@ -81,6 +92,3 @@ export class DB {
     }
   }
 }
-
-DB.setupDatabase();
-DB.addUser("ddi", "Superpassword");

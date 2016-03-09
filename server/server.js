@@ -2,7 +2,7 @@
 var express = require("express");
 var https = require("https");
 var fs = require("fs");
-var credentials_1 = require("./credentials");
+var db_1 = require("./db");
 var bodyParser = require("body-parser");
 var app = express();
 var insecure = express();
@@ -29,8 +29,9 @@ app.get("/diet/*", function (req, res) {
     res.sendFile("/index.html", { "root": __dirname + "/../" });
 });
 app.post("/app/submitcreds", function (req, res) {
-    var c = credentials_1.Credentials.hashNewCredentials(req.body.username, req.body.password);
-    c.then(function (data) { return res.send(data); }).catch(function (error) { return console.error(error); });
+    console.log("Getting to server.ts");
+    var d = db_1.DB.addUser(req.body.username, req.body.password);
+    console.log(d);
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

@@ -6,6 +6,7 @@ import * as http from "http";
 import * as fs from "fs";
 import {Credentials} from "./credentials";
 import {Promise} from "es6-promise";
+import {DB} from "./db";
 import * as bodyParser from "body-parser";
 
 let app = express();
@@ -39,12 +40,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/diet/*", (req, res) => {
-  res.sendFile("/index.html", {"root": __dirname + "/../"});
+  res.sendFile("/index.html", { "root": __dirname + "/../" });
 });
 
 app.post("/app/submitcreds", (req, res) => {
-  let c = Credentials.hashNewCredentials(req.body.username, req.body.password);
-  c.then(data => res.send(data)).catch(error => console.error(error));
+  console.log("Getting to server.ts");
+  let d = DB.addUser(req.body.username, req.body.password);
+  console.log(d);
+  // .then(() => res.status(201))
+  // .catch((e) => res.status(400).json({error: e}));
 })
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {

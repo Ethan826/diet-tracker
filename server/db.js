@@ -1,5 +1,6 @@
 "use strict";
 var sqlite3_1 = require("sqlite3");
+var es6_promise_1 = require("es6-promise");
 var fs = require("fs");
 var credentials_1 = require("./credentials");
 var DB_PATH = "./db.db";
@@ -8,14 +9,27 @@ var DB = (function () {
         DB_PATH = DB_PATH;
     }
     DB.addUser = function (username, password) {
+        var _this = this;
+        console.log("Getting to db.ts");
+        credentials_1.Credentials.hashNewCredentials(username, password)
+            .then(function (data) {
+            return _this.promiseDBRun("insert into users (username, salt, hashedpwd) values (?, ?, ?)", [data.username, data.salt, data.password]);
+        })
+            .catch(function (err) {
+            console.error(err);
+        });
+    };
+    DB.promiseDBRun = function (sqlStatement, params) {
         var db = new sqlite3_1.Database(DB_PATH);
-        db.serialize(function () {
-            var hashResult = credentials_1.Credentials.hashNewCredentials(username, password);
-            hashResult.then(function (data) {
-                var s = db.prepare("insert into users (username, salt, hashedpwd) values (?, ?, ?)", [data.username, data.salt, data.hash]);
-                s.run();
-            })
-                .catch(function (err) { return console.error(err); });
+        return new es6_promise_1.Promise(function (resolve, reject) {
+            db.run(sqlStatement, params, function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
         });
     };
     DB.setupDatabase = function () {
@@ -40,5 +54,3 @@ var DB = (function () {
     return DB;
 }());
 exports.DB = DB;
-DB.setupDatabase();
-DB.addUser("ddi", "Superpassword");

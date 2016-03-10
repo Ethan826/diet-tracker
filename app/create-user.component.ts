@@ -1,10 +1,15 @@
-import {Component, OnInit} from "angular2/core";
+import {Component, OnInit, Injectable} from "angular2/core";
 import {FORM_DIRECTIVES, Control, ControlGroup, Validators, AbstractControl, FormBuilder} from "angular2/common";
+import {AccountService} from "./account.service";
+import {HTTP_PROVIDERS, Http} from "angular2/http";
+import {Router, RouterLink, RouteParams} from "angular2/router";
 
 declare let zxcvbn: any;
 
+@Injectable()
 @Component({
   selector: "create-user",
+  providers: [AccountService, HTTP_PROVIDERS],
   template: `
     <h1>Create User</h1>
     <br>
@@ -72,7 +77,12 @@ export class CreateUser {
   private confirmPasswordControl: AbstractControl
   private self: any;
 
-  constructor(fb: FormBuilder) {
+  constructor(
+    fb: FormBuilder,
+    private accountService: AccountService,
+    public router: Router,
+    public routeParams: RouteParams
+    ) {
     this.createUserForm = fb.group({
       "username": ["", Validators.required],
       "password": ["", Validators.compose([Validators.required, this.passwordStrengthValidator])],
@@ -84,9 +94,18 @@ export class CreateUser {
   }
 
   private handleSubmit(group: ControlGroup) {
-    console.log(this.usernameControl.errors);
-    console.log(this.passwordControl.errors);
-    console.log(this.confirmPasswordControl.errors);
+    if (group.valid) {
+      this.accountService.submitNewCreds(this.usernameControl.value, this.passwordControl.value)
+        .subscribe(
+        data => {
+          this.router.navigate(["/Login"]);
+        },
+        error => {
+          // TODO: Handle server or database errors on registering a user.
+        });
+    } else {
+      alert("Correct the errors in the form, then resubmit.");
+    }
   }
 
   private passwordStrengthValidator = (control: Control): { [s: string]: boolean } => {

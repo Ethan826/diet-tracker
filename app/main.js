@@ -1,4 +1,4 @@
-System.register(["./app.component", "angular2/platform/browser"], function(exports_1, context_1) {
+System.register(["./app.component", "angular2/platform/browser", "rxjs/Rx"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var app_component_1, browser_1;
@@ -9,7 +9,8 @@ System.register(["./app.component", "angular2/platform/browser"], function(expor
             },
             function (browser_1_1) {
                 browser_1 = browser_1_1;
-            }],
+            },
+            function (_1) {}],
         execute: function() {
             browser_1.bootstrap(app_component_1.AppComponent);
         }

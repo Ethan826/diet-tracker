@@ -16,30 +16,20 @@ export class DB {
     DB_PATH = DB_PATH;
   }
 
-  static addUser(username: string, password: string) {
+  static addUser(username: string, password: string, cb: Function) {
     console.log("Getting to db.ts");
+    let db = new Database(DB_PATH);
 
     Credentials.hashNewCredentials(username, password)
       .then(data => {
-        return this.promiseDBRun(
-          "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
-          [data.username, data.salt, data.password]);
+      db.run(
+        "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
+        [data.username, data.salt, data.hash],
+        cb
+      );
     })
       .catch(err => {
       console.error(err);
-    });
-  }
-
-  private static promiseDBRun(sqlStatement: string, params: string[]): Promise<any> {
-    let db = new Database(DB_PATH);
-    return new Promise((resolve, reject) => {
-      db.run(sqlStatement, params, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
     });
   }
 

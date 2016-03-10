@@ -24,29 +24,21 @@ System.register(["angular2/core", "angular2/common", "angular2/router"], functio
                 router_1 = router_1_1;
             }],
         execute: function() {
-            exports_1("NAV_OPTIONS", NAV_OPTIONS = [
-                { text: "Daily Tracker", available: true, active: false, route: "DailyForm" },
-                { text: "Monthly View", available: true, active: false, route: "MonthlyForm" },
-                { text: "Login", available: true, active: false, route: "Login" },
-                { text: "New User", available: true, active: false, route: "CreateUser" },
-                { text: "Account Info", available: true, active: false, route: "AccountInfo" },
-                { text: "Admin Panel", available: false, active: false, route: "AdminPanel" }
-            ]);
+            NAV_OPTIONS = [
+                { text: "Daily Tracker", route: "/DailyForm" },
+                { text: "Monthly View", route: "/MonthlyForm" },
+                { text: "Login", route: "/Login" },
+                { text: "New User", route: "/CreateUser" },
+            ];
             NavComponent = (function () {
                 function NavComponent() {
                     this.navOptions = NAV_OPTIONS;
                 }
-                NavComponent.prototype.handleNavSelection = function (option) {
-                    this.navOptions.forEach(function (o) {
-                        o.active = false;
-                    });
-                    option.active = true;
-                };
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
                         directives: [common_1.NgClass, router_1.ROUTER_DIRECTIVES],
-                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngFor=\"#navOption of navOptions\" [class.active]=\"navOption.active\">\n              <a [routerLink]=\"[navOption.route]\" *ngIf=\"navOption.available\" href=\"#\" (click)=\"handleNavSelection(navOption)\">{{navOption.text}}</a>\n            </li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
+                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngFor=\"#navOption of navOptions\">\n              <a [routerLink]=\"[navOption.route]\">{{navOption.text}}</a>\n            </li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
                     }), 
                     __metadata('design:paramtypes', [])
                 ], NavComponent);

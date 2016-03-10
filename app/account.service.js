@@ -11,7 +11,7 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, http_1;
-    var AccountInfo;
+    var HEADERS, SUBMIT_CREDS_URL, AccountService;
     return {
         setters:[
             function (core_1_1) {
@@ -21,19 +21,27 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
                 http_1 = http_1_1;
             }],
         execute: function() {
-            AccountInfo = (function () {
-                function AccountInfo() {
+            HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
+            SUBMIT_CREDS_URL = "app/submitcreds";
+            AccountService = (function () {
+                function AccountService(http) {
+                    this.http = http;
+                    this.HEADERS = HEADERS;
+                    this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
                 }
-                AccountInfo = __decorate([
-                    core_1.Component({
-                        providers: [http_1.HTTP_PROVIDERS],
-                        template: ""
-                    }), 
-                    __metadata('design:paramtypes', [])
-                ], AccountInfo);
-                return AccountInfo;
+                AccountService.prototype.submitNewCreds = function (username, password) {
+                    console.log("Inside the submitNewCreds() method in account.service.ts");
+                    var creds = JSON.stringify({ username: username, password: password });
+                    var headers = new http_1.Headers({ "Content-Type": "application/json" });
+                    return this.http.post(this.SUBMIT_CREDS_URL, creds, { headers: this.HEADERS });
+                };
+                AccountService = __decorate([
+                    core_1.Injectable(), 
+                    __metadata('design:paramtypes', [http_1.Http])
+                ], AccountService);
+                return AccountService;
             }());
-            exports_1("AccountInfo", AccountInfo);
+            exports_1("AccountService", AccountService);
         }
     }
 });

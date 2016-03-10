@@ -4,18 +4,14 @@ import {ROUTER_DIRECTIVES} from "angular2/router";
 
 interface NavOption {
   text: string;
-  available: boolean;
-  active: boolean;
   route: string;
 }
 
-export let NAV_OPTIONS: NavOption[] = [
-  { text: "Daily Tracker", available: true, active: false, route: "DailyForm" },
-  { text: "Monthly View", available: true, active: false, route: "MonthlyForm" },
-  { text: "Login", available: true, active: false, route: "Login" },
-  { text: "New User", available: true, active: false, route: "CreateUser" },
-  { text: "Account Info", available: true, active: false, route: "AccountInfo" },
-  { text: "Admin Panel", available: false, active: false, route: "AdminPanel" }
+let NAV_OPTIONS: NavOption[] = [
+  { text: "Daily Tracker", route: "/DailyForm" },
+  { text: "Monthly View", route: "/MonthlyForm" },
+  { text: "Login", route: "/Login" },
+  { text: "New User", route: "/CreateUser" },
 ];
 
 @Component({
@@ -35,8 +31,8 @@ export let NAV_OPTIONS: NavOption[] = [
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li *ngFor="#navOption of navOptions" [class.active]="navOption.active">
-              <a [routerLink]="[navOption.route]" *ngIf="navOption.available" href="#" (click)="handleNavSelection(navOption)">{{navOption.text}}</a>
+            <li *ngFor="#navOption of navOptions">
+              <a [routerLink]="[navOption.route]">{{navOption.text}}</a>
             </li>
           </ul>
         </div>
@@ -45,12 +41,8 @@ export let NAV_OPTIONS: NavOption[] = [
 `
 })
 export class NavComponent {
-  private navOptions: NavOption[] = NAV_OPTIONS;
-
-  handleNavSelection(option: NavOption) {
-    this.navOptions.forEach((o) => {
-      o.active = false;
-    });
-    option.active = true;
+  private navOptions: NavOption[];
+  constructor() {
+    this.navOptions = NAV_OPTIONS;
   }
 }

@@ -30,8 +30,14 @@ app.get("/diet/*", function (req, res) {
 });
 app.post("/app/submitcreds", function (req, res) {
     console.log("Getting to server.ts");
-    var d = db_1.DB.addUser(req.body.username, req.body.password);
-    console.log(d);
+    db_1.DB.addUser(req.body.username, req.body.password, function (err) {
+        if (err) {
+            res.status(400).send(err);
+        }
+        else {
+            res.sendStatus(201);
+        }
+    });
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

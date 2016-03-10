@@ -45,10 +45,13 @@ app.get("/diet/*", (req, res) => {
 
 app.post("/app/submitcreds", (req, res) => {
   console.log("Getting to server.ts");
-  let d = DB.addUser(req.body.username, req.body.password);
-  console.log(d);
-  // .then(() => res.status(201))
-  // .catch((e) => res.status(400).json({error: e}));
+  DB.addUser(req.body.username, req.body.password, (err) => {
+    if(err) {
+      res.status(400).send(err);
+    } else {
+      res.sendStatus(201);
+    }
+  });
 })
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {

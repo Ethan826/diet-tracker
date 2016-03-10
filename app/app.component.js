@@ -43,12 +43,13 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                 function AppComponent() {
                 }
                 AppComponent = __decorate([
+                    core_1.Injectable(),
                     core_1.Component({
                         selector: "app",
                         inputs: [],
                         directives: [nav_component_1.NavComponent, daily_form_component_1.DailyForm, monthly_form_component_1.MonthlyForm, router_1.ROUTER_DIRECTIVES, create_user_component_1.CreateUser],
                         providers: [router_1.ROUTER_PROVIDERS],
-                        template: "<nav-component></nav-component><router-outlet></router-outlet>"
+                        template: "\n    <nav-component></nav-component>\n    <router-outlet></router-outlet>\n  "
                     }),
                     router_1.RouteConfig([
                         { path: "/diet/daily", name: "DailyForm", component: daily_form_component_1.DailyForm },

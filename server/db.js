@@ -1,5 +1,6 @@
 "use strict";
 var sqlite3_1 = require("sqlite3");
+var es6_promise_1 = require("es6-promise");
 var fs = require("fs");
 var credentials_1 = require("./credentials");
 var DB_PATH = "./db.db";
@@ -8,7 +9,6 @@ var DB = (function () {
         DB_PATH = DB_PATH;
     }
     DB.addUser = function (username, password, cb) {
-        console.log("Getting to db.ts");
         var db = new sqlite3_1.Database(DB_PATH);
         credentials_1.Credentials.hashNewCredentials(username, password)
             .then(function (data) {
@@ -16,6 +16,30 @@ var DB = (function () {
         })
             .catch(function (err) {
             console.error(err);
+        });
+    };
+    DB.checkCredentials = function (username, password) {
+        console.log(username);
+        var db = new sqlite3_1.Database(DB_PATH);
+        return new es6_promise_1.Promise(function (resolve, reject) {
+            db.get("select * from users where username=? limit 1;", [username], function (dbErr, dbResults) {
+                if (dbResults) {
+                    credentials_1.Credentials.getHashedPassword(username, password, dbResults.salt)
+                        .then(function (credResults) {
+                        if (credResults.hash === dbResults.hashedpwd) {
+                            resolve({ success: true, jwt: "Foo" });
+                        }
+                        else {
+                            reject({ success: false, error: "Bad password" });
+                        }
+                    })
+                        .catch(function (credErr) { return reject({ success: false, error: credErr }); });
+                }
+                else {
+                    var e = dbErr || "Database error";
+                    reject({ success: false, error: dbErr });
+                }
+            });
         });
     };
     DB.setupDatabase = function () {

@@ -17,7 +17,6 @@ export class DB {
   }
 
   static addUser(username: string, password: string, cb: Function) {
-    console.log("Getting to db.ts");
     let db = new Database(DB_PATH);
 
     Credentials.hashNewCredentials(username, password)
@@ -26,10 +25,37 @@ export class DB {
         "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
         [data.username, data.salt, data.hash],
         cb
-      );
+        );
     })
       .catch(err => {
       console.error(err);
+    });
+  }
+
+  static checkCredentials(username: string, password: string): Promise<Object> {
+    console.log(username);
+    let db = new Database(DB_PATH);
+    return new Promise((resolve, reject) => {
+      db.get(
+        "select * from users where username=? limit 1;",
+        [username],
+        (dbErr, dbResults) => {
+          if (dbResults) {
+            Credentials.getHashedPassword(username, password, dbResults.salt)
+              .then(credResults => {
+              if (credResults.hash === dbResults.hashedpwd) {
+                resolve({ success: true, jwt: "Foo" });
+              } else {
+                reject({ success: false, error: "Bad password" });
+              }
+            })
+              .catch(credErr => reject({ success: false, error: credErr }));
+          } else {
+            let e = dbErr || "Database error";
+            reject({ success: false, error: dbErr });
+          }
+        }
+        )
     });
   }
 

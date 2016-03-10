@@ -29,7 +29,6 @@ app.get("/diet/*", function (req, res) {
     res.sendFile("/index.html", { "root": __dirname + "/../" });
 });
 app.post("/app/submitcreds", function (req, res) {
-    console.log("Getting to server.ts");
     db_1.DB.addUser(req.body.username, req.body.password, function (err) {
         if (err) {
             res.status(400).send(err);
@@ -38,6 +37,11 @@ app.post("/app/submitcreds", function (req, res) {
             res.sendStatus(201);
         }
     });
+});
+app.post("/app/dologin", function (req, res) {
+    db_1.DB.checkCredentials(req.body.username, req.body.password)
+        .then(function (r) { return console.log(r); })
+        .catch(function (e) { return console.error(e); });
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

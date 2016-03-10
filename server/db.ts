@@ -21,6 +21,7 @@ export class DB {
 
     Credentials.hashNewCredentials(username, password)
       .then(data => {
+      console.log(data);
       db.run(
         "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
         [data.username, data.salt, data.hash],
@@ -29,6 +30,24 @@ export class DB {
     })
       .catch(err => {
       console.error(err);
+    });
+  }
+
+  static isUserAdmin(userId: number): Promise<boolean> {
+    let db = new Database(DB_PATH);
+    return new Promise((resolve, reject) => {
+      db.get(
+        "select * from users where id=? limit 1;",
+        [userId],
+        (err, results) => {
+          if (results) {
+            let r = results.admin === 1 ? true : false;
+            resolve(r);
+          } else {
+            reject(err);
+          }
+        }
+        );
     });
   }
 
@@ -44,15 +63,20 @@ export class DB {
             Credentials.getHashedPassword(username, password, dbResults.salt)
               .then(credResults => {
               if (credResults.hash === dbResults.hashedpwd) {
-                resolve({ success: true, jwt: "Foo" });
+                resolve({
+                  success: true,
+                  jwt: Credentials.makeJWT(dbResults.id, dbResults.admin)
+                });
               } else {
                 reject({ success: false, error: "Bad password" });
               }
             })
-              .catch(credErr => reject({ success: false, error: credErr }));
+              .catch(credErr => {
+              reject({ success: false, error: credErr })
+            });
           } else {
-            let e = dbErr || "Database error";
-            reject({ success: false, error: dbErr });
+            console.log(dbErr);
+            reject({ success: false, error: "Username or database error" });
           }
         }
         )
@@ -71,7 +95,8 @@ export class DB {
           	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
           	username TEXT NOT NULL UNIQUE,
           	salt TEXT NOT NULL,
-          	hashedpwd TEXT NOT NULL
+          	hashedpwd TEXT NOT NULL,
+            admin INTEGER NOT NULL DEFAULT 0
           );
        `);
         db.run(`
@@ -108,3 +133,5 @@ export class DB {
     }
   }
 }
+
+//DB.setupDatabase();

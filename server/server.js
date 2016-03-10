@@ -2,6 +2,7 @@
 var express = require("express");
 var https = require("https");
 var fs = require("fs");
+var credentials_1 = require("./credentials");
 var db_1 = require("./db");
 var bodyParser = require("body-parser");
 var app = express();
@@ -40,8 +41,12 @@ app.post("/app/submitcreds", function (req, res) {
 });
 app.post("/app/dologin", function (req, res) {
     db_1.DB.checkCredentials(req.body.username, req.body.password)
-        .then(function (r) { return console.log(r); })
-        .catch(function (e) { return console.error(e); });
+        .then(function (results) { return res.status(200).send(results); })
+        .catch(function (err) { return res.status(400).send(err); });
+});
+app.post("/app/checkjwt", function (req, res) {
+    var aud = credentials_1.Credentials.checkJWT(req.body.jwt);
+    res.send(aud);
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

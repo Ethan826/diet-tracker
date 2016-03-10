@@ -51,20 +51,18 @@ app.post("/app/submitcreds", (req, res) => {
       res.sendStatus(201);
     }
   });
-})
+});
 
 app.post("/app/dologin", (req, res) => {
   DB.checkCredentials(req.body.username, req.body.password)
-    .then(r => console.log(r))
-    .catch(e => console.error(e));
-  // DB.addUser(req.body.username, req.body.password, (err) => {
-  //   if(err) {
-  //     res.status(400).send(err);
-  //   } else {
-  //     res.sendStatus(201);
-  //   }
-  // });
-})
+    .then(results => res.status(200).send(results))
+    .catch(err => res.status(400).send(err));
+});
+
+app.post("/app/checkjwt", (req, res) => {
+  let aud = Credentials.checkJWT(req.body.jwt);
+  res.send(aud);
+});
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {
   console.log(`Listening on port ${HTTPS_PORT}`);

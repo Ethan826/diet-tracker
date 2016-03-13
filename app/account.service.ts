@@ -46,6 +46,29 @@ export class AccountService {
       .map((res: Response) => res.json())
   }
 
+  isAuthorized(audiences: string[]) {
+    return new Promise((resolve) => {
+      this.audience
+        .subscribe((actualAudiences: string[]) => {
+        resolve(this.isAuthorizedHelper(audiences, actualAudiences));
+      });
+    });
+  }
+
+  private isAuthorizedHelper(permittedAudiences: string[], actualAudiences: string[]): boolean {
+    let result = false;
+    if (permittedAudiences.indexOf("any") >= 0) {
+      result = true;
+    } else {
+      permittedAudiences.forEach((audience) => {
+        if (actualAudiences.indexOf(audience) >= 0) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  };
+
   private submitHelper(
     username: string,
     password: string,

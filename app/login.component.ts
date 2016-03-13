@@ -3,6 +3,7 @@ import {AccountService} from "./account.service";
 import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from "angular2/common";
 import {map} from "rxjs/operator/map";
 import {HTTP_PROVIDERS, Response} from "angular2/http";
+import {Router, RouteParams} from "angular2/router"
 
 @Component({
   directives: [FORM_DIRECTIVES],
@@ -60,7 +61,7 @@ export class Login {
   private password: AbstractControl;
   private error: string;
 
-  constructor(fb: FormBuilder, private accountService: AccountService) {
+  constructor(fb: FormBuilder, private accountService: AccountService, private router: Router) {
     this.loginForm = fb.group({
       "username": ["", Validators.required],
       "password": ["", Validators.required]
@@ -79,6 +80,7 @@ export class Login {
         data => {
           localStorage.setItem("jwt", data.jwt);
           console.log(localStorage.getItem("jwt"));
+          this.router.parent.navigate(["/DailyForm"]);
         },
         error => {
           this.error = error.json().error;

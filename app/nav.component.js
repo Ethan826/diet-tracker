@@ -37,13 +37,15 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
                 { text: "New User", route: "/CreateUser", audience: ["any"] },
             ];
             NavComponent = (function () {
-                function NavComponent(accountService) {
-                    var _this = this;
+                function NavComponent(accountService, router) {
                     this.accountService = accountService;
+                    this.router = router;
                     this.navOptions = NAV_OPTIONS;
-                    this.accountService.audience.subscribe(function (audience) { return _this.audience = audience; });
                 }
-                NavComponent.prototype.logout = function () { localStorage.removeItem("jwt"); };
+                NavComponent.prototype.logout = function () {
+                    localStorage.removeItem("jwt");
+                    this.router.navigate["/Login"];
+                };
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
@@ -51,7 +53,7 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
                         providers: [account_service_1.AccountService, http_1.HTTP_PROVIDERS],
                         template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngFor=\"#navOption of navOptions\">\n              <a [routerLink]=\"[navOption.route]\">{{navOption.text}}</a>\n            </li>\n            <li><a (click)=\"logout()\" href=\"#\">Logout</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
                     }), 
-                    __metadata('design:paramtypes', [account_service_1.AccountService])
+                    __metadata('design:paramtypes', [account_service_1.AccountService, router_1.Router])
                 ], NavComponent);
                 return NavComponent;
             }());

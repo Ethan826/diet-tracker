@@ -1,6 +1,6 @@
 import {Component} from "angular2/core";
 import {NgClass} from "angular2/common";
-import {ROUTER_DIRECTIVES} from "angular2/router";
+import {ROUTER_DIRECTIVES, Router} from "angular2/router";
 import {AccountService} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
 
@@ -47,12 +47,13 @@ let NAV_OPTIONS: NavOption[] = [
 })
 export class NavComponent {
   private navOptions: NavOption[];
-  private audience: string[];
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService, private router: Router) {
     this.navOptions = NAV_OPTIONS;
-    this.accountService.audience.subscribe(audience => this.audience = audience);
   }
 
-  logout() { localStorage.removeItem("jwt"); }
+  logout() {
+    localStorage.removeItem("jwt");
+    this.router.navigate["/Login"];
+  }
 }

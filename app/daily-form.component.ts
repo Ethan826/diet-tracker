@@ -8,11 +8,12 @@ import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
-import {authorized} from "./check-login";
+import {checkAuth} from "./check-login.service";
+import {appInjector} from "./app-injector";
 
 @CanActivate(
   (to: ComponentInstruction, fr: ComponentInstruction) => {
-    return authorized(["standard", "admin"]);
+    return checkAuth(["standard", "admin"]);
   }
   )
 @Component({

@@ -47,6 +47,30 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
                     this.audience = this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
                         .map(function (res) { return res.json(); });
                 };
+                AccountService.prototype.isAuthorized = function (audiences) {
+                    var _this = this;
+                    return new Promise(function (resolve) {
+                        _this.audience
+                            .subscribe(function (actualAudiences) {
+                            resolve(_this.isAuthorizedHelper(audiences, actualAudiences));
+                        });
+                    });
+                };
+                AccountService.prototype.isAuthorizedHelper = function (permittedAudiences, actualAudiences) {
+                    var result = false;
+                    if (permittedAudiences.indexOf("any") >= 0) {
+                        result = true;
+                    }
+                    else {
+                        permittedAudiences.forEach(function (audience) {
+                            if (actualAudiences.indexOf(audience) >= 0) {
+                                result = true;
+                            }
+                        });
+                    }
+                    return result;
+                };
+                ;
                 AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });
                     return this.http.post(url, creds, { headers: this.HEADERS });

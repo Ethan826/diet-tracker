@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common", "angular2/router"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common", "angular2/router", "./account.service", "angular2/http"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/common", "angular2/router"], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, router_1;
+    var core_1, common_1, router_1, account_service_1, http_1;
     var NAV_OPTIONS, NavComponent;
     return {
         setters:[
@@ -22,25 +22,36 @@ System.register(["angular2/core", "angular2/common", "angular2/router"], functio
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+            },
+            function (account_service_1_1) {
+                account_service_1 = account_service_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
             }],
         execute: function() {
             NAV_OPTIONS = [
-                { text: "Daily Tracker", route: "/DailyForm" },
-                { text: "Monthly View", route: "/MonthlyForm" },
-                { text: "Login", route: "/Login" },
-                { text: "New User", route: "/CreateUser" },
+                { text: "Daily Tracker", route: "/DailyForm", audience: ["standard", "admin"] },
+                { text: "Monthly View", route: "/MonthlyForm", audience: ["standard", "admin"] },
+                { text: "Login", route: "/Login", audience: ["any"] },
+                { text: "New User", route: "/CreateUser", audience: ["any"] },
             ];
             NavComponent = (function () {
-                function NavComponent() {
+                function NavComponent(accountService) {
+                    var _this = this;
+                    this.accountService = accountService;
                     this.navOptions = NAV_OPTIONS;
+                    this.accountService.audience.subscribe(function (audience) { return _this.audience = audience; });
                 }
+                NavComponent.prototype.logout = function () { localStorage.removeItem("jwt"); };
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
                         directives: [common_1.NgClass, router_1.ROUTER_DIRECTIVES],
-                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngFor=\"#navOption of navOptions\">\n              <a [routerLink]=\"[navOption.route]\">{{navOption.text}}</a>\n            </li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
+                        providers: [account_service_1.AccountService, http_1.HTTP_PROVIDERS],
+                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngFor=\"#navOption of navOptions\">\n              <a [routerLink]=\"[navOption.route]\">{{navOption.text}}</a>\n            </li>\n            <li><a (click)=\"logout()\" href=\"#\">Logout</a></li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [account_service_1.AccountService])
                 ], NavComponent);
                 return NavComponent;
             }());

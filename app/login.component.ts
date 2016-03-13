@@ -1,8 +1,12 @@
 import {Component} from "angular2/core";
+import {AccountService} from "./account.service";
 import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from "angular2/common";
+import {map} from "rxjs/operator/map";
+import {HTTP_PROVIDERS, Response} from "angular2/http";
 
 @Component({
   directives: [FORM_DIRECTIVES],
+  providers: [AccountService, HTTP_PROVIDERS],
   template: `
 <h1>Login</h1>
 <br>
@@ -36,6 +40,11 @@ import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, Abstrac
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       Password cannot be blank.
     </div>
+    <div *ngIf="error"
+         class="alert alert-danger">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      Incorrect credentials
+    </div>
     <br>
     <input type="submit"
            class="btn btn-primary"
@@ -43,14 +52,15 @@ import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, Abstrac
            [class.disabled]="!loginForm.valid">
   </div>
 </form>
-`
+` // TODO: Password lockout
 })
 export class Login {
   private loginForm: ControlGroup;
   private username: AbstractControl;
   private password: AbstractControl;
+  private error: string;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: FormBuilder, private accountService: AccountService) {
     this.loginForm = fb.group({
       "username": ["", Validators.required],
       "password": ["", Validators.required]
@@ -60,11 +70,22 @@ export class Login {
     this.password = this.loginForm.controls["password"];
   }
 
-  onSubmit(f: ControlGroup) {
-    if(!f.valid) {
-      alert("Invalid submission. Correct errors and resubmit.");
+  onSubmit() {
+    this.error = null;
+    if (this.loginForm.valid) {
+      this.accountService.submitLogin(this.username.value, this.password.value)
+        .map((res: Response) => res.json())
+        .subscribe(
+        data => {
+          localStorage.setItem("jwt", data.jwt);
+          console.log(localStorage.getItem("jwt"));
+        },
+        error => {
+          this.error = error.json().error;
+        }
+        );
     } else {
-      // Handle
+      alert("Invalid submission. Correct errors and resubmit.");
     }
   }
 

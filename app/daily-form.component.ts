@@ -1,13 +1,24 @@
-import {Component} from "angular2/core";
+/// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
+import {Component, Injector} from "angular2/core";
 import {IButtonQuestion, IButtonQuestionField, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {ButtonQuestions} from "./button-questions.component";
 import {CheckboxQuestions} from "./checkbox-questions.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
+import {AccountService} from "./account.service";
+import {CanActivate, ComponentInstruction} from "angular2/router";
+import {HTTP_PROVIDERS, Http} from "angular2/http";
+import {authorized} from "./check-login";
 
+@CanActivate(
+  (to: ComponentInstruction, fr: ComponentInstruction) => {
+    return authorized(["standard", "admin"]);
+  }
+  )
 @Component({
   selector: "daily-form",
   directives: [ButtonQuestions, CheckboxQuestions, DatePicker],
+  providers: [HTTP_PROVIDERS],
   template: `
     <form>
       <h1>Daily Tracker</h1>

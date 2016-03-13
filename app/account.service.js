@@ -11,7 +11,7 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, http_1;
-    var HEADERS, SUBMIT_CREDS_URL, AccountService;
+    var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, AccountService;
     return {
         setters:[
             function (core_1_1) {
@@ -23,17 +23,33 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
         execute: function() {
             HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
             SUBMIT_CREDS_URL = "app/submitcreds";
+            LOGIN_URL = "app/dologin";
             AccountService = (function () {
                 function AccountService(http) {
+                    var _this = this;
                     this.http = http;
                     this.HEADERS = HEADERS;
                     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
+                    this.LOGIN_URL = "app/dologin";
+                    this.JWT_CHECK_URL = "app/checkjwt";
+                    this.checkJWT();
+                    this.audience.subscribe(function (result) {
+                        _this.currentAudience = result;
+                    }, function (error) { return console.error(error); });
                 }
                 AccountService.prototype.submitNewCreds = function (username, password) {
-                    console.log("Inside the submitNewCreds() method in account.service.ts");
+                    return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
+                };
+                AccountService.prototype.submitLogin = function (username, password) {
+                    return this.submitHelper(username, password, this.LOGIN_URL);
+                };
+                AccountService.prototype.checkJWT = function () {
+                    this.audience = this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
+                        .map(function (res) { return res.json(); });
+                };
+                AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });
-                    var headers = new http_1.Headers({ "Content-Type": "application/json" });
-                    return this.http.post(this.SUBMIT_CREDS_URL, creds, { headers: this.HEADERS });
+                    return this.http.post(url, creds, { headers: this.HEADERS });
                 };
                 AccountService = __decorate([
                     core_1.Injectable(), 

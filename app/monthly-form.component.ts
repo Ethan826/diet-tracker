@@ -1,7 +1,14 @@
 import {Component, OnInit} from "angular2/core";
+import {CanActivate, ComponentInstruction} from "angular2/router";
+import {authorized} from "./check-login";
 
 declare let google: any;
 
+@CanActivate(
+  (to: ComponentInstruction, fr: ComponentInstruction) => {
+    return authorized(["standard", "admin"]);
+  }
+  )
 @Component({
   template: `
     <div id="chart-fixer">

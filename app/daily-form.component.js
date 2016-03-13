@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./date-picker.component", "./button-questions.component", "./checkbox-questions.component", "./question-data"], function(exports_1, context_1) {
+System.register(["angular2/core", "./date-picker.component", "./button-questions.component", "./checkbox-questions.component", "./question-data", "angular2/router", "angular2/http", "./check-login"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, date_picker_component_1, button_questions_component_1, checkbox_questions_component_1, question_data_1;
+    var core_1, date_picker_component_1, button_questions_component_1, checkbox_questions_component_1, question_data_1, router_1, http_1, check_login_1;
     var DailyForm;
     return {
         setters:[
@@ -28,6 +28,15 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
             },
             function (question_data_1_1) {
                 question_data_1 = question_data_1_1;
+            },
+            function (router_1_1) {
+                router_1 = router_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
+            },
+            function (check_login_1_1) {
+                check_login_1 = check_login_1_1;
             }],
         execute: function() {
             DailyForm = (function () {
@@ -54,9 +63,13 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
                     this.checkboxQuestions[i] = event;
                 };
                 DailyForm = __decorate([
+                    router_1.CanActivate(function (to, fr) {
+                        return check_login_1.authorized(["standard", "admin"]);
+                    }),
                     core_1.Component({
                         selector: "daily-form",
                         directives: [button_questions_component_1.ButtonQuestions, checkbox_questions_component_1.CheckboxQuestions, date_picker_component_1.DatePicker],
+                        providers: [http_1.HTTP_PROVIDERS],
                         template: "\n    <form>\n      <h1>Daily Tracker</h1>\n      <br>\n      <legend>Date</legend>\n      <date-picker (onDataEntered)=\"dateDataEntered($event)\"></date-picker>\n      <br>\n      <br>\n      <button-questions\n        *ngFor=\"#b of buttonQuestions\"\n        [btn]=\"b\"\n        (onDataEntered)=\"buttonDataEntered($event)\">\n      </button-questions>\n      <checkbox-questions\n        *ngFor=\"#c of checkboxQuestions\"\n        [cbox]=\"c\"\n        (onDataEntered)=\"checkboxDataEntered($event)\">\n      </checkbox-questions>\n      <br>\n      <input type=\"submit\" value=\"Submit\" class=\"btn btn-primary\">\n    </form>\n  "
                     }), 
                     __metadata('design:paramtypes', [])

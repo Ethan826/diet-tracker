@@ -1,8 +1,11 @@
-import {Component} from "angular2/core";
+import {Component, Injector} from "angular2/core";
 import {NgClass} from "angular2/common";
-import {ROUTER_DIRECTIVES, Router} from "angular2/router";
+import {ROUTER_DIRECTIVES} from "angular2/router";
 import {AccountService} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
+import {appInjector} from "./app-injector";
+import {checkAuth} from "./check-login.service";
+import {Observable} from "rxjs/Observable";
 
 interface NavOption {
   text: string;
@@ -12,7 +15,7 @@ interface NavOption {
 
 let NAV_OPTIONS: NavOption[] = [
   { text: "Daily Tracker", route: "/DailyForm", audience: ["standard", "admin"] },
-  { text: "Monthly View", route: "/MonthlyForm", audience: ["standard", "admin"]},
+  { text: "Monthly View", route: "/MonthlyForm", audience: ["standard", "admin"] },
   { text: "Login", route: "/Login", audience: ["any"] },
   { text: "New User", route: "/CreateUser", audience: ["any"] },
 ];
@@ -35,10 +38,7 @@ let NAV_OPTIONS: NavOption[] = [
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li *ngFor="#navOption of navOptions">
-              <a [routerLink]="[navOption.route]">{{navOption.text}}</a>
-            </li>
-            <li><a (click)="logout()" href="#">Logout</a></li>
+            <li *ngIf="flipFlop | async">Hello</li>
           </ul>
         </div>
       </div>
@@ -47,13 +47,20 @@ let NAV_OPTIONS: NavOption[] = [
 })
 export class NavComponent {
   private navOptions: NavOption[];
+  private checkAuth: Function;
+  private injector: Injector;
+  private actualAudiences: string[];
+  private flipFlop: Observable<boolean>;
 
-  constructor(private accountService: AccountService, private router: Router) {
-    this.navOptions = NAV_OPTIONS;
+  constructor(private accountService: AccountService) {
+    this.flipFlop = Observable
+      .interval(500)
+      .take(50)
+      .map(x => { return x % 2 === 0 });
+    this.flipFlop.subscribe(x => console.log(x));
   }
 
   logout() {
     localStorage.removeItem("jwt");
-    this.router.navigate["/Login"];
   }
 }

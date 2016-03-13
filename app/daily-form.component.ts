@@ -9,7 +9,6 @@ import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./check-login.service";
-import {appInjector} from "./app-injector";
 
 @CanActivate(
   (to: ComponentInstruction, fr: ComponentInstruction) => {

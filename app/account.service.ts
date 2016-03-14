@@ -24,6 +24,7 @@ export class AccountService {
   private JWT_CHECK_URL: string;
   public audience: Promise<string>;
   public audiencesMap: IAudiencesMap;
+  public loggedIn: Observable<boolean>;
 
   constructor(private http: Http) {
     this.HEADERS = HEADERS;
@@ -35,16 +36,20 @@ export class AccountService {
 
   doCheckJWT() {
     let jwt = this.checkJWT();
+    // This is for hiding links in nav.component: an Observable
     this.audiencesMap = {
       "standard": jwt.map(audience => { return audience === "standard"; }),
       "admin": jwt.map(audience => { return audience === "admin"; })
     }
+    // This is for @CanActivate, which requires a promise
     this.audience = new Promise((resolve, reject) => {
       jwt.subscribe(
         (audience) => { resolve(audience); },
         (err) => { reject(err); }
         );
     });
+    // This is for hiding / showing the Login and Logout links
+    this.loggedIn = jwt.map(audience => { return audience === "[]" || audience === "" });
   }
 
   submitNewCreds(username: string, password: string): Observable<Response> {
@@ -70,7 +75,7 @@ export class AccountService {
     return new Promise((resolve, reject) => {
       this.audience
         .then((audience) => {
-          console.log(`Inside the promise inside isAuthorized, audience = ${audience}`);
+        console.log(`Inside the promise inside isAuthorized, audience = ${audience}`);
         resolve(
           audiences.indexOf(audience) >= 0
           )

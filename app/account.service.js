@@ -51,6 +51,7 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                     this.audience = new Promise(function (resolve, reject) {
                         jwt.subscribe(function (audience) { resolve(audience); }, function (err) { reject(err); });
                     });
+                    this.loggedIn = jwt.map(function (audience) { return audience === "[]" || audience === ""; });
                 };
                 AccountService.prototype.submitNewCreds = function (username, password) {
                     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);

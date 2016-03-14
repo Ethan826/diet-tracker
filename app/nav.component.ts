@@ -1,6 +1,6 @@
 import {Subscription} from "rxjs/Subscription";
 import {Component, Injector} from "angular2/core";
-import {NgClass} from "angular2/common";
+import {NgIf} from "angular2/common";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 import {AccountService, checkAuth} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
@@ -9,7 +9,7 @@ import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: "nav-component",
-  directives: [NgClass, ROUTER_DIRECTIVES],
+  directives: [NgIf, ROUTER_DIRECTIVES],
   providers: [AccountService, HTTP_PROVIDERS],
   template: `
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -27,10 +27,16 @@ import {Observable} from "rxjs/Observable";
           <ul class="nav navbar-nav">
             <li *ngIf="hasPermission('standard') || hasPermission('admin') | async">
               <a [routerLink]="['/MonthlyForm']">Monthly</a>
+            <li *ngIf="hasPermission('standard') || hasPermission('admin') | async">
+              <a [routerLink]="['/DailyForm']">Daily</a>
             </li>
-            <li><a [routerLink]="['/Login']">Login</a></li>
-            <li><a [routerLink]="['/Login']"
-                   (click)="accountService.logout()">Logout</a></li>
+            <li *ngIf="loggedIn | async">
+              <a [routerLink]="['/Login']">Login</a>
+            </li>
+            <li *ngIf="loggedOut | async">
+              <a [routerLink]="['/Login']"
+                   (click)="accountService.logout()">Logout</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -38,7 +44,14 @@ import {Observable} from "rxjs/Observable";
 `
 })
 export class NavComponent {
-  constructor(private accountService: AccountService) { }
+  loggedIn: Observable<boolean>;
+  loggedOut: Observable<boolean>;
+
+  constructor(private accountService: AccountService) {
+    this.loggedIn = this.accountService.loggedIn;
+    // This is necessary because you can't invert an Observable<boolean> directly
+    this.loggedOut = this.loggedIn.map(x => { return !x });
+  }
 
   hasPermission(audience: string): Observable<boolean> {
     return this.accountService.audiencesMap[audience];

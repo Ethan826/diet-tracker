@@ -1,10 +1,10 @@
+import {Subscription} from "rxjs/Subscription";
 import {Component, Injector} from "angular2/core";
 import {NgClass} from "angular2/common";
 import {ROUTER_DIRECTIVES} from "angular2/router";
-import {AccountService} from "./account.service";
+import {AccountService, checkAuth} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
 import {appInjector} from "./app-injector";
-import {checkAuth} from "./check-login.service";
 import {Observable} from "rxjs/Observable";
 
 interface NavOption {
@@ -38,7 +38,15 @@ let NAV_OPTIONS: NavOption[] = [
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li *ngIf="flipFlop | async">Hello</li>
+          <li *ngIf="hasPermission('standard') || hasPermission('admin') | async">
+            Foo
+          </li>
+            <li>
+              <a [routerLink]="['/MonthlyForm']">Monthly</a>
+            </li>
+            <li><a [routerLink]="['/Login']">Login</a></li>
+            <li><a [routerLink]="['/Login']"
+                   (click)="accountService.logout()">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -46,21 +54,9 @@ let NAV_OPTIONS: NavOption[] = [
 `
 })
 export class NavComponent {
-  private navOptions: NavOption[];
-  private checkAuth: Function;
-  private injector: Injector;
-  private actualAudiences: string[];
-  private flipFlop: Observable<boolean>;
+  constructor(private accountService: AccountService) { }
 
-  constructor(private accountService: AccountService) {
-    this.flipFlop = Observable
-      .interval(500)
-      .take(50)
-      .map(x => { return x % 2 === 0 });
-    this.flipFlop.subscribe(x => console.log(x));
-  }
-
-  logout() {
-    localStorage.removeItem("jwt");
+  hasPermission(audience: string): Observable<boolean> {
+    return this.accountService.audiencePermissions[audience];
   }
 }

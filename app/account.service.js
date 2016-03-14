@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/http"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/http", './app-injector'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,8 +10,8 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1;
-    var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, AccountService;
+    var core_1, http_1, app_injector_1;
+    var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, checkAuth, AccountService;
     return {
         setters:[
             function (core_1_1) {
@@ -19,11 +19,19 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
             },
             function (http_1_1) {
                 http_1 = http_1_1;
+            },
+            function (app_injector_1_1) {
+                app_injector_1 = app_injector_1_1;
             }],
         execute: function() {
             HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
             SUBMIT_CREDS_URL = "app/submitcreds";
             LOGIN_URL = "app/dologin";
+            exports_1("checkAuth", checkAuth = function (permittedAudiences) {
+                var injector = app_injector_1.appInjector();
+                var accountService = injector.get(AccountService);
+                return accountService.isAuthorized(permittedAudiences);
+            });
             AccountService = (function () {
                 function AccountService(http) {
                     var _this = this;

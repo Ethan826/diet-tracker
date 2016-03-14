@@ -1,10 +1,20 @@
 import {Injectable, OnInit} from "angular2/core";
 import {Http, Headers, RequestOptions, Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
+/// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
+import {appInjector} from './app-injector';
+import {Router, ComponentInstruction} from 'angular2/router';
 
 let HEADERS = new Headers({ "Content-Type": "application/json" });
 let SUBMIT_CREDS_URL = "app/submitcreds";
 let LOGIN_URL = "app/dologin";
+
+export const checkAuth = (permittedAudiences: string[]) => {
+  let injector = appInjector();
+  let accountService = injector.get(AccountService);
+
+  return accountService.isAuthorized(permittedAudiences);
+};
 
 @Injectable()
 export class AccountService {

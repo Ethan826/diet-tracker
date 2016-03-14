@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/router", "./check-login.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/router", "./account.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/router", "./check-login.service"], f
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, check_login_service_1;
+    var core_1, router_1, account_service_1;
     var MonthlyForm;
     return {
         setters:[
@@ -20,8 +20,8 @@ System.register(["angular2/core", "angular2/router", "./check-login.service"], f
             function (router_1_1) {
                 router_1 = router_1_1;
             },
-            function (check_login_service_1_1) {
-                check_login_service_1 = check_login_service_1_1;
+            function (account_service_1_1) {
+                account_service_1 = account_service_1_1;
             }],
         execute: function() {
             MonthlyForm = (function () {
@@ -61,7 +61,7 @@ System.register(["angular2/core", "angular2/router", "./check-login.service"], f
                 };
                 MonthlyForm = __decorate([
                     router_1.CanActivate(function (to, fr) {
-                        return check_login_service_1.checkAuth(["standard", "admin"]);
+                        return account_service_1.checkAuth(["standard", "admin"]);
                     }),
                     core_1.Component({
                         template: "\n    <div id=\"chart-fixer\">\n      <div id=\"chart\"></div>\n    </div>\n  "

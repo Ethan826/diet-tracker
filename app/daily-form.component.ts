@@ -8,13 +8,11 @@ import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
-import {checkAuth} from "./check-login.service";
+import {checkAuth} from "./account.service";
 
-@CanActivate(
-  (to: ComponentInstruction, fr: ComponentInstruction) => {
-    return checkAuth(["standard", "admin"]);
-  }
-  )
+@CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
+  return checkAuth(["standard", "admin"]);
+})
 @Component({
   selector: "daily-form",
   directives: [ButtonQuestions, CheckboxQuestions, DatePicker],

@@ -1,3 +1,5 @@
+import {Observable} from "rxjs/Observable";
+
 export interface IButtonQuestion {
   buttonText: string;
   buttonPoints: number;
@@ -17,4 +19,8 @@ export interface ICheckboxQuestion {
   textPrompt?: string;
   checkboxInput: boolean;
   textInput?: string;
+}
+
+export interface IAudiencesMap {
+  [audience: string]: Observable<boolean>;
 }

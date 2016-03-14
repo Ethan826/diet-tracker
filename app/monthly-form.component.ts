@@ -1,6 +1,6 @@
 import {Component, OnInit} from "angular2/core";
 import {CanActivate, ComponentInstruction} from "angular2/router";
-import {checkAuth} from "./check-login.service";
+import {checkAuth} from "./account.service";
 import {appInjector} from "./app-injector";
 
 declare let google: any;
@@ -8,8 +8,7 @@ declare let google: any;
 @CanActivate(
   (to: ComponentInstruction, fr: ComponentInstruction) => {
     return checkAuth(["standard", "admin"]);
-  }
-  )
+  })
 @Component({
   template: `
     <div id="chart-fixer">

@@ -34,17 +34,21 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
             });
             AccountService = (function () {
                 function AccountService(http) {
-                    var _this = this;
                     this.http = http;
                     this.HEADERS = HEADERS;
                     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
                     this.LOGIN_URL = "app/dologin";
                     this.JWT_CHECK_URL = "app/checkjwt";
-                    this.checkJWT();
-                    this.audience.subscribe(function (result) {
-                        _this.currentAudience = result;
-                    }, function (error) { return console.error(error); });
+                    this.doCheckJWT();
                 }
+                AccountService.prototype.doCheckJWT = function () {
+                    var jwt = this.checkJWT();
+                    this.audiencesMap = {
+                        "standard": jwt.map(function (audience) { return audience === "standard"; }),
+                        "admin": jwt.map(function (audience) { return audience === "standard"; })
+                    };
+                    jwt.map(function (audience) { return audience === "[]" ? "" : audience; });
+                };
                 AccountService.prototype.submitNewCreds = function (username, password) {
                     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
                 };
@@ -52,33 +56,18 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                     return this.submitHelper(username, password, this.LOGIN_URL);
                 };
                 AccountService.prototype.checkJWT = function () {
-                    this.audience = this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
-                        .map(function (res) { return res.json(); });
+                    return this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
+                        .map(function (res) { return res.text(); });
                 };
                 AccountService.prototype.isAuthorized = function (audiences) {
                     var _this = this;
                     return new Promise(function (resolve) {
                         _this.audience
-                            .subscribe(function (actualAudiences) {
-                            resolve(_this.isAuthorizedHelper(audiences, actualAudiences));
+                            .subscribe(function (actualAudience) {
+                            resolve(audiences.indexOf(actualAudience) >= 0);
                         });
                     });
                 };
-                AccountService.prototype.isAuthorizedHelper = function (permittedAudiences, actualAudiences) {
-                    var result = false;
-                    if (permittedAudiences.indexOf("any") >= 0) {
-                        result = true;
-                    }
-                    else {
-                        permittedAudiences.forEach(function (audience) {
-                            if (actualAudiences.indexOf(audience) >= 0) {
-                                result = true;
-                            }
-                        });
-                    }
-                    return result;
-                };
-                ;
                 AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });
                     return this.http.post(url, creds, { headers: this.HEADERS });

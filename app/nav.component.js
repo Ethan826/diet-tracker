@@ -11,7 +11,7 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, common_1, router_1, account_service_1, http_1;
-    var NAV_OPTIONS, NavComponent;
+    var NavComponent;
     return {
         setters:[
             function (core_1_1) {
@@ -30,18 +30,12 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
                 http_1 = http_1_1;
             }],
         execute: function() {
-            NAV_OPTIONS = [
-                { text: "Daily Tracker", route: "/DailyForm", audience: ["standard", "admin"] },
-                { text: "Monthly View", route: "/MonthlyForm", audience: ["standard", "admin"] },
-                { text: "Login", route: "/Login", audience: ["any"] },
-                { text: "New User", route: "/CreateUser", audience: ["any"] },
-            ];
             NavComponent = (function () {
                 function NavComponent(accountService) {
                     this.accountService = accountService;
                 }
                 NavComponent.prototype.hasPermission = function (audience) {
-                    return this.accountService.audiencePermissions[audience];
+                    return this.accountService.audiencesMap[audience];
                 };
                 NavComponent = __decorate([
                     core_1.Component({

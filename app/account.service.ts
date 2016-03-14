@@ -1,9 +1,9 @@
 import {Injectable, OnInit} from "angular2/core";
 import {Http, Headers, RequestOptions, Response} from "angular2/http";
 import {Observable} from "rxjs/Observable";
-/// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {appInjector} from './app-injector';
 import {Router, ComponentInstruction} from 'angular2/router';
+import {IAudiencesMap} from "./interfaces";
 
 let HEADERS = new Headers({ "Content-Type": "application/json" });
 let SUBMIT_CREDS_URL = "app/submitcreds";
@@ -12,7 +12,6 @@ let LOGIN_URL = "app/dologin";
 export const checkAuth = (permittedAudiences: string[]) => {
   let injector = appInjector();
   let accountService = injector.get(AccountService);
-
   return accountService.isAuthorized(permittedAudiences);
 };
 
@@ -22,21 +21,24 @@ export class AccountService {
   private SUBMIT_CREDS_URL: string;
   private LOGIN_URL: string;
   private JWT_CHECK_URL: string;
-  public audience: Observable<string[]>;
-  public currentAudience: string[];
+  public audience: Observable<string>;
+  public audiencesMap: IAudiencesMap;
 
   constructor(private http: Http) {
     this.HEADERS = HEADERS;
     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
     this.LOGIN_URL = "app/dologin";
     this.JWT_CHECK_URL = "app/checkjwt"
-    this.checkJWT();
-    this.audience.subscribe(
-      result => {
-        this.currentAudience = result;
-      },
-      error => console.error(error)
-      );
+    this.doCheckJWT();
+  }
+
+  doCheckJWT() {
+    let jwt = this.checkJWT();
+    this.audiencesMap = {
+      "standard": jwt.map(audience => { return audience === "standard" }),
+      "admin": jwt.map(audience => { return audience === "standard" })
+    }
+    jwt.map(audience => { return audience === "[]" ? "" : audience });
   }
 
   submitNewCreds(username: string, password: string): Observable<Response> {
@@ -47,37 +49,23 @@ export class AccountService {
     return this.submitHelper(username, password, this.LOGIN_URL);
   }
 
-  checkJWT() {
-    this.audience = this.http.post(
+  private checkJWT(): Observable<string> {
+    return this.http.post(
       this.JWT_CHECK_URL,
       JSON.stringify({ jwt: localStorage.getItem("jwt") }),
       { headers: this.HEADERS }
       )
-      .map((res: Response) => res.json())
+      .map((res: Response) => res.text())
   }
 
   isAuthorized(audiences: string[]) {
     return new Promise((resolve) => {
       this.audience
-        .subscribe((actualAudiences: string[]) => {
-        resolve(this.isAuthorizedHelper(audiences, actualAudiences));
+        .subscribe((actualAudience: string) => {
+        resolve(audiences.indexOf(actualAudience) >= 0);
       });
     });
   }
-
-  private isAuthorizedHelper(permittedAudiences: string[], actualAudiences: string[]): boolean {
-    let result = false;
-    if (permittedAudiences.indexOf("any") >= 0) {
-      result = true;
-    } else {
-      permittedAudiences.forEach((audience) => {
-        if (actualAudiences.indexOf(audience) >= 0) {
-          result = true;
-        }
-      });
-    }
-    return result;
-  };
 
   private submitHelper(
     username: string,

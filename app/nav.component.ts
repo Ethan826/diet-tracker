@@ -7,19 +7,6 @@ import {Response, HTTP_PROVIDERS} from "angular2/http";
 import {appInjector} from "./app-injector";
 import {Observable} from "rxjs/Observable";
 
-interface NavOption {
-  text: string;
-  route: string;
-  audience: string[]; // These should be refactored to an enum
-}
-
-let NAV_OPTIONS: NavOption[] = [
-  { text: "Daily Tracker", route: "/DailyForm", audience: ["standard", "admin"] },
-  { text: "Monthly View", route: "/MonthlyForm", audience: ["standard", "admin"] },
-  { text: "Login", route: "/Login", audience: ["any"] },
-  { text: "New User", route: "/CreateUser", audience: ["any"] },
-];
-
 @Component({
   selector: "nav-component",
   directives: [NgClass, ROUTER_DIRECTIVES],
@@ -57,6 +44,6 @@ export class NavComponent {
   constructor(private accountService: AccountService) { }
 
   hasPermission(audience: string): Observable<boolean> {
-    return this.accountService.audiencePermissions[audience];
+    return this.accountService.audiencesMap[audience];
   }
 }

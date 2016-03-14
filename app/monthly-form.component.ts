@@ -18,7 +18,7 @@ declare let google: any;
 })
 export class MonthlyForm implements OnInit {
   ngOnInit() {
-    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.load('current', { 'packages': ['corechart'] }); // TODO: This has to be a Singleton in a service
     google.charts.setOnLoadCallback(this.drawChart);
     window.onresize = this.drawChart;
   }

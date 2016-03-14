@@ -10,11 +10,17 @@ let SUBMIT_CREDS_URL = "app/submitcreds";
 let LOGIN_URL = "app/dologin";
 
 export const checkAuth = (permittedAudiences: string[]) => {
-  console.log("In checkAuth");
   let injector = appInjector();
   let accountService = injector.get(AccountService);
   return accountService.isAuthorized(permittedAudiences);
 };
+
+/* We need to have an Observable that IS NOT REPLACED that the *ngIfs in the
+ * navComponent can remain subscribed to. They are being replaced, and so the
+ * navComponent is not subscribed to the updated observable.
+ * The problem is that each JWT check returns a new observable, so that has to
+ * be slotted in.
+ */
 
 @Injectable()
 export class AccountService {

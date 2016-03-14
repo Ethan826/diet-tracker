@@ -11,7 +11,6 @@ bootstrap(AppComponent, [
   AccountService,
   HTTP_PROVIDERS,
   ROUTER_PROVIDERS,
-  provide(LocationStrategy, {useClass: HashLocationStrategy})
 ]).then((appRef: ComponentRef) => {
   appInjector(appRef.injector);
 });

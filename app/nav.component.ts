@@ -1,6 +1,6 @@
+import {AppComponent} from "./app.component";
 import {Subscription} from "rxjs/Subscription";
-import {Component, Injector} from "angular2/core";
-import {NgIf} from "angular2/common";
+import {Component, Injector, OnChanges} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 import {AccountService, checkAuth} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
@@ -9,8 +9,9 @@ import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: "nav-component",
-  directives: [NgIf, ROUTER_DIRECTIVES],
+  directives: [ROUTER_DIRECTIVES],
   providers: [AccountService, HTTP_PROVIDERS],
+  inputs: ["AppComponent"],
   template: `
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">

@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common", "angular2/router", "./account.service", "angular2/http"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/router", "./account.service", "angular2/http"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,15 +10,12 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, router_1, account_service_1, http_1;
+    var core_1, router_1, account_service_1, http_1;
     var NavComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
-            },
-            function (common_1_1) {
-                common_1 = common_1_1;
             },
             function (router_1_1) {
                 router_1 = router_1_1;
@@ -42,8 +39,9 @@ System.register(["angular2/core", "angular2/common", "angular2/router", "./accou
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
-                        directives: [common_1.NgIf, router_1.ROUTER_DIRECTIVES],
+                        directives: [router_1.ROUTER_DIRECTIVES],
                         providers: [account_service_1.AccountService, http_1.HTTP_PROVIDERS],
+                        inputs: ["AppComponent"],
                         template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngIf=\"hasPermission('standard') || hasPermission('admin') | async\">\n              <a [routerLink]=\"['/MonthlyForm']\">Monthly</a>\n            <li *ngIf=\"hasPermission('standard') || hasPermission('admin') | async\">\n              <a [routerLink]=\"['/DailyForm']\">Daily</a>\n            </li>\n            <li *ngIf=\"loggedIn | async\">\n              <a [routerLink]=\"['/Login']\">Login</a>\n            </li>\n            <li *ngIf=\"loggedOut | async\">\n              <a [routerLink]=\"['/Login']\"\n                   (click)=\"accountService.logout()\">Logout</a>\n            </li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
                     }), 
                     __metadata('design:paramtypes', [account_service_1.AccountService])

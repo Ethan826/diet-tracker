@@ -28,7 +28,6 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
             SUBMIT_CREDS_URL = "app/submitcreds";
             LOGIN_URL = "app/dologin";
             exports_1("checkAuth", checkAuth = function (permittedAudiences) {
-                console.log("In checkAuth");
                 var injector = app_injector_1.appInjector();
                 var accountService = injector.get(AccountService);
                 return accountService.isAuthorized(permittedAudiences);

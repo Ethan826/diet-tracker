@@ -10,6 +10,7 @@ let SUBMIT_CREDS_URL = "app/submitcreds";
 let LOGIN_URL = "app/dologin";
 
 export const checkAuth = (permittedAudiences: string[]) => {
+  console.log("In checkAuth");
   let injector = appInjector();
   let accountService = injector.get(AccountService);
   return accountService.isAuthorized(permittedAudiences);
@@ -21,7 +22,7 @@ export class AccountService {
   private SUBMIT_CREDS_URL: string;
   private LOGIN_URL: string;
   private JWT_CHECK_URL: string;
-  public audience: Observable<string>;
+  public audience: Promise<string>;
   public audiencesMap: IAudiencesMap;
 
   constructor(private http: Http) {
@@ -35,10 +36,15 @@ export class AccountService {
   doCheckJWT() {
     let jwt = this.checkJWT();
     this.audiencesMap = {
-      "standard": jwt.map(audience => { return audience === "standard" }),
-      "admin": jwt.map(audience => { return audience === "standard" })
+      "standard": jwt.map(audience => { return audience === "standard"; }),
+      "admin": jwt.map(audience => { return audience === "admin"; })
     }
-    jwt.map(audience => { return audience === "[]" ? "" : audience });
+    this.audience = new Promise((resolve, reject) => {
+      jwt.subscribe(
+        (audience) => { resolve(audience); },
+        (err) => { reject(err); }
+        );
+    });
   }
 
   submitNewCreds(username: string, password: string): Observable<Response> {
@@ -58,13 +64,25 @@ export class AccountService {
       .map((res: Response) => res.text())
   }
 
-  isAuthorized(audiences: string[]) {
-    return new Promise((resolve) => {
+  isAuthorized(audiences: string[]): Promise<boolean> | boolean {
+    console.log("In isAuthorized");
+    this.doCheckJWT(); // Is this necessary?
+    return new Promise((resolve, reject) => {
       this.audience
-        .subscribe((actualAudience: string) => {
-        resolve(audiences.indexOf(actualAudience) >= 0);
-      });
+        .then((audience) => {
+          console.log(`Inside the promise inside isAuthorized, audience = ${audience}`);
+        resolve(
+          audiences.indexOf(audience) >= 0
+          )
+      })
+        .catch(err => reject(err));
     });
+  }
+
+  logout() {
+    localStorage.removeItem("jwt");
+    this.audience = Promise.resolve("");
+    this.audiencesMap = {};
   }
 
   private submitHelper(

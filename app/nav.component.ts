@@ -25,10 +25,7 @@ import {Observable} from "rxjs/Observable";
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-          <li *ngIf="hasPermission('standard') || hasPermission('admin') | async">
-            Foo
-          </li>
-            <li>
+            <li *ngIf="hasPermission('standard') || hasPermission('admin') | async">
               <a [routerLink]="['/MonthlyForm']">Monthly</a>
             </li>
             <li><a [routerLink]="['/Login']">Login</a></li>

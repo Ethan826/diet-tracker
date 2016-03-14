@@ -28,6 +28,7 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
             SUBMIT_CREDS_URL = "app/submitcreds";
             LOGIN_URL = "app/dologin";
             exports_1("checkAuth", checkAuth = function (permittedAudiences) {
+                console.log("In checkAuth");
                 var injector = app_injector_1.appInjector();
                 var accountService = injector.get(AccountService);
                 return accountService.isAuthorized(permittedAudiences);
@@ -45,9 +46,11 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                     var jwt = this.checkJWT();
                     this.audiencesMap = {
                         "standard": jwt.map(function (audience) { return audience === "standard"; }),
-                        "admin": jwt.map(function (audience) { return audience === "standard"; })
+                        "admin": jwt.map(function (audience) { return audience === "admin"; })
                     };
-                    jwt.map(function (audience) { return audience === "[]" ? "" : audience; });
+                    this.audience = new Promise(function (resolve, reject) {
+                        jwt.subscribe(function (audience) { resolve(audience); }, function (err) { reject(err); });
+                    });
                 };
                 AccountService.prototype.submitNewCreds = function (username, password) {
                     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
@@ -61,12 +64,21 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                 };
                 AccountService.prototype.isAuthorized = function (audiences) {
                     var _this = this;
-                    return new Promise(function (resolve) {
+                    console.log("In isAuthorized");
+                    this.doCheckJWT();
+                    return new Promise(function (resolve, reject) {
                         _this.audience
-                            .subscribe(function (actualAudience) {
-                            resolve(audiences.indexOf(actualAudience) >= 0);
-                        });
+                            .then(function (audience) {
+                            console.log("Inside the promise inside isAuthorized, audience = " + audience);
+                            resolve(audiences.indexOf(audience) >= 0);
+                        })
+                            .catch(function (err) { return reject(err); });
                     });
+                };
+                AccountService.prototype.logout = function () {
+                    localStorage.removeItem("jwt");
+                    this.audience = Promise.resolve("");
+                    this.audiencesMap = {};
                 };
                 AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });

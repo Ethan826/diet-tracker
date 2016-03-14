@@ -134,4 +134,5 @@ export class DB {
   }
 }
 
+// Uncomment to reset database.
 //DB.setupDatabase();

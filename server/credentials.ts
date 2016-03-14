@@ -30,7 +30,8 @@ export class Credentials {
 
   static makeJWT(userId: number, admin: number) {
     let now = Date.now();
-    let aud = admin === 1 ? ["admin"] : ["standard"];
+    let aud = admin === 1 ? "admin" : "standard";
+    console.log(`In makeJWT, aud = ${aud}`);
     return jwt.encode({
       iss: CREDENTIAL_CONSTANTS.ISS,
       iat: now,
@@ -44,6 +45,7 @@ export class Credentials {
     if (myJwt) {
       let creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
       if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) { // TODO: check database for changes
+        console.log(creds.aud);
         return creds.aud;
       } else {
         return [];

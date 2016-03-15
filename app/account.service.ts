@@ -1,6 +1,7 @@
+/// <reference path="../node_modules/rxjs/Subscription.d.ts"/>
 import {Injectable, OnInit} from "angular2/core";
 import {Http, Headers, RequestOptions, Response} from "angular2/http";
-import {Observable} from "rxjs/Observable";
+import * as Rx from "rxjs/Rx";
 import {appInjector} from './app-injector';
 import {Router, ComponentInstruction} from 'angular2/router';
 import {IAudiencesMap} from "./interfaces";
@@ -28,45 +29,43 @@ export class AccountService {
   private SUBMIT_CREDS_URL: string;
   private LOGIN_URL: string;
   private JWT_CHECK_URL: string;
-  public audience: Promise<string>;
+  public audience: Rx.Subject<string>;
   public audiencesMap: IAudiencesMap;
-  public loggedIn: Observable<boolean>;
+  private subscriptions: Rx.Subscription[];
+  // public audience: Promise<string>;
+  // public audiencesMap: IAudiencesMap;
+  // public loggedIn: Observable<boolean>;
 
   constructor(private http: Http) {
     this.HEADERS = HEADERS;
     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
     this.LOGIN_URL = "app/dologin";
     this.JWT_CHECK_URL = "app/checkjwt"
+    this.audience = new Rx.Subject();
+    this.subscriptions = [];
     this.doCheckJWT();
   }
 
   doCheckJWT() {
-    let jwt = this.checkJWT();
-    // This is for hiding links in nav.component: an Observable
-    this.audiencesMap = {
-      "standard": jwt.map(audience => { return audience === "standard"; }),
-      "admin": jwt.map(audience => { return audience === "admin"; })
+    let jwt = this.checkJWT()
+      .map((audience: string) => { return audience === "[]" ? "" : audience });
+
+    this.subscriptions.unshift(jwt.subscribe(this.audience));
+
+    while (this.subscriptions.length > 1) {
+      this.subscriptions.pop().dispose();
     }
-    // This is for @CanActivate, which requires a promise
-    this.audience = new Promise((resolve, reject) => {
-      jwt.subscribe(
-        (audience) => { resolve(audience); },
-        (err) => { reject(err); }
-        );
-    });
-    // This is for hiding / showing the Login and Logout links
-    this.loggedIn = jwt.map(audience => { return audience === "[]" || audience === "" });
   }
 
-  submitNewCreds(username: string, password: string): Observable<Response> {
+  submitNewCreds(username: string, password: string): Rx.Observable<Response> {
     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
   }
 
-  submitLogin(username: string, password: string): Observable<Response> {
+  submitLogin(username: string, password: string): Rx.Observable<Response> {
     return this.submitHelper(username, password, this.LOGIN_URL);
   }
 
-  private checkJWT(): Observable<string> {
+  private checkJWT(): Rx.Observable<string> {
     return this.http.post(
       this.JWT_CHECK_URL,
       JSON.stringify({ jwt: localStorage.getItem("jwt") }),
@@ -75,32 +74,15 @@ export class AccountService {
       .map((res: Response) => res.text())
   }
 
-  isAuthorized(audiences: string[]): Promise<boolean> | boolean {
-    console.log("In isAuthorized");
-    this.doCheckJWT(); // Is this necessary?
-    return new Promise((resolve, reject) => {
-      this.audience
-        .then((audience) => {
-        console.log(`Inside the promise inside isAuthorized, audience = ${audience}`);
-        resolve(
-          audiences.indexOf(audience) >= 0
-          )
-      })
-        .catch(err => reject(err));
-    });
-  }
-
   logout() {
     localStorage.removeItem("jwt");
-    this.audience = Promise.resolve("");
-    this.audiencesMap = {};
   }
 
   private submitHelper(
     username: string,
     password: string,
     url: string
-    ): Observable<Response> {
+    ): Rx.Observable<Response> {
     let creds = JSON.stringify({ username: username, password: password })
     return this.http.post(url, creds, { headers: this.HEADERS });
   }

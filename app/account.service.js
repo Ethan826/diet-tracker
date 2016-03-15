@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/http", './app-injector'], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/http", "rxjs/Rx", './app-injector'], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, app_injector_1;
+    var core_1, http_1, Rx, app_injector_1;
     var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, checkAuth, AccountService;
     return {
         setters:[
@@ -19,6 +19,9 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
             },
             function (http_1_1) {
                 http_1 = http_1_1;
+            },
+            function (Rx_1) {
+                Rx = Rx_1;
             },
             function (app_injector_1_1) {
                 app_injector_1 = app_injector_1_1;
@@ -39,18 +42,17 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
                     this.LOGIN_URL = "app/dologin";
                     this.JWT_CHECK_URL = "app/checkjwt";
+                    this.audience = new Rx.Subject();
+                    this.subscriptions = [];
                     this.doCheckJWT();
                 }
                 AccountService.prototype.doCheckJWT = function () {
-                    var jwt = this.checkJWT();
-                    this.audiencesMap = {
-                        "standard": jwt.map(function (audience) { return audience === "standard"; }),
-                        "admin": jwt.map(function (audience) { return audience === "admin"; })
-                    };
-                    this.audience = new Promise(function (resolve, reject) {
-                        jwt.subscribe(function (audience) { resolve(audience); }, function (err) { reject(err); });
-                    });
-                    this.loggedIn = jwt.map(function (audience) { return audience === "[]" || audience === ""; });
+                    var jwt = this.checkJWT()
+                        .map(function (audience) { return audience === "[]" ? "" : audience; });
+                    this.subscriptions.unshift(jwt.subscribe(this.audience));
+                    while (this.subscriptions.length > 1) {
+                        this.subscriptions.pop().dispose();
+                    }
                 };
                 AccountService.prototype.submitNewCreds = function (username, password) {
                     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
@@ -62,23 +64,8 @@ System.register(["angular2/core", "angular2/http", './app-injector'], function(e
                     return this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
                         .map(function (res) { return res.text(); });
                 };
-                AccountService.prototype.isAuthorized = function (audiences) {
-                    var _this = this;
-                    console.log("In isAuthorized");
-                    this.doCheckJWT();
-                    return new Promise(function (resolve, reject) {
-                        _this.audience
-                            .then(function (audience) {
-                            console.log("Inside the promise inside isAuthorized, audience = " + audience);
-                            resolve(audiences.indexOf(audience) >= 0);
-                        })
-                            .catch(function (err) { return reject(err); });
-                    });
-                };
                 AccountService.prototype.logout = function () {
                     localStorage.removeItem("jwt");
-                    this.audience = Promise.resolve("");
-                    this.audiencesMap = {};
                 };
                 AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });

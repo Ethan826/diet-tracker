@@ -1,10 +1,9 @@
-/// <reference path="../node_modules/rxjs/Subscription.d.ts"/>
-import {Injectable, OnInit} from "angular2/core";
+import {Injectable, OnInit, EventEmitter} from "angular2/core";
 import {Http, Headers, RequestOptions, Response} from "angular2/http";
 import * as Rx from "rxjs/Rx";
 import {appInjector} from './app-injector';
 import {Router, ComponentInstruction} from 'angular2/router';
-import {IAudiencesMap} from "./interfaces";
+import {LoginService} from "./login.service";
 
 let HEADERS = new Headers({ "Content-Type": "application/json" });
 let SUBMIT_CREDS_URL = "app/submitcreds";
@@ -16,45 +15,30 @@ export const checkAuth = (permittedAudiences: string[]) => {
   return accountService.isAuthorized(permittedAudiences);
 };
 
-/* We need to have an Observable that IS NOT REPLACED that the *ngIfs in the
- * navComponent can remain subscribed to. They are being replaced, and so the
- * navComponent is not subscribed to the updated observable.
- * The problem is that each JWT check returns a new observable, so that has to
- * be slotted in.
- */
-
 @Injectable()
 export class AccountService {
   private HEADERS: Headers;
   private SUBMIT_CREDS_URL: string;
   private LOGIN_URL: string;
   private JWT_CHECK_URL: string;
-  public audience: Rx.Subject<string>;
-  public audiencesMap: IAudiencesMap;
-  private subscriptions: Rx.Subscription[];
-  // public audience: Promise<string>;
-  // public audiencesMap: IAudiencesMap;
-  // public loggedIn: Observable<boolean>;
+  currentAudience: string;
+  audienceEvent: EventEmitter<string>;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private loginService: LoginService) {
     this.HEADERS = HEADERS;
     this.SUBMIT_CREDS_URL = SUBMIT_CREDS_URL;
     this.LOGIN_URL = "app/dologin";
     this.JWT_CHECK_URL = "app/checkjwt"
-    this.audience = new Rx.Subject();
-    this.subscriptions = [];
     this.doCheckJWT();
+    this.audienceEvent = new EventEmitter();
+    this.audienceEvent.subscribe((audience: string) => this.currentAudience = audience);
   }
 
   doCheckJWT() {
-    let jwt = this.checkJWT()
-      .map((audience: string) => { return audience === "[]" ? "" : audience });
-
-    this.subscriptions.unshift(jwt.subscribe(this.audience));
-
-    while (this.subscriptions.length > 1) {
-      this.subscriptions.pop().dispose();
-    }
+    let jwt = this.checkJWT();
+    jwt.subscribe(audience => {
+      this.loginService.loginEvent.emit(audience);
+    });
   }
 
   submitNewCreds(username: string, password: string): Rx.Observable<Response> {
@@ -63,6 +47,10 @@ export class AccountService {
 
   submitLogin(username: string, password: string): Rx.Observable<Response> {
     return this.submitHelper(username, password, this.LOGIN_URL);
+  }
+
+  isAuthorized(permittedAudiences: string[]) {
+    return permittedAudiences.indexOf(this.currentAudience) >= 0;
   }
 
   private checkJWT(): Rx.Observable<string> {
@@ -76,6 +64,7 @@ export class AccountService {
 
   logout() {
     localStorage.removeItem("jwt");
+    this.doCheckJWT();
   }
 
   private submitHelper(

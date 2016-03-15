@@ -5,10 +5,12 @@ import {provide, ComponentRef} from "angular2/core";
 import {appInjector} from "./app-injector";
 import {bootstrap} from "angular2/platform/browser";
 import {AccountService} from "./account.service";
+import {LoginService} from "./login.service";
 import "rxjs/Rx";
 
 bootstrap(AppComponent, [
   AccountService,
+  LoginService,
   HTTP_PROVIDERS,
   ROUTER_PROVIDERS,
 ]).then((appRef: ComponentRef) => {

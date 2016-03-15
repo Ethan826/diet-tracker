@@ -37,15 +37,14 @@ var Credentials = (function () {
         if (myJwt) {
             var creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
             if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) {
-                console.log(creds.aud);
                 return creds.aud;
             }
             else {
-                return [];
+                return "";
             }
         }
         else {
-            return [];
+            return "";
         }
     };
     Credentials.pbkdf2 = function (username, password, salt) {

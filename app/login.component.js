@@ -49,8 +49,8 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                             .map(function (res) { return res.json(); })
                             .subscribe(function (data) {
                             localStorage.setItem("jwt", data.jwt);
-                            console.log(localStorage.getItem("jwt"));
                             _this.router.parent.navigate(["/DailyForm"]);
+                            _this.accountService.doCheckJWT();
                         }, function (error) {
                             _this.error = error.json().error;
                         });

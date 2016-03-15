@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./date-picker.component", "./button-questions.component", "./checkbox-questions.component", "./question-data", "angular2/router", "angular2/http", "./account.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "./date-picker.component", "./button-questions.component", "./checkbox-questions.component", "./question-data", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, date_picker_component_1, button_questions_component_1, checkbox_questions_component_1, question_data_1, router_1, http_1, account_service_1;
+    var core_1, date_picker_component_1, button_questions_component_1, checkbox_questions_component_1, question_data_1, router_1, http_1, login_service_1;
     var DailyForm;
     return {
         setters:[
@@ -35,8 +35,8 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (account_service_1_1) {
-                account_service_1 = account_service_1_1;
+            function (login_service_1_1) {
+                login_service_1 = login_service_1_1;
             }],
         execute: function() {
             DailyForm = (function () {
@@ -64,7 +64,7 @@ System.register(["angular2/core", "./date-picker.component", "./button-questions
                 };
                 DailyForm = __decorate([
                     router_1.CanActivate(function (to, fr) {
-                        return account_service_1.checkAuth(["standard", "admin"]);
+                        return login_service_1.checkAuth(["standard", "admin"]);
                     }),
                     core_1.Component({
                         selector: "daily-form",

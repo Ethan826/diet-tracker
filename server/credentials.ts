@@ -41,17 +41,16 @@ export class Credentials {
     }, CREDENTIAL_CONSTANTS.SECRET);
   }
 
-  static checkJWT(myJwt: string): string[] {
+  static checkJWT(myJwt: string): string {
     if (myJwt) {
       let creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
       if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) { // TODO: check database for changes
-        console.log(creds.aud);
         return creds.aud;
       } else {
-        return [];
+        return "";
       }
     } else {
-      return [];
+      return "";
     }
   }
 

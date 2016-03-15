@@ -1,7 +1,6 @@
 import {Component, OnInit} from "angular2/core";
 import {CanActivate, ComponentInstruction} from "angular2/router";
-import {checkAuth} from "./account.service";
-import {appInjector} from "./app-injector";
+import {checkAuth} from "./login.service";
 
 declare let google: any;
 

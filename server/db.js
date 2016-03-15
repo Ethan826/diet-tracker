@@ -44,7 +44,7 @@ var DB = (function () {
                         if (credResults.hash === dbResults.hashedpwd) {
                             resolve({
                                 success: true,
-                                jwt: credentials_1.Credentials.makeJWT(dbResults.id, dbResults.admin)
+                                jwt: credentials_1.Credentials.makeJWT(username, dbResults.id, dbResults.admin)
                             });
                         }
                         else {

@@ -21,7 +21,7 @@ var Credentials = (function () {
     Credentials.getHashedPassword = function (username, password, salt) {
         return this.pbkdf2(username, password, salt);
     };
-    Credentials.makeJWT = function (userId, admin) {
+    Credentials.makeJWT = function (username, userId, admin) {
         var now = Date.now();
         var aud = admin === 1 ? "admin" : "standard";
         console.log("In makeJWT, aud = " + aud);
@@ -30,21 +30,22 @@ var Credentials = (function () {
             iat: now,
             aud: aud,
             exp: now + CREDENTIAL_CONSTANTS.JWT_DURATION,
-            userId: userId
+            userId: userId,
+            username: username
         }, CREDENTIAL_CONSTANTS.SECRET);
     };
     Credentials.checkJWT = function (myJwt) {
         if (myJwt) {
             var creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
             if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) {
-                return creds.aud;
+                return creds;
             }
             else {
-                return "";
+                return {};
             }
         }
         else {
-            return "";
+            return {};
         }
     };
     Credentials.pbkdf2 = function (username, password, salt) {

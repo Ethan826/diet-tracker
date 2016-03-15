@@ -11,7 +11,7 @@ System.register(["angular2/core", "./app-injector"], function(exports_1, context
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, app_injector_1;
-    var checkAuth, LoginService;
+    var checkAuth, checkLoggedOut, LoginService;
     return {
         setters:[
             function (core_1_1) {
@@ -26,18 +26,39 @@ System.register(["angular2/core", "./app-injector"], function(exports_1, context
                 var loginService = injector.get(LoginService);
                 return loginService.isAuthorized(permittedAudiences);
             });
+            exports_1("checkLoggedOut", checkLoggedOut = function () {
+                var injector = app_injector_1.appInjector();
+                var loginService = injector.get(LoginService);
+                return new Promise(function (resolve, reject) {
+                    loginService.loggedOut.subscribe(function (loggedOut) { resolve(loggedOut); }, function (err) { reject(err); });
+                });
+            });
             LoginService = (function () {
                 function LoginService() {
                     var _this = this;
                     this.loginEvent = new core_1.EventEmitter();
-                    this.loginEvent.subscribe(function (audience) { return _this.audience = audience; });
+                    this.loginEvent.subscribe(function (jwtResult) {
+                        _this.jwtResult = jwtResult;
+                    });
+                    this.loggedIn = this.loginEvent.map(function (jwtResult) {
+                        return Boolean(jwtResult && jwtResult.aud);
+                    });
+                    this.loggedOut = this.loggedIn.map(function (b) { return !b; });
                 }
                 LoginService.prototype.isAuthorized = function (permittedAudiences) {
-                    if (this.audience) {
-                        return permittedAudiences.indexOf(this.audience) >= 0;
+                    var _this = this;
+                    if (this.jwtResult) {
+                        return Promise.resolve(permittedAudiences.indexOf(this.jwtResult.aud) >= 0);
                     }
                     else {
-                        return false;
+                        if (localStorage.getItem("jwt")) {
+                            return new Promise(function (resolve, reject) {
+                                _this.loginEvent.subscribe(function (jwtResult) { resolve(jwtResult); }, function (err) { reject(err); });
+                            });
+                        }
+                        else {
+                            return Promise.resolve(false);
+                        }
                     }
                 };
                 LoginService = __decorate([

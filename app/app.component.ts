@@ -3,7 +3,7 @@ import {DailyForm} from "./daily-form.component";
 import {MonthlyForm} from "./monthly-form.component";
 import {Login} from "./login.component";
 import {CreateUser} from "./create-user.component";
-import {AccountInfo} from "./account-info.component";
+import {AdminComponent} from "./admin.component";
 import {AccountService} from "./account.service";
 import {NavComponent} from "./nav.component";
 import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
@@ -21,7 +21,7 @@ import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router"
 @RouteConfig([
   { path: "/diet/daily", name: "DailyForm", component: DailyForm },
   { path: "/diet/monthly", name: "MonthlyForm", component: MonthlyForm },
-  { path: "/diet/account", name: "AccountInfo", component: AccountInfo },
+  { path: "/diet/admin", name: "Admin", component: AdminComponent },
   { path: "/diet/login", name: "Login", component: Login },
   { path: "/diet/createuser", name: "CreateUser", component: CreateUser }
 ])

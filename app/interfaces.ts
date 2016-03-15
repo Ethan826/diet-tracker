@@ -1,4 +1,5 @@
 import {Observable} from "rxjs/Observable";
+export {IJWT} from "../server/interfaces";
 
 export interface IButtonQuestion {
   buttonText: string;

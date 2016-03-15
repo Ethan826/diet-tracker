@@ -32,20 +32,33 @@ System.register(["angular2/core", "angular2/router", "./account.service", "angul
         execute: function() {
             NavComponent = (function () {
                 function NavComponent(accountService, loginService) {
-                    var _this = this;
                     this.accountService = accountService;
                     this.loginService = loginService;
+                }
+                NavComponent.prototype.ngOnInit = function () {
+                    var _this = this;
                     this.loginService.loginEvent.subscribe(function (jwtResult) {
                         _this.jwtResult = jwtResult;
                         console.log("Inside NavComponent, just learned that audience = " + jwtResult.aud + " at " + Date.now() / 1000);
                     });
-                }
+                };
+                NavComponent.prototype.hasPermission = function (permittedAudiences) {
+                    if (this.jwtResult && this.jwtResult.aud) {
+                        return permittedAudiences.indexOf(this.jwtResult.aud) >= 0;
+                    }
+                    else {
+                        return false;
+                    }
+                };
+                NavComponent.prototype.isLoggedIn = function () {
+                    return Boolean(this.jwtResult && this.jwtResult.aud);
+                };
                 NavComponent = __decorate([
                     core_1.Component({
                         selector: "nav-component",
                         directives: [router_1.ROUTER_DIRECTIVES],
                         providers: [http_1.HTTP_PROVIDERS],
-                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngIf=\"loginService.isAuthorized(['standard', 'admin'])\">\n              <a [routerLink]=\"['/DailyForm']\">Daily</a>\n            <li *ngIf=\"loginService.isAuthorized(['standard', 'admin'])\">\n              <a [routerLink]=\"['/MonthlyForm']\">Monthly</a>\n            </li>\n            <li *ngIf=\"loginService.isAuthorized(['admin'])\">\n              <a [routerLink]=\"['/Admin']\">Admin</a>\n            <li *ngIf=\"loginService.loggedOut | async\">\n              <a [routerLink]=\"['/Login']\">Login</a>\n            </li>\n            <li *ngIf=\"loginService.loggedIn | async\">\n              <a [routerLink]=\"['/Login']\"\n                   (click)=\"accountService.logout()\">Logout</a>\n            </li>\n          </ul>\n          <p *ngIf=\"jwtResult && jwtResult.username\"\n             class=\"nav navbar-text navbar-right\">Logged in as {{jwtResult.username}}\n          </p>\n        </div>\n      </div>\n    </nav>\n"
+                        template: "\n    <nav class=\"navbar navbar-default navbar-fixed-top\">\n      <div class=\"container col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1\">\n        <div class=\"navbar-header\">\n          <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n            <span class=\"sr-only\">Toggle navigation</span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n            <span class=\"icon-bar\"></span>\n          </button>\n          <a class=\"navbar-brand\" href=\"#\">Diet Tracker</a>\n        </div>\n        <div id=\"navbar\" class=\"navbar-collapse collapse\">\n          <ul class=\"nav navbar-nav\">\n            <li *ngIf=\"hasPermission(['standard', 'admin'])\">\n              <a [routerLink]=\"['/MonthlyForm']\">Monthly</a>\n            <li *ngIf=\"hasPermission(['standard', 'admin'])\">\n              <a [routerLink]=\"['/DailyForm']\">Daily</a>\n            </li>\n            <li *ngIf=\"!isLoggedIn()\">\n              <a [routerLink]=\"['/Login']\">Login</a>\n            </li>\n            <li *ngIf=\"isLoggedIn()\">\n              <a [routerLink]=\"['/Login']\"\n                   (click)=\"accountService.logout()\">Logout</a>\n            </li>\n          </ul>\n        </div>\n      </div>\n    </nav>\n"
                     }), 
                     __metadata('design:paramtypes', [account_service_1.AccountService, login_service_1.LoginService])
                 ], NavComponent);

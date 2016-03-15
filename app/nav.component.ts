@@ -1,6 +1,6 @@
 import {AppComponent} from "./app.component";
 import {Subscription} from "rxjs/Subscription";
-import {Component, Injector} from "angular2/core";
+import {Component, Injector, OnInit} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
 import {AccountService} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
@@ -27,36 +27,46 @@ import {IJWT} from "./interfaces";
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li *ngIf="loginService.isAuthorized(['standard', 'admin'])">
-              <a [routerLink]="['/DailyForm']">Daily</a>
-            <li *ngIf="loginService.isAuthorized(['standard', 'admin'])">
+            <li *ngIf="hasPermission(['standard', 'admin'])">
               <a [routerLink]="['/MonthlyForm']">Monthly</a>
+            <li *ngIf="hasPermission(['standard', 'admin'])">
+              <a [routerLink]="['/DailyForm']">Daily</a>
             </li>
-            <li *ngIf="loginService.isAuthorized(['admin'])">
-              <a [routerLink]="['/Admin']">Admin</a>
-            <li *ngIf="loginService.loggedOut | async">
+            <li *ngIf="!isLoggedIn()">
               <a [routerLink]="['/Login']">Login</a>
             </li>
-            <li *ngIf="loginService.loggedIn | async">
+            <li *ngIf="isLoggedIn()">
               <a [routerLink]="['/Login']"
                    (click)="accountService.logout()">Logout</a>
             </li>
           </ul>
-          <p *ngIf="jwtResult && jwtResult.username"
-             class="nav navbar-text navbar-right">Logged in as {{jwtResult.username}}
-          </p>
         </div>
       </div>
     </nav>
 `
 })
-export class NavComponent {
+export class NavComponent implements OnInit {
   private jwtResult: IJWT;
 
-  constructor(private accountService: AccountService, private loginService: LoginService) {
+  constructor(private accountService: AccountService, private loginService: LoginService) { }
+
+  ngOnInit() {
     this.loginService.loginEvent.subscribe((jwtResult: IJWT) => {
       this.jwtResult = jwtResult;
       console.log(`Inside NavComponent, just learned that audience = ${jwtResult.aud} at ${Date.now() / 1000}`);
     });
+  }
+
+  hasPermission(permittedAudiences: string[]): boolean {
+    if (this.jwtResult && this.jwtResult.aud) {
+      return permittedAudiences.indexOf(this.jwtResult.aud) >= 0;
+    }
+    else {
+      return false;
+    }
+  }
+
+  isLoggedIn(): boolean {
+    return Boolean(this.jwtResult && this.jwtResult.aud);
   }
 }

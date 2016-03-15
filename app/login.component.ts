@@ -4,7 +4,7 @@ import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, Abstrac
 import {map} from "rxjs/operator/map";
 import {HTTP_PROVIDERS, Response} from "angular2/http";
 import {Router, RouteParams, CanActivate, ComponentInstruction} from "angular2/router";
-import {checkLoggedOut} from "./login.service";
+import {LoginService, checkLoggedOut} from "./login.service";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   let loggedOut = checkLoggedOut();
@@ -67,7 +67,12 @@ export class Login {
   private password: AbstractControl;
   private error: string;
 
-  constructor(fb: FormBuilder, private accountService: AccountService, private router: Router) {
+  constructor(
+    fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router,
+    private loginService: LoginService
+    ) {
     this.loginForm = fb.group({
       "username": ["", Validators.required],
       "password": ["", Validators.required]
@@ -84,8 +89,10 @@ export class Login {
         .subscribe(
         data => {
           localStorage.setItem("jwt", data.jwt);
-          this.router.parent.navigate(["/DailyForm"]);
           this.accountService.doCheckJWT();
+          this.loginService.loginEvent.subscribe(() => {
+            this.router.parent.navigate(["/DailyForm"]);
+          });
         },
         error => {
           this.error = error.json().error;

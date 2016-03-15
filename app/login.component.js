@@ -34,9 +34,10 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
             }],
         execute: function() {
             Login = (function () {
-                function Login(fb, accountService, router) {
+                function Login(fb, accountService, router, loginService) {
                     this.accountService = accountService;
                     this.router = router;
+                    this.loginService = loginService;
                     this.loginForm = fb.group({
                         "username": ["", common_1.Validators.required],
                         "password": ["", common_1.Validators.required]
@@ -52,8 +53,10 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                             .map(function (res) { return res.json(); })
                             .subscribe(function (data) {
                             localStorage.setItem("jwt", data.jwt);
-                            _this.router.parent.navigate(["/DailyForm"]);
                             _this.accountService.doCheckJWT();
+                            _this.loginService.loginEvent.subscribe(function () {
+                                _this.router.parent.navigate(["/DailyForm"]);
+                            });
                         }, function (error) {
                             _this.error = error.json().error;
                         });
@@ -73,7 +76,7 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                         providers: [account_service_1.AccountService, http_1.HTTP_PROVIDERS],
                         template: "\n<h1>Login</h1>\n<br>\n<form [ngFormModel]=\"loginForm\" (ngSubmit)=\"onSubmit(loginForm.value)\">\n  <div class=\"form-group\">\n    <div [class.has-error]=\"username.touched && !username.valid\"\n         [class.has-success]=\"username.valid\">\n      <input id=\"usernameInput\"\n             class=\"form-control\"\n             type=\"text\"\n             placeholder=\"Username\"\n             [ngFormControl]=\"loginForm.controls['username']\">\n    </div>\n    <br>\n    <div *ngIf=\"username.hasError('required') && username.touched\" class=\"alert alert-danger\">\n      <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n      Username cannot be blank.\n    </div>\n    <br>\n    <div [class.has-error]=\"password.touched && !password.valid\"\n         [class.has-success]=\"password.valid\">\n      <input id=\"passwordInput\"\n             class=\"form-control\"\n             type=\"password\"\n             placeholder=\"Password\"\n             [ngFormControl]=\"loginForm.controls['password']\">\n    </div>\n    <br>\n    <div *ngIf=\"password.hasError('required') && password.touched\"\n         class=\"alert alert-danger\">\n      <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n      Password cannot be blank.\n    </div>\n    <div *ngIf=\"error\"\n         class=\"alert alert-danger\">\n      <span class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\"></span>\n      Incorrect credentials\n    </div>\n    <br>\n    <input type=\"submit\"\n           class=\"btn btn-primary\"\n           value=\"Submit\"\n           [class.disabled]=\"!loginForm.valid\">\n  </div>\n</form>\n"
                     }), 
-                    __metadata('design:paramtypes', [common_1.FormBuilder, account_service_1.AccountService, router_1.Router])
+                    __metadata('design:paramtypes', [common_1.FormBuilder, account_service_1.AccountService, router_1.Router, login_service_1.LoginService])
                 ], Login);
                 return Login;
             }());

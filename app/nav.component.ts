@@ -40,6 +40,9 @@ import {IJWT} from "./interfaces";
                    (click)="accountService.logout()">Logout</a>
             </li>
           </ul>
+          <p *ngIf="jwtResult && jwtResult.username"
+            class="nav navbar-text navbar-right">Logged in as {{jwtResult.username}}
+          </p>
         </div>
       </div>
     </nav>

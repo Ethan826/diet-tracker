@@ -2,7 +2,7 @@ import {AppComponent} from "./app.component";
 import {Subscription} from "rxjs/Subscription";
 import {Component, Injector, OnInit} from "angular2/core";
 import {ROUTER_DIRECTIVES} from "angular2/router";
-import {AccountService, checkAuth} from "./account.service";
+import {AccountService} from "./account.service";
 import {Response, HTTP_PROVIDERS} from "angular2/http";
 import {appInjector} from "./app-injector";
 import {Observable} from "rxjs/Observable";

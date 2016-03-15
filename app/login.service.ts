@@ -10,7 +10,7 @@ export const checkAuth = (permittedAudiences: string[]) => {
 
 @Injectable()
 export class LoginService {
-  loginEvent: EventEmitter<string>
+  loginEvent: EventEmitter<string>;
   audience: string;
 
   constructor() {
@@ -19,7 +19,7 @@ export class LoginService {
   }
 
   isAuthorized(permittedAudiences: string[]): boolean {
-    if(this.audience) {
+    if (this.audience) {
       return permittedAudiences.indexOf(this.audience) >= 0;
     } else {
       return false;

@@ -28,7 +28,7 @@ let OPTIONS = {
   // cert: fs.readfilesync("../../secrets/flashbangsplat/cert.pem")
   key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
   cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
-}
+};
 
 app.use(bodyParser.json());
 app.use("/app", express.static(`${__dirname}/../app`));
@@ -36,7 +36,7 @@ app.use("/css", express.static(`${__dirname}/../css`));
 app.use("/node_modules", express.static(`${__dirname}/../node_modules`));
 
 app.get("/", (req, res) => {
-  res.redirect("/diet/")
+  res.redirect("/diet/");
 });
 
 app.get("/diet/*", (req, res) => {

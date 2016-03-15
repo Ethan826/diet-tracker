@@ -14,7 +14,7 @@ let CREDENTIAL_CONSTANTS = {
   JWT_DURATION: 86400000,
   SECRET: "Db4gG8tdLXlkvfetHAnkizXn72OulTj68BN1AbXxuKEZrxQexa0aApzPcNH0OvwFMK75ASTKDKpRUNupQjoW3r+rcyPeNf/jJ8nCnWU+033WfBwocMyL5preLR7XGbCIRjeSDrMENixyEYn5GmKqhBBzxkOmp6BBijfmLmDQyCc=",
   ISS: "https://flashbangsplat.com"
-}
+};
 
 export class Credentials {
   private static CREDENTIAL_CONSTANTS = CREDENTIAL_CONSTANTS;
@@ -71,7 +71,7 @@ export class Credentials {
             hash: key.toString("base64")
           });
         }
-        )
+        );
     });
   }
 

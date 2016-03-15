@@ -72,14 +72,14 @@ export class DB {
               }
             })
               .catch(credErr => {
-              reject({ success: false, error: credErr })
+              reject({ success: false, error: credErr });
             });
           } else {
             console.log(dbErr);
             reject({ success: false, error: "Username or database error" });
           }
         }
-        )
+        );
     });
   }
 
@@ -92,37 +92,37 @@ export class DB {
       db.serialize(() => {
         db.run(`
           CREATE TABLE users (
-          	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-          	username TEXT NOT NULL UNIQUE,
-          	salt TEXT NOT NULL,
-          	hashedpwd TEXT NOT NULL,
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  username TEXT NOT NULL UNIQUE,
+  salt TEXT NOT NULL,
+  hashedpwd TEXT NOT NULL,
             admin INTEGER NOT NULL DEFAULT 0
           );
        `);
         db.run(`
           CREATE TABLE entries (
-          	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-          	hungerscore INTEGER NOT NULL,
-          	hungertext TEXT,
-          	cravingscore INTEGER NOT NULL,
-          	cravingtext TEXT,
-          	satietyscore INTEGER NOT NULL,
-          	satietytext TEXT,
-          	energyscore INTEGER NOT NULL,
-          	energytext TEXT,
-          	wellbeingscore INTEGER NOT NULL,
-          	wellbeingtext TEXT,
-          	carbsscore INTEGER NOT NULL,
-          	carbstext TEXT,
-          	stressambool INTEGER NOT NULL,
-          	stresspmbool INTEGER NOT NULL,
-          	walksbool INTEGER NOT NULL,
-          	movementbool INTEGER NOT NULL,
-          	movementtext TEXT,
-          	bedtimebool INTEGER NOT NULL,
-          	bedtimetext TEXT,
-          	userid INTEGER NOT NULL,
-          	FOREIGN KEY(userid) REFERENCES user(id)
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+            hungerscore INTEGER NOT NULL,
+            hungertext TEXT,
+            cravingscore INTEGER NOT NULL,
+            cravingtext TEXT,
+            satietyscore INTEGER NOT NULL,
+            satietytext TEXT,
+            energyscore INTEGER NOT NULL,
+            energytext TEXT,
+            wellbeingscore INTEGER NOT NULL,
+            wellbeingtext TEXT,
+            carbsscore INTEGER NOT NULL,
+            carbstext TEXT,
+            stressambool INTEGER NOT NULL,
+            stresspmbool INTEGER NOT NULL,
+            walksbool INTEGER NOT NULL,
+            movementbool INTEGER NOT NULL,
+            movementtext TEXT,
+            bedtimebool INTEGER NOT NULL,
+            bedtimetext TEXT,
+            userid INTEGER NOT NULL,
+            FOREIGN KEY(userid) REFERENCES user(id)
           );
        `);
       });
@@ -135,4 +135,4 @@ export class DB {
 }
 
 // Uncomment to reset database.
-//DB.setupDatabase();
+// DB.setupDatabase();

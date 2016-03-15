@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/http", './app-injector', "./login.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/http", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,8 +10,8 @@ System.register(["angular2/core", "angular2/http", './app-injector', "./login.se
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1, app_injector_1, login_service_1;
-    var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, checkAuth, AccountService;
+    var core_1, http_1, login_service_1;
+    var HEADERS, SUBMIT_CREDS_URL, LOGIN_URL, AccountService;
     return {
         setters:[
             function (core_1_1) {
@@ -20,9 +20,6 @@ System.register(["angular2/core", "angular2/http", './app-injector', "./login.se
             function (http_1_1) {
                 http_1 = http_1_1;
             },
-            function (app_injector_1_1) {
-                app_injector_1 = app_injector_1_1;
-            },
             function (login_service_1_1) {
                 login_service_1 = login_service_1_1;
             }],
@@ -30,14 +27,8 @@ System.register(["angular2/core", "angular2/http", './app-injector', "./login.se
             HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
             SUBMIT_CREDS_URL = "app/submitcreds";
             LOGIN_URL = "app/dologin";
-            exports_1("checkAuth", checkAuth = function (permittedAudiences) {
-                var injector = app_injector_1.appInjector();
-                var accountService = injector.get(AccountService);
-                return accountService.isAuthorized(permittedAudiences);
-            });
             AccountService = (function () {
                 function AccountService(http, loginService) {
-                    var _this = this;
                     this.http = http;
                     this.loginService = loginService;
                     this.HEADERS = HEADERS;
@@ -45,8 +36,6 @@ System.register(["angular2/core", "angular2/http", './app-injector', "./login.se
                     this.LOGIN_URL = "app/dologin";
                     this.JWT_CHECK_URL = "app/checkjwt";
                     this.doCheckJWT();
-                    this.audienceEvent = new core_1.EventEmitter();
-                    this.audienceEvent.subscribe(function (audience) { return _this.currentAudience = audience; });
                 }
                 AccountService.prototype.doCheckJWT = function () {
                     var _this = this;
@@ -60,9 +49,6 @@ System.register(["angular2/core", "angular2/http", './app-injector', "./login.se
                 };
                 AccountService.prototype.submitLogin = function (username, password) {
                     return this.submitHelper(username, password, this.LOGIN_URL);
-                };
-                AccountService.prototype.isAuthorized = function (permittedAudiences) {
-                    return permittedAudiences.indexOf(this.currentAudience) >= 0;
                 };
                 AccountService.prototype.checkJWT = function () {
                     return this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })

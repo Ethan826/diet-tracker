@@ -1,5 +1,5 @@
 import {Component, EventEmitter, OnInit} from "angular2/core";
-import {Control} from "angular2/common"
+import {Control} from "angular2/common";
 import {ICheckboxQuestion} from "./interfaces";
 
 @Component({

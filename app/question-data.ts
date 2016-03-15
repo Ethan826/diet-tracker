@@ -78,7 +78,7 @@ export let buttonQuestions: IButtonQuestionField[] = [
     selection: null,
     inputText: null
   }
-]
+];
 
 export let checkboxQuestions: ICheckboxQuestion[] = [
   {

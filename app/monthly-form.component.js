@@ -28,14 +28,14 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
                 function MonthlyForm() {
                 }
                 MonthlyForm.prototype.ngOnInit = function () {
-                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.load("current", { "packages": ["corechart"] });
                     google.charts.setOnLoadCallback(this.drawChart);
                     window.onresize = this.drawChart;
                 };
                 MonthlyForm.prototype.drawChart = function () {
                     var data = new google.visualization.DataTable();
-                    data.addColumn('date', 'Date');
-                    data.addColumn('number', 'Total Score');
+                    data.addColumn("date", "Date");
+                    data.addColumn("number", "Total Score");
                     data.addRows([
                         [new Date(2015, 5, 7), 4],
                         [new Date(2015, 5, 8), 5],
@@ -47,7 +47,7 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
                         [new Date(2015, 5, 14), 4]
                     ]);
                     var options = {
-                        'title': "Diet Tracker",
+                        "title": "Diet Tracker",
                         "vAxis": {
                             viewWindowMode: "explicit",
                             viewWindow: {

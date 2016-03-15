@@ -3,8 +3,14 @@ import {AccountService} from "./account.service";
 import {FORM_DIRECTIVES, FormBuilder, Control, ControlGroup, Validators, AbstractControl} from "angular2/common";
 import {map} from "rxjs/operator/map";
 import {HTTP_PROVIDERS, Response} from "angular2/http";
-import {Router, RouteParams} from "angular2/router";
+import {Router, RouteParams, CanActivate, ComponentInstruction} from "angular2/router";
+import {checkLoggedOut} from "./login.service";
 
+@CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
+  let loggedOut = checkLoggedOut();
+  console.log(loggedOut);
+  return loggedOut;
+})
 @Component({
   directives: [FORM_DIRECTIVES],
   providers: [AccountService, HTTP_PROVIDERS],
@@ -36,7 +42,7 @@ import {Router, RouteParams} from "angular2/router";
              [ngFormControl]="loginForm.controls['password']">
     </div>
     <br>
-    <div *ngIf="password.hasError('required') && username.touched"
+    <div *ngIf="password.hasError('required') && password.touched"
          class="alert alert-danger">
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       Password cannot be blank.

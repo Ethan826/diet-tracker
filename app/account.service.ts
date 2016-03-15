@@ -39,13 +39,13 @@ export class AccountService {
     return this.submitHelper(username, password, this.LOGIN_URL);
   }
 
-  private checkJWT(): Rx.Observable<string> {
+  private checkJWT(): Rx.Observable<Object> {
     return this.http.post(
       this.JWT_CHECK_URL,
       JSON.stringify({ jwt: localStorage.getItem("jwt") }),
       { headers: this.HEADERS }
       )
-      .map((res: Response) => res.text());
+      .map((res: Response) => res.json());
   }
 
   logout() {

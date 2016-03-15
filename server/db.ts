@@ -65,7 +65,7 @@ export class DB {
               if (credResults.hash === dbResults.hashedpwd) {
                 resolve({
                   success: true,
-                  jwt: Credentials.makeJWT(dbResults.id, dbResults.admin)
+                  jwt: Credentials.makeJWT(username, dbResults.id, dbResults.admin)
                 });
               } else {
                 reject({ success: false, error: "Bad password" });

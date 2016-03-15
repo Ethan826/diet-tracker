@@ -2,7 +2,7 @@
 /// <reference path="./typings/main/ambient/jwt-simple/index.d.ts"/>
 import * as crypto from "crypto";
 import {Promise} from "es6-promise";
-import {ICredentials} from "./interfaces";
+import {ICredentials, IJWT} from "./interfaces";
 import {DB} from "./db";
 import * as jwt from "jwt-simple";
 
@@ -28,7 +28,7 @@ export class Credentials {
     return this.pbkdf2(username, password, salt);
   }
 
-  static makeJWT(userId: number, admin: number) {
+  static makeJWT(username: string, userId: number, admin: number) {
     let now = Date.now();
     let aud = admin === 1 ? "admin" : "standard";
     console.log(`In makeJWT, aud = ${aud}`);
@@ -37,20 +37,21 @@ export class Credentials {
       iat: now,
       aud: aud,
       exp: now + CREDENTIAL_CONSTANTS.JWT_DURATION,
-      userId: userId
-    }, CREDENTIAL_CONSTANTS.SECRET);
+      userId: userId,
+      username: username
+    } as IJWT, CREDENTIAL_CONSTANTS.SECRET);
   }
 
-  static checkJWT(myJwt: string): string {
+  static checkJWT(myJwt: string): Object {
     if (myJwt) {
       let creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
       if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) { // TODO: check database for changes
-        return creds.aud;
+        return creds;
       } else {
-        return "";
+        return {};
       }
     } else {
-      return "";
+      return {};
     }
   }
 

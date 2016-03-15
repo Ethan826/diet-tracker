@@ -52,7 +52,7 @@ System.register(["angular2/core", "angular2/http", "./login.service"], function(
                 };
                 AccountService.prototype.checkJWT = function () {
                     return this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
-                        .map(function (res) { return res.text(); });
+                        .map(function (res) { return res.json(); });
                 };
                 AccountService.prototype.logout = function () {
                     localStorage.removeItem("jwt");

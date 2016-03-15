@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/http"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/router", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,30 +10,35 @@ System.register(["angular2/core", "angular2/http"], function(exports_1, context_
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, http_1;
-    var AccountInfo;
+    var core_1, router_1, login_service_1;
+    var AdminComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
+            },
+            function (login_service_1_1) {
+                login_service_1 = login_service_1_1;
             }],
         execute: function() {
-            AccountInfo = (function () {
-                function AccountInfo() {
+            AdminComponent = (function () {
+                function AdminComponent() {
                 }
-                AccountInfo = __decorate([
+                AdminComponent = __decorate([
+                    router_1.CanActivate(function (to, fr) {
+                        return login_service_1.checkAuth(["admin"]);
+                    }),
                     core_1.Component({
-                        providers: [http_1.HTTP_PROVIDERS],
-                        template: ""
+                        template: "Welcome to the Admin Page"
                     }), 
                     __metadata('design:paramtypes', [])
-                ], AccountInfo);
-                return AccountInfo;
+                ], AdminComponent);
+                return AdminComponent;
             }());
-            exports_1("AccountInfo", AccountInfo);
+            exports_1("AdminComponent", AdminComponent);
         }
     }
 });

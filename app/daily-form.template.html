@@ -1,0 +1,33 @@
+<form>
+  <h1>Daily Tracker</h1>
+  <br>
+  <legend>Date</legend>
+  <date-picker (onDataEntered)="dateDataEntered($event)"></date-picker>
+  <br>
+  <br>
+  <fieldset>
+    <div *ngFor="#b of buttonQuestions" <!--[btn]="b"--> (onDataEnteredp)="buttonDataEntered($event)">
+      <legend>{{btn.legend}}</legend>
+      <label>{{btn.explanatoryText}}</label>
+      <div class="form-group">
+        <div *ngFor="#b of btn.buttons" class="btn-group">
+          <button type="button" class="btn btn-default" (click)="clicked(b)" [class.btn-primary]="isSelected(b)">
+            {{b.buttonText}}
+          </button>
+        </div>
+      </div>
+      <!-- <div class="form-group">
+        <label class="sr-only">Subjective Text</label>
+        <input class="form-control" type="text" placeholder="{{btn.placeholderText}}" [ngFormControl]="inputTextControl" (keyup)=dataEntered()>
+      </div>
+      <div *ngFor="#c of checkboxQuestions" [cbox]="c" (onDataEntered)="checkboxDataEntered($event)">
+        <label>
+          <input type="checkbox" (change)="clicked()"> &emsp; {{cbox.checkboxPrompt}}
+        </label>
+      </div>
+      <div *ngIf="hasText && cbox.checkboxInput" class="form-group">
+        <input type="text" placeholder="{{cbox.textPrompt}}" [ngFormControl]="inputTextControl" (keyup)="dataEntered()" class="form-control">
+      </div>
+      <br> -->
+      <input type="submit" value="Submit" class="btn btn-primary">
+<!-- </form> -->

@@ -2,8 +2,6 @@
 import {Component, Injector} from "angular2/core";
 import {IButtonQuestion, IButtonQuestionField, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
-import {ButtonQuestions} from "./button-questions.component";
-import {CheckboxQuestions} from "./checkbox-questions.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
@@ -15,36 +13,23 @@ import {checkAuth} from "./login.service";
 })
 @Component({
   selector: "daily-form",
-  directives: [ButtonQuestions, CheckboxQuestions, DatePicker],
+  directives: [DatePicker],
   providers: [HTTP_PROVIDERS],
-  template: `
-    <form>
-      <h1>Daily Tracker</h1>
-      <br>
-      <legend>Date</legend>
-      <date-picker (onDataEntered)="dateDataEntered($event)"></date-picker>
-      <br>
-      <br>
-      <button-questions
-        *ngFor="#b of buttonQuestions"
-        [btn]="b"
-        (onDataEntered)="buttonDataEntered($event)">
-      </button-questions>
-      <checkbox-questions
-        *ngFor="#c of checkboxQuestions"
-        [cbox]="c"
-        (onDataEntered)="checkboxDataEntered($event)">
-      </checkbox-questions>
-      <br>
-      <input type="submit" value="Submit" class="btn btn-primary">
-    </form>
-  `
+  templateUrl: "app/daily-form.template.html"
 })
 export class DailyForm {
   private date: Date;
   private buttonQuestions: IButtonQuestionField[];
   private checkboxQuestions: ICheckboxQuestion[];
   private score: number;
+
+  // This hacky implementation appears to be necessary because of an issue
+  // binding controls when composing a form out of sub-elements
+  // https://github.com/angular/angular/issues/6855. Or at least I can't
+  // figure out how to do it.
+
+  // TODO: fix this when composing elements into a single form is working
+  // properly / more straightforwardly / without DI issues
 
   constructor() {
     this.score = 0;

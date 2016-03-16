@@ -6,7 +6,7 @@
   <br>
   <br>
   <fieldset>
-    <div *ngFor="#b of buttonQuestions" <!--[btn]="b"--> (onDataEnteredp)="buttonDataEntered($event)">
+    <!-- <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEnteredp)="buttonDataEntered($event)">
       <legend>{{btn.legend}}</legend>
       <label>{{btn.explanatoryText}}</label>
       <div class="form-group">
@@ -15,7 +15,7 @@
             {{b.buttonText}}
           </button>
         </div>
-      </div>
+      </div> -->
       <!-- <div class="form-group">
         <label class="sr-only">Subjective Text</label>
         <input class="form-control" type="text" placeholder="{{btn.placeholderText}}" [ngFormControl]="inputTextControl" (keyup)=dataEntered()>

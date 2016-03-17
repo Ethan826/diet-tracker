@@ -44,17 +44,8 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     this.buttonQuestions = question_data_1.buttonQuestions;
                     var buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
                     this.questionGroup = buttonGroup;
-                    console.log(this.questionGroup);
+                    console.log(buttonGroup);
                 }
-                DailyForm.prototype.getControl = function (outer, inner) {
-                    return this.questionGroup.controls[outer].controls[inner];
-                };
-                DailyForm.prototype.identity = function (i) {
-                    return i;
-                };
-                DailyForm.prototype.flipFlop = function (control) {
-                    control.updateValue(!control.value);
-                };
                 /**
                  * Helper method to convert questions associated with buttons into a
                  * ControlGroup of ControlGroups.
@@ -80,6 +71,8 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         buttonKeys.forEach(function (buttonKey) {
                             intermediateResult[buttonKey] = [false];
                         });
+                        // Add the text field
+                        intermediateResult["textField"] = [""];
                         finalResult[questionKey] = _this.fb.group(intermediateResult);
                     });
                     return this.fb.group(finalResult);

@@ -10,6 +10,10 @@
   </div>
 </div> -->
 <form [ngFormModel]="questionGroup">
+  <h1>{{questionGroup.controls["hungerControl"].controls["textField"].value}}</h1>
+  <h1>Daily Tracker</h1>
+  <br>
+  <legend>Date</legend>
   <div *ngFor="#outer of getKeys(buttonQuestions)">
     <legend>{{buttonQuestions[outer].legend}}</legend>
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
@@ -20,41 +24,16 @@
       </label>
     </div>
     <br><br>
+    <div class="form-group">
+      <input [ngFormControl]="questionGroup.controls[outer].controls['textField']"
+             placeholder="{{buttonQuestions[outer].placeholderText}}"
+             class="form-control"
+             type="text">
+    </div>
+    <br>
   </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-<!-- <form [ngFormModel]="questionGroup">
-  <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default"
-           [ngClass]="{
-             'btn-primary': questionGroup.value.option1.checked,
-             'btn-default': !questionGroup.value.option1.checked}">
-      <input [ngFormControl]="questionGroup.controls['option1']"
-             type="radio"
-             name="options"
-             id="option1"> Option 1
-    </label>
-    <label class="btn btn-default"
-           [ngClass]="{
-             'btn-primary': questionGroup.value.option2.checked,
-             'btn-default': !questionGroup.value.option2.checked}">
-      <input [ngFormControl]="questionGroup.controls['option2']"
-             type="radio"
-             name="options"
-             id="option2"> Option 2
-    </label>
-    <label class="btn btn-default"
-           [ngClass]="{
-             'btn-primary': questionGroup.value.option3.checked,
-             'btn-default': !questionGroup.value.option3.checked}">
-      <input [ngFormControl]="questionGroup.controls['option3']"
-             type="radio"
-             name="options"
-             id="option3"> Option 3
-    </label>
-  </div>
-</form> -->
-
 
 <!-- <form [ngFormModel]="questionGroup">
   <h1>Daily Tracker</h1>

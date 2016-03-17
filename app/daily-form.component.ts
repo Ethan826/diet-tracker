@@ -35,19 +35,7 @@ export class DailyForm {
     this.buttonQuestions = buttonQuestions;
     let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
     this.questionGroup = buttonGroup;
-    console.log(this.questionGroup);
-  }
-
-  private getControl(outer: string, inner: string) {
-    return this.questionGroup.controls[outer].controls[inner];
-  }
-
-  private identity(i: any) {
-    return i;
-  }
-
-  private flipFlop(control: Control) {
-    control.updateValue(!control.value);
+    console.log(buttonGroup);
   }
 
   /**
@@ -78,6 +66,9 @@ export class DailyForm {
       buttonKeys.forEach(buttonKey => {
         intermediateResult[buttonKey] = [false];
       });
+
+      // Add the text field
+      intermediateResult["textField"] = [""];
       finalResult[questionKey] = this.fb.group(intermediateResult);
     });
     return this.fb.group(finalResult);

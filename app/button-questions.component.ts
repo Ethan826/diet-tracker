@@ -1,6 +1,6 @@
 import {Component, EventEmitter} from "angular2/core";
 import {FORM_DIRECTIVES, FormBuilder, Control} from "angular2/common";
-import {IButtonQuestion, IButtonQuestionField} from "./interfaces";
+import {IButtonQuestion, IButtonQuestion} from "./interfaces";
 
 @Component({
   selector: "button-questions",
@@ -37,7 +37,7 @@ import {IButtonQuestion, IButtonQuestionField} from "./interfaces";
   `
 })
 export class ButtonQuestions {
-  onDataEntered: EventEmitter<IButtonQuestionField>;
+  onDataEntered: EventEmitter<IButtonQuestion>;
   private btn: IButtonQuestionField;
   private inputTextControl: Control;
 

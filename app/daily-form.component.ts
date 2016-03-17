@@ -1,6 +1,7 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {Component, Injector} from "angular2/core";
-import {IButtonQuestion, IButtonQuestionField, ICheckboxQuestion} from "./interfaces";
+import {ControlGroup, FormBuilder, AbstractControl} from "angular2/common";
+import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
@@ -19,35 +20,31 @@ import {checkAuth} from "./login.service";
 })
 export class DailyForm {
   private date: Date;
-  private buttonQuestions: IButtonQuestionField[];
+  private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: ICheckboxQuestion[];
-  private score: number;
 
-  // This hacky implementation appears to be necessary because of an issue
-  // binding controls when composing a form out of sub-elements
-  // https://github.com/angular/angular/issues/6855. Or at least I can't
-  // figure out how to do it.
+  private dailyGroup: ControlGroup;
 
-  // TODO: fix this when composing elements into a single form is working
-  // properly / more straightforwardly / without DI issues
-
-  constructor() {
-    this.score = 0;
+  // Consider reimplementing with Sweet.js macros to transform
+  // the data structure directly into the fb.group() call
+  constructor(fb: FormBuilder) {
     this.buttonQuestions = buttonQuestions;
-    this.checkboxQuestions = checkboxQuestions;
-    this.buttonQuestions.forEach((b, i) => {
-      b["index"] = i;
-    });
-    this.checkboxQuestions.forEach((c, i) => {
-      c["index"] = i;
-    });
+    let hungerControl = this.buttonQuestions["hungerControl"];
+    console.log(fb.group(this.fbButtonHelper(hungerControl.buttons)));
   }
 
-  private dateDataEntered(event: Date) {
-    console.log(event);
+  private fbButtonHelper(buttons: { [val: number]: string }) {
+    let result = {};
+    let keys = Object
+      .keys(buttons)
+      .filter(button => { return buttons.hasOwnProperty(button) });
+    keys.forEach(key => {
+      result[String(key)] = [false];
+    });
+    return result;
   }
 
-  private buttonDataEntered(event: IButtonQuestionField) {
+  private buttonDataEntered(event: IButtonQuestion) {
     let i = event["index"];
     this.buttonQuestions[i] = event;
   }

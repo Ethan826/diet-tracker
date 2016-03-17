@@ -40,7 +40,7 @@ export class DailyForm implements OnInit {
       "option2": [false],
       "option3": [false]
     });
-    console.log(this.testGroup);
+    this.testGroup.valueChanges.subscribe(_ => console.log(this.testGroup.value.option1.checked));
   }
 
   ngOnInit() {

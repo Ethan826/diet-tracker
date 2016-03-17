@@ -37,6 +37,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 // Consider reimplementing with Sweet.js macros to transform
                 // the data structure directly into the fb.group() call
                 function DailyForm(fb) {
+                    var _this = this;
                     this.fb = fb;
                     // this.buttonQuestions = buttonQuestions;
                     // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
@@ -47,7 +48,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "option2": [false],
                         "option3": [false]
                     });
-                    console.log(this.testGroup);
+                    this.testGroup.valueChanges.subscribe(function (_) { return console.log(_this.testGroup.value.option1.checked); });
                 }
                 DailyForm.prototype.ngOnInit = function () {
                     $("#foo-b").click(function () { return $("#foo").click(); });

@@ -1,18 +1,27 @@
 <form [ngFormModel]="testGroup">
   <div class="btn-group" data-toggle="buttons">
-    <label class="btn btn-default">
+    <label class="btn btn-default"
+           [ngClass]="{
+             'btn-primary': testGroup.value.option1.checked,
+             'btn-default': !testGroup.value.option1.checked}">
       <input [ngFormControl]="testGroup.controls['option1']"
              type="radio"
              name="options"
              id="option1"> Option 1
     </label>
-    <label class="btn btn-default">
+    <label class="btn btn-default"
+           [ngClass]="{
+             'btn-primary': testGroup.value.option2.checked,
+             'btn-default': !testGroup.value.option2.checked}">
       <input [ngFormControl]="testGroup.controls['option2']"
              type="radio"
              name="options"
              id="option2"> Option 2
     </label>
-    <label class="btn btn-default">
+    <label class="btn btn-default"
+           [ngClass]="{
+             'btn-primary': testGroup.value.option3.checked,
+             'btn-default': !testGroup.value.option3.checked}">
       <input [ngFormControl]="testGroup.controls['option3']"
              type="radio"
              name="options"

@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common", "./date-picker.component", "./question-data", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common", "./date-picker.component", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, date_picker_component_1, question_data_1, router_1, http_1, login_service_1;
+    var core_1, common_1, date_picker_component_1, router_1, http_1, login_service_1;
     var DailyForm;
     return {
         setters:[
@@ -23,9 +23,6 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
             function (date_picker_component_1_1) {
                 date_picker_component_1 = date_picker_component_1_1;
             },
-            function (question_data_1_1) {
-                question_data_1 = question_data_1_1;
-            },
             function (router_1_1) {
                 router_1 = router_1_1;
             },
@@ -37,20 +34,54 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
             }],
         execute: function() {
             DailyForm = (function () {
+                // Consider reimplementing with Sweet.js macros to transform
+                // the data structure directly into the fb.group() call
                 function DailyForm(fb) {
-                    this.buttonQuestions = question_data_1.buttonQuestions;
-                    var hungerControl = this.buttonQuestions["hungerControl"];
-                    console.log(fb.group(this.fbButtonHelper(hungerControl.buttons)));
-                }
-                DailyForm.prototype.fbButtonHelper = function (buttons) {
-                    var result = {};
-                    var keys = Object
-                        .keys(buttons)
-                        .filter(function (button) { return buttons.hasOwnProperty(button); });
-                    keys.forEach(function (key) {
-                        result[String(key)] = [false];
+                    this.fb = fb;
+                    this.flipFlop = function (control) {
+                        control.updateValue(!control.value);
+                    };
+                    // this.buttonQuestions = buttonQuestions;
+                    // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
+                    // this.testGroup = buttonGroup;
+                    // console.log(this.testGroup);
+                    this.testGroup = fb.group({
+                        "test": [true]
                     });
-                    return result;
+                }
+                /**
+                 * Helper method to convert questions associated with buttons into a
+                 * ControlGroup of ControlGroups.
+                 *
+                 * @param {Object} buttonQuestions - buttonQuestions is an object-based map of
+                 * the name of each button and the IButtonQuestion.
+                 *
+                 * @returns {ControlGroup} - The return value is a ControlGroup containing multiple
+                 * ControlGroups, each corresponding to a question; each question's
+                 * ControlGroup contains a Control for one of the buttons.
+                 */
+                DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
+                    var _this = this;
+                    // Accumulator of outer ControlGroup
+                    var finalResult = {};
+                    // Loop over questions by key to build up outer ControlGroup
+                    var questionKeys = this.getKeys(buttonQuestions);
+                    questionKeys.forEach(function (questionKey) {
+                        var intermediateResult = {};
+                        var buttonQuestion = buttonQuestions[questionKey];
+                        var buttonKeys = _this.getKeys(buttonQuestion.buttons);
+                        // Loop over buttons to build inner ControlGroups
+                        buttonKeys.forEach(function (buttonKey) {
+                            intermediateResult[buttonKey] = [false];
+                        });
+                        finalResult[questionKey] = _this.fb.group(intermediateResult);
+                    });
+                    return this.fb.group(finalResult);
+                };
+                DailyForm.prototype.getKeys = function (objects) {
+                    return Object
+                        .keys(objects)
+                        .filter(function (object) { return objects.hasOwnProperty(object); });
                 };
                 DailyForm.prototype.buttonDataEntered = function (event) {
                     var i = event["index"];

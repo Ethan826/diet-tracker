@@ -1,12 +1,20 @@
-<form>
+<form [ngFormModel]="testGroup">
   <h1>Daily Tracker</h1>
   <br>
   <legend>Date</legend>
   <date-picker (onDataEntered)="dateDataEntered($event)"></date-picker>
   <br>
   <br>
+  <h1>{{testGroup.controls["test"].value}}</h1>
   <fieldset>
-    <!-- <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEnteredp)="buttonDataEntered($event)">
+    <label>Foo&emsp;
+      <input type="button"
+             [ngFormControl]="testGroup.controls['test']"
+             (click)="flipFlop(testGroup.controls['test'])">
+    </label>
+    <br>
+    <br>
+    <!-- <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEntered)="buttonDataEntered($event)">
       <legend>{{btn.legend}}</legend>
       <label>{{btn.explanatoryText}}</label>
       <div class="form-group">

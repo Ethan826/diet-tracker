@@ -1,6 +1,6 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {Component, Injector} from "angular2/core";
-import {ControlGroup, FormBuilder, AbstractControl} from "angular2/common";
+import {ControlGroup, FormBuilder, Control, AbstractControl} from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
@@ -22,26 +22,65 @@ export class DailyForm {
   private date: Date;
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: ICheckboxQuestion[];
+  private testBool: boolean;
+  private testGroup: ControlGroup;
+  private testControl: Control;
 
   private dailyGroup: ControlGroup;
 
   // Consider reimplementing with Sweet.js macros to transform
   // the data structure directly into the fb.group() call
-  constructor(fb: FormBuilder) {
-    this.buttonQuestions = buttonQuestions;
-    let hungerControl = this.buttonQuestions["hungerControl"];
-    console.log(fb.group(this.fbButtonHelper(hungerControl.buttons)));
+  constructor(private fb: FormBuilder) {
+    // this.buttonQuestions = buttonQuestions;
+    // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
+    // this.testGroup = buttonGroup;
+    // console.log(this.testGroup);
+    this.testGroup = fb.group({
+      "test": [true]
+    });
   }
 
-  private fbButtonHelper(buttons: { [val: number]: string }) {
-    let result = {};
-    let keys = Object
-      .keys(buttons)
-      .filter(button => { return buttons.hasOwnProperty(button) });
-    keys.forEach(key => {
-      result[String(key)] = [false];
+  private flipFlop = (control: Control) => {
+    control.updateValue(!control.value);
+  }
+
+  /**
+   * Helper method to convert questions associated with buttons into a
+   * ControlGroup of ControlGroups.
+   *
+   * @param {Object} buttonQuestions - buttonQuestions is an object-based map of
+   * the name of each button and the IButtonQuestion.
+   *
+   * @returns {ControlGroup} - The return value is a ControlGroup containing multiple
+   * ControlGroups, each corresponding to a question; each question's
+   * ControlGroup contains a Control for one of the buttons.
+   */
+  private buttonGroupBuilder(
+    buttonQuestions: { [key: string]: IButtonQuestion }
+    ): ControlGroup {
+    // Accumulator of outer ControlGroup
+    let finalResult = {};
+
+    // Loop over questions by key to build up outer ControlGroup
+    let questionKeys = this.getKeys(buttonQuestions);
+    questionKeys.forEach(questionKey => {
+      let intermediateResult = {};
+      let buttonQuestion = buttonQuestions[questionKey];
+      let buttonKeys = this.getKeys(buttonQuestion.buttons);
+
+      // Loop over buttons to build inner ControlGroups
+      buttonKeys.forEach(buttonKey => {
+        intermediateResult[buttonKey] = [false];
+      });
+      finalResult[questionKey] = this.fb.group(intermediateResult);
     });
-    return result;
+    return this.fb.group(finalResult);
+  }
+
+  private getKeys(objects: { [val: number]: any }) {
+    return Object
+      .keys(objects)
+      .filter(object => { return objects.hasOwnProperty(object) });
   }
 
   private buttonDataEntered(event: IButtonQuestion) {

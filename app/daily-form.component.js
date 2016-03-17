@@ -38,9 +38,6 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 // the data structure directly into the fb.group() call
                 function DailyForm(fb) {
                     this.fb = fb;
-                    this.flipFlop = function (control) {
-                        control.updateValue(!control.value);
-                    };
                     // this.buttonQuestions = buttonQuestions;
                     // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
                     // this.testGroup = buttonGroup;
@@ -49,6 +46,12 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "test": [true]
                     });
                 }
+                DailyForm.prototype.ngOnInit = function () {
+                    $("#foo-b").click(function () { return $("#foo").click(); });
+                };
+                DailyForm.prototype.flipFlop = function (control) {
+                    control.updateValue(!control.value);
+                };
                 /**
                  * Helper method to convert questions associated with buttons into a
                  * ControlGroup of ControlGroups.

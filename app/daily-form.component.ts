@@ -1,6 +1,6 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {Component, Injector} from "angular2/core";
-import {ControlGroup, FormBuilder, Control, AbstractControl} from "angular2/common";
+import {OnInit, ControlGroup, FormBuilder, Control, AbstractControl} from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
@@ -18,7 +18,7 @@ import {checkAuth} from "./login.service";
   providers: [HTTP_PROVIDERS],
   templateUrl: "app/daily-form.template.html"
 })
-export class DailyForm {
+export class DailyForm implements OnInit {
   private date: Date;
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: ICheckboxQuestion[];
@@ -40,7 +40,11 @@ export class DailyForm {
     });
   }
 
-  private flipFlop = (control: Control) => {
+  ngOnInit() {
+    $("#foo-b").click(() => $("#foo").click());
+  }
+
+  private flipFlop(control: Control) {
     control.updateValue(!control.value);
   }
 

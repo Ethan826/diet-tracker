@@ -9,8 +9,13 @@
   <fieldset>
     <label>Foo&emsp;
       <input type="button"
+             id="foo"
+             class="hidden"
              [ngFormControl]="testGroup.controls['test']"
              (click)="flipFlop(testGroup.controls['test'])">
+      <button id="foo-b">
+        Button
+      </button>
     </label>
     <br>
     <br>

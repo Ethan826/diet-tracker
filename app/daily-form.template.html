@@ -1,51 +1,83 @@
-<form [ngFormModel]="testGroup">
+<!-- <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEntered)="buttonDataEntered($event)">
+  <legend>{{btn.legend}}</legend>
+  <label>{{btn.explanatoryText}}</label>
+  <div class="form-group">
+    <div *ngFor="#b of btn.buttons" class="btn-group">
+      <button type="button" class="btn btn-default" (click)="clicked(b)" [class.btn-primary]="isSelected(b)">
+        {{b.buttonText}}
+      </button>
+    </div>
+  </div>
+</div> -->
+<form [ngFormModel]="questionGroup">
+  <div *ngFor="#outer of getKeys(buttonQuestions)">
+    <legend>{{buttonQuestions[outer].legend}}</legend>
+    <label>{{buttonQuestions[outer].explanatoryText}}</label>
+    <div class="form-group">
+      <div *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
+           class="btn-group"
+           data-toggle="buttons">
+        <label class="btn btn-default">
+          <input [ngFormControl]="getControl(outer, inner)"
+                 type=radio>
+            {{buttonQuestions[outer].buttons[inner]}}
+        </label>
+      </div>
+    </div>
+    <!-- <div *ngFor="#inner of getKeys(questionGroup.controls[outer].controls)">
+      {{inner}}
+    </div> -->
+  </div>
+</form>
+
+<!-- <form [ngFormModel]="questionGroup">
   <div class="btn-group" data-toggle="buttons">
     <label class="btn btn-default"
            [ngClass]="{
-             'btn-primary': testGroup.value.option1.checked,
-             'btn-default': !testGroup.value.option1.checked}">
-      <input [ngFormControl]="testGroup.controls['option1']"
+             'btn-primary': questionGroup.value.option1.checked,
+             'btn-default': !questionGroup.value.option1.checked}">
+      <input [ngFormControl]="questionGroup.controls['option1']"
              type="radio"
              name="options"
              id="option1"> Option 1
     </label>
     <label class="btn btn-default"
            [ngClass]="{
-             'btn-primary': testGroup.value.option2.checked,
-             'btn-default': !testGroup.value.option2.checked}">
-      <input [ngFormControl]="testGroup.controls['option2']"
+             'btn-primary': questionGroup.value.option2.checked,
+             'btn-default': !questionGroup.value.option2.checked}">
+      <input [ngFormControl]="questionGroup.controls['option2']"
              type="radio"
              name="options"
              id="option2"> Option 2
     </label>
     <label class="btn btn-default"
            [ngClass]="{
-             'btn-primary': testGroup.value.option3.checked,
-             'btn-default': !testGroup.value.option3.checked}">
-      <input [ngFormControl]="testGroup.controls['option3']"
+             'btn-primary': questionGroup.value.option3.checked,
+             'btn-default': !questionGroup.value.option3.checked}">
+      <input [ngFormControl]="questionGroup.controls['option3']"
              type="radio"
              name="options"
              id="option3"> Option 3
     </label>
   </div>
-</form>
+</form> -->
 
 
-<!-- <form [ngFormModel]="testGroup">
+<!-- <form [ngFormModel]="questionGroup">
   <h1>Daily Tracker</h1>
   <br>
   <legend>Date</legend>
   <date-picker (onDataEntered)="dateDataEntered($event)"></date-picker>
   <br>
   <br>
-  <h1>{{testGroup.controls["test"].value}}</h1>
+  <h1>{{questionGroup.controls["test"].value}}</h1>
   <fieldset>
     <label>Foo&emsp;
       <input type="button"
              id="foo"
              class="hidden"
-             [ngFormControl]="testGroup.controls['test']"
-             (click)="flipFlop(testGroup.controls['test'])">
+             [ngFormControl]="questionGroup.controls['test']"
+             (click)="flipFlop(questionGroup.controls['test'])">
       <button id="foo-b">
         Button
       </button>

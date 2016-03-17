@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/common", "./date-picker.component", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/common", "./date-picker.component", "./question-data", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, date_picker_component_1, router_1, http_1, login_service_1;
+    var core_1, common_1, date_picker_component_1, question_data_1, router_1, http_1, login_service_1;
     var DailyForm;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
             },
             function (date_picker_component_1_1) {
                 date_picker_component_1 = date_picker_component_1_1;
+            },
+            function (question_data_1_1) {
+                question_data_1 = question_data_1_1;
             },
             function (router_1_1) {
                 router_1 = router_1_1;
@@ -37,19 +40,15 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 // Consider reimplementing with Sweet.js macros to transform
                 // the data structure directly into the fb.group() call
                 function DailyForm(fb) {
-                    var _this = this;
                     this.fb = fb;
-                    // this.buttonQuestions = buttonQuestions;
-                    // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
-                    // this.testGroup = buttonGroup;
-                    // console.log(this.testGroup);
-                    this.testGroup = fb.group({
-                        "option1": [true],
-                        "option2": [false],
-                        "option3": [false]
-                    });
-                    this.testGroup.valueChanges.subscribe(function (_) { return console.log(_this.testGroup.value.option1.checked); });
+                    this.buttonQuestions = question_data_1.buttonQuestions;
+                    var buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
+                    this.questionGroup = buttonGroup;
+                    console.log(this.questionGroup);
                 }
+                DailyForm.prototype.getControl = function (outer, inner) {
+                    return this.questionGroup.controls[outer].controls[inner];
+                };
                 DailyForm.prototype.ngOnInit = function () {
                     $("#foo-b").click(function () { return $("#foo").click(); });
                 };

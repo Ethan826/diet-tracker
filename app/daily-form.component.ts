@@ -23,7 +23,7 @@ export class DailyForm implements OnInit {
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: ICheckboxQuestion[];
   private testBool: boolean;
-  private testGroup: ControlGroup;
+  private questionGroup: ControlGroup;
   private testControl: Control;
 
   private dailyGroup: ControlGroup;
@@ -31,16 +31,14 @@ export class DailyForm implements OnInit {
   // Consider reimplementing with Sweet.js macros to transform
   // the data structure directly into the fb.group() call
   constructor(private fb: FormBuilder) {
-    // this.buttonQuestions = buttonQuestions;
-    // let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
-    // this.testGroup = buttonGroup;
-    // console.log(this.testGroup);
-    this.testGroup = fb.group({
-      "option1": [true],
-      "option2": [false],
-      "option3": [false]
-    });
-    this.testGroup.valueChanges.subscribe(_ => console.log(this.testGroup.value.option1.checked));
+    this.buttonQuestions = buttonQuestions;
+    let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
+    this.questionGroup = buttonGroup;
+    console.log(this.questionGroup);
+  }
+
+  getControl(outer: string, inner: string) {
+    return this.questionGroup.controls[outer].controls[inner];
   }
 
   ngOnInit() {

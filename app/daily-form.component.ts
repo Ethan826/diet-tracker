@@ -63,14 +63,17 @@ export class DailyForm {
       let buttonKeys = this.getKeys(buttonQuestion.buttons);
 
       // Loop over buttons to build inner ControlGroups
+      let tertiaryResult = {}
       buttonKeys.forEach(buttonKey => {
-        intermediateResult[buttonKey] = [false];
+        tertiaryResult[buttonKey] = [false];
       });
 
       // Add the text field
+      intermediateResult["buttons"] = this.fb.group(tertiaryResult);
       intermediateResult["textField"] = [""];
       finalResult[questionKey] = this.fb.group(intermediateResult);
     });
+    console.log(finalResult);
     return this.fb.group(finalResult);
   }
 

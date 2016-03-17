@@ -68,13 +68,16 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         var buttonQuestion = buttonQuestions[questionKey];
                         var buttonKeys = _this.getKeys(buttonQuestion.buttons);
                         // Loop over buttons to build inner ControlGroups
+                        var tertiaryResult = {};
                         buttonKeys.forEach(function (buttonKey) {
-                            intermediateResult[buttonKey] = [false];
+                            tertiaryResult[buttonKey] = [false];
                         });
                         // Add the text field
+                        intermediateResult["buttons"] = _this.fb.group(tertiaryResult);
                         intermediateResult["textField"] = [""];
                         finalResult[questionKey] = _this.fb.group(intermediateResult);
                     });
+                    console.log(finalResult);
                     return this.fb.group(finalResult);
                 };
                 DailyForm.prototype.getKeys = function (objects) {

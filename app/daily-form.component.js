@@ -43,8 +43,11 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     // this.testGroup = buttonGroup;
                     // console.log(this.testGroup);
                     this.testGroup = fb.group({
-                        "test": [true]
+                        "option1": [true],
+                        "option2": [false],
+                        "option3": [false]
                     });
+                    console.log(this.testGroup);
                 }
                 DailyForm.prototype.ngOnInit = function () {
                     $("#foo-b").click(function () { return $("#foo").click(); });

@@ -36,8 +36,11 @@ export class DailyForm implements OnInit {
     // this.testGroup = buttonGroup;
     // console.log(this.testGroup);
     this.testGroup = fb.group({
-      "test": [true]
+      "option1": [true],
+      "option2": [false],
+      "option3": [false]
     });
+    console.log(this.testGroup);
   }
 
   ngOnInit() {

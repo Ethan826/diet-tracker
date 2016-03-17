@@ -1,12 +1,13 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {Component, Injector} from "angular2/core";
-import {OnInit, ControlGroup, FormBuilder, Control, AbstractControl} from "angular2/common";
+import {ControlGroup, FormBuilder, Control, AbstractControl} from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
+import {Observable} from "rxjs/Observable";
 import {checkAuth} from "./login.service";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
@@ -18,7 +19,7 @@ import {checkAuth} from "./login.service";
   providers: [HTTP_PROVIDERS],
   templateUrl: "app/daily-form.template.html"
 })
-export class DailyForm implements OnInit {
+export class DailyForm {
   private date: Date;
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: ICheckboxQuestion[];
@@ -37,12 +38,22 @@ export class DailyForm implements OnInit {
     console.log(this.questionGroup);
   }
 
-  getControl(outer: string, inner: string) {
-    return this.questionGroup.controls[outer].controls[inner];
+
+  // Feedback loop
+  isChecked(outer: string, inner: string): Observable<boolean> {
+    // return Boolean(this.getControl(outer, inner).value);
+    this.getControl(outer, inner).valueChanges.subscribe(v => {
+      console.log(v.checked)
+    });
   }
 
-  ngOnInit() {
-    $("#foo-b").click(() => $("#foo").click());
+  isUnchecked(outer: string, inner: string): Observable<boolean> {
+    return this.isChecked(outer, inner)
+      .map(v => { return !v; });
+  }
+
+  getControl(outer: string, inner: string) {
+    return this.questionGroup.controls[outer].controls[inner];
   }
 
   private flipFlop(control: Control) {

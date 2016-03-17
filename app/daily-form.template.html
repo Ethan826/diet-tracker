@@ -17,10 +17,12 @@
       <div *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
            class="btn-group"
            data-toggle="buttons">
-        <label class="btn btn-default">
+        <label class="btn btn-default"
+               [class.btn-primary]="isChecked(outer, inner) | async">
           <input [ngFormControl]="getControl(outer, inner)"
                  type=radio>
-            {{buttonQuestions[outer].buttons[inner]}}
+            {{getControl(outer, inner).value.checked}}
+            <!-- {{buttonQuestions[outer].buttons[inner]}} -->
         </label>
       </div>
     </div>

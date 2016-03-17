@@ -46,11 +46,19 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     this.questionGroup = buttonGroup;
                     console.log(this.questionGroup);
                 }
+                // Feedback loop
+                DailyForm.prototype.isChecked = function (outer, inner) {
+                    // return Boolean(this.getControl(outer, inner).value);
+                    this.getControl(outer, inner).valueChanges.subscribe(function (v) {
+                        console.log(v.checked);
+                    });
+                };
+                DailyForm.prototype.isUnchecked = function (outer, inner) {
+                    return this.isChecked(outer, inner)
+                        .map(function (v) { return !v; });
+                };
                 DailyForm.prototype.getControl = function (outer, inner) {
                     return this.questionGroup.controls[outer].controls[inner];
-                };
-                DailyForm.prototype.ngOnInit = function () {
-                    $("#foo-b").click(function () { return $("#foo").click(); });
                 };
                 DailyForm.prototype.flipFlop = function (control) {
                     control.updateValue(!control.value);

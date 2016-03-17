@@ -38,22 +38,12 @@ export class DailyForm {
     console.log(this.questionGroup);
   }
 
-
-  // Feedback loop
-  isChecked(outer: string, inner: string): Observable<boolean> {
-    // return Boolean(this.getControl(outer, inner).value);
-    this.getControl(outer, inner).valueChanges.subscribe(v => {
-      console.log(v.checked)
-    });
-  }
-
-  isUnchecked(outer: string, inner: string): Observable<boolean> {
-    return this.isChecked(outer, inner)
-      .map(v => { return !v; });
-  }
-
-  getControl(outer: string, inner: string) {
+  private getControl(outer: string, inner: string) {
     return this.questionGroup.controls[outer].controls[inner];
+  }
+
+  private identity(i: any) {
+    return i;
   }
 
   private flipFlop(control: Control) {

@@ -13,22 +13,13 @@
   <div *ngFor="#outer of getKeys(buttonQuestions)">
     <legend>{{buttonQuestions[outer].legend}}</legend>
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
-    <div class="form-group">
-      <div *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
-           class="btn-group"
-           data-toggle="buttons">
-        <label class="btn btn-default"
-               [class.btn-primary]="isChecked(outer, inner) | async">
-          <input [ngFormControl]="getControl(outer, inner)"
-                 type=radio>
-            {{getControl(outer, inner).value.checked}}
-            <!-- {{buttonQuestions[outer].buttons[inner]}} -->
-        </label>
-      </div>
+    <br>
+    <div class="btn-group" data-toggle="buttons">
+      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)" class="btn btn-default">
+        <input type="radio" name="{{outer}}"> {{buttonQuestions[outer].buttons[inner]}}
+      </label>
     </div>
-    <!-- <div *ngFor="#inner of getKeys(questionGroup.controls[outer].controls)">
-      {{inner}}
-    </div> -->
+    <br><br>
   </div>
 </form>
 

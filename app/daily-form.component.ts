@@ -1,4 +1,6 @@
+/// <reference path="../typings/main/ambient/jquery/jquery.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
+/// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
 import {Component, Injector, OnInit} from "angular2/core";
 import {
 ControlGroup,
@@ -163,28 +165,32 @@ export class DailyForm implements OnInit {
   }
 
   private processForm() {
-    // console.log(this.dailyGroup);
-    let bc = this.dailyGroup.controls["buttonGroup"].controls;
-    let cc = this.dailyGroup.controls["checkboxGroup"].controls;
+    // Shorten the names (plus hack to avoid type error)
+    let temp: any = this.dailyGroup.controls["buttonGroup"];
+    let bc = temp.controls;
+    temp = this.dailyGroup.controls["checkboxGroup"];
+    let cc = temp.controls;
+    console.log(this.dailyGroup);
+
     let result = {};
-    this.getPoints(bc["hungerControl"]);
+
     // result["userid"] = this.dailyGroup.controls
 
-    // result["date"] = this.dailyGroup.controls["date"].value;
-    //
-    // result["hungerscore"] = bc["hungerControl"]
-    // result["hungertext"] = this.dailyGroup.controls
-    // result["cravingscore"] = this.dailyGroup.controls
-    // result["cravingtext"] = this.dailyGroup.controls
-    // result["satietyscore"] = this.dailyGroup.controls
-    // result["satietytext"] = this.dailyGroup.controls
-    // result["energyscore"] = this.dailyGroup.controls
-    // result["energytext"] = this.dailyGroup.controls
-    // result["wellbeingscore"] = this.dailyGroup.controls
-    // result["wellbeingtext"] = this.dailyGroup.controls
-    // result["carbsscore"] = this.dailyGroup.controls
-    // result["carbstext"] = this.dailyGroup.controls
-    //
+    result["date"] = this.dailyGroup.controls["date"].value;
+
+    result["hungerscore"] = this.getPoints(bc["hungerControl"]);
+    result["hungertext"] = bc["hungerControl"].value["textField"];
+    result["cravingscore"] = this.getPoints(bc["cravingControl"]);
+    result["cravingtext"] = bc["cravingControl"].value["textField"];
+    result["satietyscore"] = this.getPoints(bc["satiety"]);
+    result["satietytext"] = bc["satiety"].value["textField"];
+    result["energyscore"] = this.getPoints(bc["energyLevel"]);
+    result["energytext"] = bc["energyLevel"].value["textField"];
+    result["wellbeingscore"] = this.getPoints(bc["wellBeing"]);
+    result["wellbeingtext"] = bc["wellBeing"].value["textField"];
+    result["carbsscore"] = this.getPoints(bc["processedCarbs"]);
+    result["carbstext"] = bc["processedCarbs"].value["textField"];
+
     // result["stressambool"] = this.dailyGroup.controls
     // result["stresspmbool"] = this.dailyGroup.controls
     // result["walksbool"] = this.dailyGroup.controls
@@ -192,6 +198,7 @@ export class DailyForm implements OnInit {
     // result["movementtext"] = this.dailyGroup.controls
     // result["bedtimebool"] = this.dailyGroup.controls
     // result["bedtimetext"] = this.dailyGroup.controls
+    console.log(result);
   }
 
   /**********************************************
@@ -281,13 +288,18 @@ export class DailyForm implements OnInit {
   }
 
   private getPoints(buttonGroup: ControlGroup | any): number {
-    let keys = this.getKeys(buttonGroup.value["buttons"]);
-    let result: number = null;
-    keys.forEach(key => {
-      if (buttonGroup.value["buttons"][key]) {
-        result = Number(key);
-      }
-    });
-    return result;
+    try {
+      let keys = this.getKeys(buttonGroup.value["buttons"]);
+      let result: number = null;
+      keys.forEach(key => {
+        if (buttonGroup.value["buttons"][key]) {
+          result = Number(key);
+        }
+      });
+      return result;
+    }
+    catch (e) {
+      console.log(`Error while evaluating ${buttonGroup}: ${e}`);
+    }
   }
 }

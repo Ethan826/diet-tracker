@@ -16,13 +16,14 @@ import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
+import {FormsService} from "./forms.service";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   return checkAuth(["standard", "admin"]);
 })
 @Component({
   selector: "daily-form",
-  providers: [HTTP_PROVIDERS],
+  providers: [HTTP_PROVIDERS, FormsService],
   template: `
   <!-- Header material -->
   <h1>Daily Tracker</h1>
@@ -105,7 +106,7 @@ export class DailyForm {
 
   // Consider reimplementing with Sweet.js macros to transform
   // the data structure directly into the fb.group() call
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private formsService: FormsService) {
     this.buttonQuestions = buttonQuestions;
     this.checkboxQuestions = checkboxQuestions;
     let dateString = new Date().toLocaleDateString();
@@ -152,17 +153,18 @@ export class DailyForm {
     if (!this.dailyGroup.valid) {
       alert("You must click on at least one button in each set.");
     } else {
-      this.processForm();
+      let form = this.processForm();
+      this.formsService.submitDaily(form).then().catch();
+      console.log("Submitting form in daily-form.component.ts");
     }
   }
 
-  private processForm() {
+  private processForm(): Object {
     // Shorten the names (plus hack to avoid type error)
     let temp: any = this.dailyGroup.controls["buttonGroup"];
     let bc = temp.controls;
     temp = this.dailyGroup.controls["checkboxGroup"];
     let cc = temp.controls;
-    console.log(this.dailyGroup);
 
     let result = {};
 
@@ -195,7 +197,7 @@ export class DailyForm {
     result["bedtimebool"] = cc["bedtime"].value["checkboxPrompt"] ? 1 : 0;
     result["bedtimetext"] = cc["bedtime"].value["textPrompt"];
 
-    console.log(result);
+    return result;
   }
 
   /**********************************************

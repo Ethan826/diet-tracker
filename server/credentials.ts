@@ -11,7 +11,7 @@ let CREDENTIAL_CONSTANTS = {
   ITERATIONS: 50000,
   KEYLEN: 512,
   DIGEST: "sha512",
-  JWT_DURATION: 86400000,
+  JWT_DURATION: 86400,
   SECRET: "Db4gG8tdLXlkvfetHAnkizXn72OulTj68BN1AbXxuKEZrxQexa0aApzPcNH0OvwFMK75ASTKDKpRUNupQjoW3r+rcyPeNf/jJ8nCnWU+033WfBwocMyL5preLR7XGbCIRjeSDrMENixyEYn5GmKqhBBzxkOmp6BBijfmLmDQyCc=",
   ISS: "https://flashbangsplat.com"
 };
@@ -29,7 +29,7 @@ export class Credentials {
   }
 
   static makeJWT(username: string, userId: number, admin: number) {
-    let now = Date.now();
+    let now = Date.now() / 1000;
     let aud = admin === 1 ? "admin" : "standard";
     return jwt.encode({
       iss: CREDENTIAL_CONSTANTS.ISS,
@@ -44,7 +44,7 @@ export class Credentials {
   static checkJWT(myJwt: string): Object {
     if (myJwt) {
       let creds = jwt.decode(myJwt, CREDENTIAL_CONSTANTS.SECRET);
-      if (Date.now() < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) { // TODO: check database for changes
+      if (Date.now() / 1000 < creds.exp && creds.iss === CREDENTIAL_CONSTANTS.ISS) { // TODO: check database for changes
         return creds;
       } else {
         return {};

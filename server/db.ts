@@ -83,6 +83,43 @@ export class DB {
     });
   }
 
+  static handleDailyForm(formOutput: JSON, cb: Function) {
+    let db = new Database(DB_PATH);
+    console.log(formOutput);
+    db.run(`
+      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,
+                           carbstext, cravingscore, cravingtext,
+                           date, energyscore, energytext,
+                           hungerscore, hungertext, movementbool,
+                           movementtext, satietyscore, satietytext,
+                           stressambool, stresspmbool, userId,
+                           walksbool, wellbeingscore, wellbeingtext)
+                   VALUES (?, ?, ?,
+                           ?, ?, ?,
+                           ?, ?, ?,
+                           ?, ?, ?,
+                           ?, ?, ?,
+                           ?, ?, ?,
+                           ?, ?, ?)`,
+      [
+        formOutput.bedtimebool, formOutput.bedtimetext, formOutput.carbsscore,
+        formOutput.carbstext, formOutput.cravingscore, formOutput.cravingtext,
+        formOutput.date, formOutput.energyscore, formOutput.energytext,
+        formOutput.hungerscore, formOutput.hungertext, formOutput.movementbool,
+        formOutput.movementtext, formOutput.satietyscore, formOutput.satietytext,
+        formOutput.stressambool, formOutput.stresspmbool, formOutput.userId,
+        formOutput.walksbool, formOutput.wellbeingscore, formOutput.wellbeingtext
+      ]
+      );
+  }
+
+
+  static getKeys(objects: { [val: string]: any }) {
+    return Object
+      .keys(objects)
+      .filter(object => { return objects.hasOwnProperty(object); });
+  }
+
   static setupDatabase() {
     try {
       fs.unlinkSync(DB_PATH);

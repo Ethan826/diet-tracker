@@ -62,6 +62,24 @@ var DB = (function () {
             });
         });
     };
+    DB.handleDailyForm = function (formOutput, cb) {
+        var db = new sqlite3_1.Database(DB_PATH);
+        console.log(formOutput);
+        db.run("\n      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,\n                           carbstext, cravingscore, cravingtext,\n                           date, energyscore, energytext,\n                           hungerscore, hungertext, movementbool,\n                           movementtext, satietyscore, satietytext,\n                           stressambool, stresspmbool, userId,\n                           walksbool, wellbeingscore, wellbeingtext)\n                   VALUES (?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?)", [
+            formOutput.bedtimebool, formOutput.bedtimetext, formOutput.carbsscore,
+            formOutput.carbstext, formOutput.cravingscore, formOutput.cravingtext,
+            formOutput.date, formOutput.energyscore, formOutput.energytext,
+            formOutput.hungerscore, formOutput.hungertext, formOutput.movementbool,
+            formOutput.movementtext, formOutput.satietyscore, formOutput.satietytext,
+            formOutput.stressambool, formOutput.stresspmbool, formOutput.userId,
+            formOutput.walksbool, formOutput.wellbeingscore, formOutput.wellbeingtext
+        ]);
+    };
+    DB.getKeys = function (objects) {
+        return Object
+            .keys(objects)
+            .filter(function (object) { return objects.hasOwnProperty(object); });
+    };
     DB.setupDatabase = function () {
         try {
             fs.unlinkSync(DB_PATH);

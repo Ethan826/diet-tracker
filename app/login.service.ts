@@ -30,14 +30,18 @@ export class LoginService {
 
   constructor() {
     this.loginEvent = new EventEmitter();
+
+    // If I implement revocation of JWTs from the server side, make sure to
+    // cache JWTs that are revoked until they expire.
     this.loginEvent.subscribe((jwtResult: IJWT) => {
       this.jwtResult = jwtResult;
     });
-    this.loggedIn = this.loginEvent.map((jwtResult: IJWT) => {
+    this.loggedIn = this.loginEvent
+      .map((jwtResult: IJWT) => {
       return Boolean(jwtResult && jwtResult.aud);
     });
     // Necessary because you can't negate an Observable<boolean> or assign
-    // within a map fucntion inside a template
+    // within a map function inside a template
     this.loggedOut = this.loggedIn.map(b => !b);
   }
 

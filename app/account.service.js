@@ -40,8 +40,8 @@ System.register(["angular2/core", "angular2/http", "./login.service"], function(
                 AccountService.prototype.doCheckJWT = function () {
                     var _this = this;
                     var jwt = this.checkJWT();
-                    jwt.subscribe(function (audience) {
-                        _this.loginService.loginEvent.emit(audience);
+                    jwt.subscribe(function (jwt) {
+                        _this.loginService.loginEvent.emit(jwt);
                     });
                 };
                 AccountService.prototype.submitNewCreds = function (username, password) {

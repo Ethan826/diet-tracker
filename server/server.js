@@ -48,6 +48,9 @@ app.post("/app/checkjwt", function (req, res) {
     var aud = credentials_1.Credentials.checkJWT(req.body.jwt);
     res.send(aud);
 });
+app.post("/app/submitdaily", function (req, res) {
+    db_1.DB.handleDailyForm(req.body, function (x) { return console.log(x); });
+});
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);
 });

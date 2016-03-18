@@ -64,6 +64,10 @@ app.post("/app/checkjwt", (req, res) => {
   res.send(aud);
 });
 
+app.post("/app/submitdaily", (req, res) => {
+  DB.handleDailyForm(req.body, x => console.log(x));
+});
+
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {
   console.log(`Listening on port ${HTTPS_PORT}`);
 });

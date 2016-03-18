@@ -37,20 +37,28 @@ System.register(["angular2/core", "./app-injector"], function(exports_1, context
                 function LoginService() {
                     var _this = this;
                     this.loginEvent = new core_1.EventEmitter();
+                    // If I implement revocation of JWTs from the server side, make sure to
+                    // cache JWTs that are revoked until they expire.
                     this.loginEvent.subscribe(function (jwtResult) {
                         _this.jwtResult = jwtResult;
                     });
-                    this.loggedIn = this.loginEvent.map(function (jwtResult) {
+                    this.loggedIn = this.loginEvent
+                        .map(function (jwtResult) {
                         return Boolean(jwtResult && jwtResult.aud);
                     });
+                    // Necessary because you can't negate an Observable<boolean> or assign
+                    // within a map function inside a template
                     this.loggedOut = this.loggedIn.map(function (b) { return !b; });
                 }
                 LoginService.prototype.isAuthorized = function (permittedAudiences) {
                     var _this = this;
+                    // A jwtResult is at the ready
                     if (this.jwtResult) {
                         return Promise.resolve(permittedAudiences.indexOf(this.jwtResult.aud) >= 0);
                     }
                     else {
+                        // There is a jwt but jwtResult is not in yet. Subscribe to the event
+                        // emitter and wait for the result.
                         if (localStorage.getItem("jwt")) {
                             return new Promise(function (resolve, reject) {
                                 _this.loginEvent.subscribe(function (jwtResult) { resolve(jwtResult); }, function (err) { reject(err); });

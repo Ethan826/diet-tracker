@@ -26,8 +26,8 @@ export class AccountService {
 
   doCheckJWT() {
     let jwt = this.checkJWT();
-    jwt.subscribe(audience => {
-      this.loginService.loginEvent.emit(audience);
+    jwt.subscribe(jwt => {
+      this.loginService.loginEvent.emit(jwt);
     });
   }
 

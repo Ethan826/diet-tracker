@@ -1,5 +1,5 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
-import {Component, Injector} from "angular2/core";
+import {Component, Injector, OnInit} from "angular2/core";
 import {
 ControlGroup,
 FormBuilder,
@@ -13,7 +13,6 @@ import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
-import {Observable} from "rxjs/Observable";
 import {checkAuth} from "./login.service";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
@@ -23,16 +22,84 @@ import {checkAuth} from "./login.service";
   selector: "daily-form",
   directives: [DatePicker],
   providers: [HTTP_PROVIDERS],
-  templateUrl: "app/daily-form.template.html"
+  template: `
+  <!-- Header material -->
+  <h1>Daily Tracker</h1>
+  <br>
+
+  <form [ngFormModel]="dailyGroup">
+
+    <!-- Date -->
+    <legend>Date</legend>
+
+    <input type="text"
+           [ngFormControl]="dailyGroup.controls['date']"
+           readonly="readonly"
+           id="date-picker">
+    <br><br>
+
+    <!-- Button Questions -->
+
+    <div *ngFor="#outer of getKeys(buttonQuestions)">
+      <legend>{{buttonQuestions[outer].legend}}</legend>
+      <label>{{buttonQuestions[outer].explanatoryText}}</label>
+      <br>
+      <div class="btn-group" data-toggle="buttons">
+        <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
+               class="btn btn-default"
+               [class.error]="submitAttempted | async"
+               (click)="handleButtonSelection(outer, inner)">
+          <input type="radio"
+                 name="{{outer}}">
+            {{buttonQuestions[outer].buttons[inner]}}
+        </label>
+      </div>
+      <br>
+      <br>
+      <div class="form-group">
+        <!-- This is getting a little hairy. Consider refactoring. -->
+        <input [ngFormControl]="dailyGroup.controls.buttonGroup.controls[outer].controls['textField']"
+               placeholder="{{buttonQuestions[outer].placeholderText}}"
+               class="form-control"
+               type="text">
+      </div>
+      <br>
+    </div>
+
+    <!-- Checkbox Questions -->
+
+    <div *ngFor="#outer of getKeys(checkboxQuestions)">
+      <label>
+        <input type="checkbox"
+               (click)="handleCheckboxSelection(outer)">
+          &emsp; {{checkboxQuestions[outer]["checkboxPrompt"]}}
+      </label>
+      <div *ngIf="checkShowText(outer)">
+        <div class="form-group">
+          <input [ngFormControl]="dailyGroup.controls.checkboxGroup.controls[outer].controls['textPrompt']"
+                 placeholder="{{checkboxQuestions[outer].textPrompt}}"
+                 class="form-control"
+                 type="text">
+      </div>
+      </div>
+    </div>
+    <br>
+
+    <!-- Form Submit -->
+
+    <button type="submit"
+            class="btn btn-primary"
+            (click)=submitForm()
+            [class.disabled]="!dailyGroup.valid">Submit</button>
+  </form>
+  `
 })
-export class DailyForm {
-  private date: Date;
+export class DailyForm implements OnInit {
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: { [key: string]: ICheckboxQuestion };
   private testBool: boolean;
   private buttonGroup: ControlGroup;
   private checkboxGroup: ControlGroup;
-
   private dailyGroup: ControlGroup;
 
   // Consider reimplementing with Sweet.js macros to transform
@@ -40,13 +107,30 @@ export class DailyForm {
   constructor(private fb: FormBuilder) {
     this.buttonQuestions = buttonQuestions;
     this.checkboxQuestions = checkboxQuestions;
+    let dateString = new Date().toLocaleDateString();
     this.dailyGroup = fb.group({
+
+      // This is a tradeoff: this permits validation, but does so at the cost
+      // of switching from date to string to date.
+      "date": [dateString, Validators.required],
+
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
       "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
     });
-    this.dailyGroup.valueChanges.subscribe((_) =>
-      console.log(this.dailyGroup)
-      );
+  }
+
+  /**********************************************
+   * Event handlers and submits                 *
+   *********************************************/
+
+  ngOnInit() {
+    let self = this;
+    $("#date-picker").val();
+    $("#date-picker").datepicker({
+      onSelect: function() {
+        // handle the date
+      }
+    });
   }
 
   private handleButtonSelection(outer: string, inner: string) {
@@ -64,7 +148,7 @@ export class DailyForm {
     controls[inner].markAsDirty();
   }
 
-  handleCheckboxSelection(outer: string) {
+  private handleCheckboxSelection(outer: string) {
     // Hack to suppress type error (temp is a Control)
     let temp: any = this.dailyGroup.controls["checkboxGroup"];
     let control = temp.controls[outer].controls["checkboxPrompt"];
@@ -72,6 +156,18 @@ export class DailyForm {
     control.markAsTouched();
     control.markAsDirty();
   }
+
+  private submitForm() {
+    if (!this.dailyGroup.valid) {
+      alert("You must click on at least one button in each set.");
+    } else {
+      console.log(this.dailyGroup);
+    }
+  }
+
+  /**********************************************
+   * Set up form                                *
+   *********************************************/
 
   private buttonGroupBuilder(
     buttonQuestions: { [key: string]: IButtonQuestion }
@@ -121,6 +217,10 @@ export class DailyForm {
     });
     return this.fb.group(finalResult);
   }
+
+  /**********************************************
+   * Validators and helpers                     *
+   *********************************************/
 
   // Validator
   private oneControlIsChecked(group: ControlGroup) {

@@ -45,5 +45,7 @@
 
   <!-- Form Submit -->
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit"
+          class="btn btn-primary"
+          [class.disabled]="!dailyGroup.valid">Submit</button>
 </form>

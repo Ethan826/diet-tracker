@@ -44,7 +44,9 @@ export class DailyForm {
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
       "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
     });
-    this.dailyGroup.valueChanges.subscribe(v => console.log(v));
+    this.dailyGroup.valueChanges.subscribe((_) =>
+      console.log(this.dailyGroup)
+      );
   }
 
   private handleButtonSelection(outer: string, inner: string) {
@@ -87,11 +89,14 @@ export class DailyForm {
       // Loop over buttons to build inner ControlGroups
       let tertiaryResult = {};
       buttonKeys.forEach(buttonKey => {
-        tertiaryResult[buttonKey] = [false, this.oneControlIsChecked];
+        tertiaryResult[buttonKey] = [false];
       });
 
       // Add the text field
-      intermediateResult["buttons"] = this.fb.group(tertiaryResult);
+      intermediateResult["buttons"] = this.fb.group(
+        tertiaryResult,
+        { validator: this.oneControlIsChecked }
+        );
       intermediateResult["textField"] = [""];
       finalResult[questionKey] = this.fb.group(intermediateResult);
     });
@@ -120,12 +125,16 @@ export class DailyForm {
   // Validator
   private oneControlIsChecked(group: ControlGroup) {
     let counter = 0;
-    for (let key in group) {
-      if (group.hasOwnProperty(key) && group[key]) {
-        ++counter;
+    for (let key in group.controls) {
+      if (group.controls.hasOwnProperty(key)) {
+        counter += group.controls[key].value ? 1 : 0;
       }
     }
-    return counter === 1;
+    if (counter === 1) {
+      return null;
+    } else {
+      return { "mustSelectExactlyOneButton": true };
+    };
   }
 
   private getKeys(objects: { [val: string]: any }) {

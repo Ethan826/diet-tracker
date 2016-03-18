@@ -40,6 +40,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 // Consider reimplementing with Sweet.js macros to transform
                 // the data structure directly into the fb.group() call
                 function DailyForm(fb) {
+                    var _this = this;
                     this.fb = fb;
                     this.buttonQuestions = question_data_1.buttonQuestions;
                     this.checkboxQuestions = question_data_1.checkboxQuestions;
@@ -47,7 +48,9 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
                         "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
                     });
-                    this.dailyGroup.valueChanges.subscribe(function (v) { return console.log(v); });
+                    this.dailyGroup.valueChanges.subscribe(function (_) {
+                        return console.log(_this.dailyGroup);
+                    });
                 }
                 DailyForm.prototype.handleButtonSelection = function (outer, inner) {
                     // Hack to suppress type error (temp is a Control)
@@ -83,10 +86,10 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         // Loop over buttons to build inner ControlGroups
                         var tertiaryResult = {};
                         buttonKeys.forEach(function (buttonKey) {
-                            tertiaryResult[buttonKey] = [false, _this.oneControlIsChecked];
+                            tertiaryResult[buttonKey] = [false];
                         });
                         // Add the text field
-                        intermediateResult["buttons"] = _this.fb.group(tertiaryResult);
+                        intermediateResult["buttons"] = _this.fb.group(tertiaryResult, { validator: _this.oneControlIsChecked });
                         intermediateResult["textField"] = [""];
                         finalResult[questionKey] = _this.fb.group(intermediateResult);
                     });
@@ -113,12 +116,18 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 // Validator
                 DailyForm.prototype.oneControlIsChecked = function (group) {
                     var counter = 0;
-                    for (var key in group) {
-                        if (group.hasOwnProperty(key) && group[key]) {
-                            ++counter;
+                    for (var key in group.controls) {
+                        if (group.controls.hasOwnProperty(key)) {
+                            counter += group.controls[key].value ? 1 : 0;
                         }
                     }
-                    return counter === 1;
+                    if (counter === 1) {
+                        return null;
+                    }
+                    else {
+                        return { "mustSelectExactlyOneButton": true };
+                    }
+                    ;
                 };
                 DailyForm.prototype.getKeys = function (objects) {
                     return Object

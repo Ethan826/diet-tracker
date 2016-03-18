@@ -47,12 +47,12 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
                         "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
                     });
-                    console.log(this.dailyGroup);
+                    this.dailyGroup.valueChanges.subscribe(function (v) { return console.log(v); });
                 }
                 DailyForm.prototype.handleButtonSelection = function (outer, inner) {
                     // Hack to suppress type error (temp is a Control)
-                    var temp = this.buttonGroup.controls[outer];
-                    var controls = temp.controls.buttons.controls;
+                    var temp = this.dailyGroup.controls["buttonGroup"];
+                    var controls = temp.controls[outer].controls["buttons"].controls;
                     for (var c in controls) {
                         if (controls.hasOwnProperty(c)) {
                             controls[c].updateValue(false);
@@ -83,7 +83,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         // Loop over buttons to build inner ControlGroups
                         var tertiaryResult = {};
                         buttonKeys.forEach(function (buttonKey) {
-                            tertiaryResult[buttonKey] = [false];
+                            tertiaryResult[buttonKey] = [false, _this.oneControlIsChecked];
                         });
                         // Add the text field
                         intermediateResult["buttons"] = _this.fb.group(tertiaryResult);
@@ -109,6 +109,16 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         finalResult[outer] = _this.fb.group(intermediateResult);
                     });
                     return this.fb.group(finalResult);
+                };
+                // Validator
+                DailyForm.prototype.oneControlIsChecked = function (group) {
+                    var counter = 0;
+                    for (var key in group) {
+                        if (group.hasOwnProperty(key) && group[key]) {
+                            ++counter;
+                        }
+                    }
+                    return counter === 1;
                 };
                 DailyForm.prototype.getKeys = function (objects) {
                     return Object

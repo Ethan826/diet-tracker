@@ -1,14 +1,3 @@
-<!-- <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEntered)="buttonDataEntered($event)">
-  <legend>{{btn.legend}}</legend>
-  <label>{{btn.explanatoryText}}</label>
-  <div class="form-group">
-    <div *ngFor="#b of btn.buttons" class="btn-group">
-      <button type="button" class="btn btn-default" (click)="clicked(b)" [class.btn-primary]="isSelected(b)">
-        {{b.buttonText}}
-      </button>
-    </div>
-  </div>
-</div> -->
 <form [ngFormModel]="dailyGroup">
   <!-- Header material -->
   <h1>Daily Tracker</h1>

@@ -1,12 +1,6 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 import {Component, Injector} from "angular2/core";
-import {
-ControlGroup,
-FormBuilder,
-Control,
-AbstractControl,
-Validators
-} from "angular2/common";
+import {ControlGroup, FormBuilder, Control, AbstractControl, Validators} from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
@@ -44,14 +38,14 @@ export class DailyForm {
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
       "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
     });
-    this.dailyGroup.valueChanges.subscribe(v => console.log(v));
+    console.log(this.dailyGroup);
   }
 
   private handleButtonSelection(outer: string, inner: string) {
     // Hack to suppress type error (temp is a Control)
-    let temp: any = this.dailyGroup.controls["buttonGroup"];
-    let controls: any = temp.controls[outer].controls["buttons"].controls;
+    let temp: any = this.buttonGroup.controls[outer];
 
+    let controls = temp.controls.buttons.controls;
     for (let c in controls) {
       if (controls.hasOwnProperty(c)) {
         controls[c].updateValue(false);
@@ -87,7 +81,7 @@ export class DailyForm {
       // Loop over buttons to build inner ControlGroups
       let tertiaryResult = {};
       buttonKeys.forEach(buttonKey => {
-        tertiaryResult[buttonKey] = [false, this.oneControlIsChecked];
+        tertiaryResult[buttonKey] = [false];
       });
 
       // Add the text field
@@ -98,9 +92,7 @@ export class DailyForm {
     return this.fb.group(finalResult);
   }
 
-  private checkboxGroupBuilder(
-    checkboxQuestions: { [key: string]: ICheckboxQuestion }
-    ) {
+  private checkboxGroupBuilder(checkboxQuestions: { [key: string]: ICheckboxQuestion }) {
     let finalResult = {};
     this.getKeys(checkboxQuestions).forEach((outer) => {
       let intermediateResult = {};
@@ -115,17 +107,6 @@ export class DailyForm {
       finalResult[outer] = this.fb.group(intermediateResult);
     });
     return this.fb.group(finalResult);
-  }
-
-  // Validator
-  private oneControlIsChecked(group: ControlGroup) {
-    let counter = 0;
-    for (let key in group) {
-      if (group.hasOwnProperty(key) && group[key]) {
-        ++counter;
-      }
-    }
-    return counter === 1;
   }
 
   private getKeys(objects: { [val: string]: any }) {
@@ -143,5 +124,4 @@ export class DailyForm {
     let i = event["index"];
     this.checkboxQuestions[i] = event;
   }
-
 }

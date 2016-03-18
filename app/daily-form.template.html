@@ -48,10 +48,11 @@
   <div *ngFor="#outer of getKeys(checkboxQuestions)">
     <label>
       <input type="checkbox"
-             (click)="handleCheckboxSelection(outer)"
+             (click)="handleCheckboxSelection(outer)">
         &emsp; {{checkboxQuestions[outer]["checkboxPrompt"]}}
     </label>
   </div>
+  <br>
 
   <!-- Form Submit -->
 

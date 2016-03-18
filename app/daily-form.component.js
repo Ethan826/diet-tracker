@@ -47,9 +47,12 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
                         "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
                     });
+                    console.log(this.dailyGroup);
                 }
                 DailyForm.prototype.handleButtonSelection = function (outer, inner) {
-                    var controls = this.buttonGroup.controls[outer].controls.buttons.controls;
+                    // Hack to suppress type error (temp is a Control)
+                    var temp = this.buttonGroup.controls[outer];
+                    var controls = temp.controls.buttons.controls;
                     for (var c in controls) {
                         if (controls.hasOwnProperty(c)) {
                             controls[c].updateValue(false);
@@ -60,7 +63,12 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     controls[inner].markAsDirty();
                 };
                 DailyForm.prototype.handleCheckboxSelection = function (outer) {
-                    console.log(outer);
+                    // Hack to suppress type error (temp is a Control)
+                    var temp = this.dailyGroup.controls["checkboxGroup"];
+                    var control = temp.controls[outer].controls["checkboxPrompt"];
+                    control.updateValue(!control.value);
+                    control.markAsTouched();
+                    control.markAsDirty();
                 };
                 DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
                     var _this = this;
@@ -82,7 +90,6 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         intermediateResult["textField"] = [""];
                         finalResult[questionKey] = _this.fb.group(intermediateResult);
                     });
-                    console.log(finalResult);
                     return this.fb.group(finalResult);
                 };
                 DailyForm.prototype.checkboxGroupBuilder = function (checkboxQuestions) {
@@ -91,6 +98,7 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     this.getKeys(checkboxQuestions).forEach(function (outer) {
                         var intermediateResult = {};
                         _this.getKeys(checkboxQuestions[outer]).forEach(function (inner) {
+                            // TODO: Refactor to avoid matching the string
                             if (inner === "textPrompt") {
                                 intermediateResult[inner] = [""];
                             }

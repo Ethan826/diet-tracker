@@ -24,7 +24,6 @@ var Credentials = (function () {
     Credentials.makeJWT = function (username, userId, admin) {
         var now = Date.now();
         var aud = admin === 1 ? "admin" : "standard";
-        console.log("In makeJWT, aud = " + aud);
         return jwt.encode({
             iss: CREDENTIAL_CONSTANTS.ISS,
             iat: now,

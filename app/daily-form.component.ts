@@ -38,10 +38,14 @@ export class DailyForm {
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
       "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
     });
+    console.log(this.dailyGroup);
   }
 
-  handleButtonSelection(outer: string, inner: string) {
-    let controls = this.buttonGroup.controls[outer].controls.buttons.controls;
+  private handleButtonSelection(outer: string, inner: string) {
+    // Hack to suppress type error (temp is a Control)
+    let temp: any = this.buttonGroup.controls[outer];
+
+    let controls = temp.controls.buttons.controls;
     for (let c in controls) {
       if (controls.hasOwnProperty(c)) {
         controls[c].updateValue(false);
@@ -53,7 +57,12 @@ export class DailyForm {
   }
 
   handleCheckboxSelection(outer: string) {
-    console.log(outer);
+    // Hack to suppress type error (temp is a Control)
+    let temp: any = this.dailyGroup.controls["checkboxGroup"];
+    let control = temp.controls[outer].controls["checkboxPrompt"];
+    control.updateValue(!control.value);
+    control.markAsTouched();
+    control.markAsDirty();
   }
 
   private buttonGroupBuilder(
@@ -80,15 +89,15 @@ export class DailyForm {
       intermediateResult["textField"] = [""];
       finalResult[questionKey] = this.fb.group(intermediateResult);
     });
-    console.log(finalResult);
     return this.fb.group(finalResult);
   }
 
-  checkboxGroupBuilder(checkboxQuestions: { [key: string]: ICheckboxQuestion }) {
+  private checkboxGroupBuilder(checkboxQuestions: { [key: string]: ICheckboxQuestion }) {
     let finalResult = {};
     this.getKeys(checkboxQuestions).forEach((outer) => {
       let intermediateResult = {};
       this.getKeys(checkboxQuestions[outer]).forEach((inner) => {
+        // TODO: Refactor to avoid matching the string
         if (inner === "textPrompt") {
           intermediateResult[inner] = [""];
         } else {

@@ -8,7 +8,6 @@ import {LoginService, checkLoggedOut} from "./login.service";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   let loggedOut = checkLoggedOut();
-  console.log(loggedOut);
   return loggedOut;
 })
 @Component({

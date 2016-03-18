@@ -56,7 +56,6 @@ export class NavComponent implements OnInit {
   ngOnInit() {
     this.loginService.loginEvent.subscribe((jwtResult: IJWT) => {
       this.jwtResult = jwtResult;
-      console.log(`Inside NavComponent, just learned that audience = ${jwtResult.aud} at ${Date.now() / 1000}`);
     });
   }
 

@@ -31,7 +31,6 @@ export class Credentials {
   static makeJWT(username: string, userId: number, admin: number) {
     let now = Date.now();
     let aud = admin === 1 ? "admin" : "standard";
-    console.log(`In makeJWT, aud = ${aud}`);
     return jwt.encode({
       iss: CREDENTIAL_CONSTANTS.ISS,
       iat: now,

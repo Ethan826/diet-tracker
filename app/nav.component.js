@@ -39,7 +39,6 @@ System.register(["angular2/core", "angular2/router", "./account.service", "angul
                     var _this = this;
                     this.loginService.loginEvent.subscribe(function (jwtResult) {
                         _this.jwtResult = jwtResult;
-                        console.log("Inside NavComponent, just learned that audience = " + jwtResult.aud + " at " + Date.now() / 1000);
                     });
                 };
                 NavComponent.prototype.hasPermission = function (permittedAudiences) {

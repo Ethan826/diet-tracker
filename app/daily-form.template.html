@@ -24,14 +24,21 @@
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
     <br>
     <div class="btn-group" data-toggle="buttons">
-      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)" class="btn btn-default" (click)="handleSelection(outer, inner)">
-        <input type="radio" name="{{outer}}"> {{buttonQuestions[outer].buttons[inner]}}
+      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
+             class="btn btn-default"
+             (click)="handleButtonSelection(outer, inner)">
+        <input type="radio"
+               name="{{outer}}">
+          {{buttonQuestions[outer].buttons[inner]}}
       </label>
     </div>
     <br>
     <br>
     <div class="form-group">
-      <input [ngFormControl]="dailyGroup.controls.buttonGroup.controls[outer].controls['textField']" placeholder="{{buttonQuestions[outer].placeholderText}}" class="form-control" type="text">
+      <input [ngFormControl]="dailyGroup.controls.buttonGroup.controls[outer].controls['textField']"
+             placeholder="{{buttonQuestions[outer].placeholderText}}"
+             class="form-control"
+             type="text">
     </div>
     <br>
   </div>
@@ -39,58 +46,14 @@
   <!-- Checkbox Questions -->
 
   <div *ngFor="#outer of getKeys(checkboxQuestions)">
-    {{outer}}
+    <label>
+      <input type="checkbox"
+             (click)="handleCheckboxSelection(outer)"
+        &emsp; {{checkboxQuestions[outer]["checkboxPrompt"]}}
+    </label>
   </div>
 
   <!-- Form Submit -->
 
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
-
-<!-- <form [ngFormModel]="questionGroup">
-  <h1>Daily Tracker</h1>
-  <br>
-  <legend>Date</legend>
-  <date-picker (onDataEntered)="dateDataEntered($event)"></date-picker>
-  <br>
-  <br>
-  <h1>{{questionGroup.controls["test"].value}}</h1>
-  <fieldset>
-    <label>Foo&emsp;
-      <input type="button"
-             id="foo"
-             class="hidden"
-             [ngFormControl]="questionGroup.controls['test']"
-             (click)="flipFlop(questionGroup.controls['test'])">
-      <button id="foo-b">
-        Button
-      </button>
-    </label>
-    <br>
-    <br>
-    <div *ngFor="#b of buttonQuestions" [btn]="b" (onDataEntered)="buttonDataEntered($event)">
-      <legend>{{btn.legend}}</legend>
-      <label>{{btn.explanatoryText}}</label>
-      <div class="form-group">
-        <div *ngFor="#b of btn.buttons" class="btn-group">
-          <button type="button" class="btn btn-default" (click)="clicked(b)" [class.btn-primary]="isSelected(b)">
-            {{b.buttonText}}
-          </button>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="sr-only">Subjective Text</label>
-        <input class="form-control" type="text" placeholder="{{btn.placeholderText}}" [ngFormControl]="inputTextControl" (keyup)=dataEntered()>
-      </div>
-      <div *ngFor="#c of checkboxQuestions" [cbox]="c" (onDataEntered)="checkboxDataEntered($event)">
-        <label>
-          <input type="checkbox" (change)="clicked()"> &emsp; {{cbox.checkboxPrompt}}
-        </label>
-      </div>
-      <div *ngIf="hasText && cbox.checkboxInput" class="form-group">
-        <input type="text" placeholder="{{cbox.textPrompt}}" [ngFormControl]="inputTextControl" (keyup)="dataEntered()" class="form-control">
-      </div>
-      <br>
-      <input type="submit" value="Submit" class="btn btn-primary">
-</form> -->

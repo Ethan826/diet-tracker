@@ -47,9 +47,8 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
                         "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
                     });
-                    console.log(this.dailyGroup);
                 }
-                DailyForm.prototype.handleSelection = function (outer, inner) {
+                DailyForm.prototype.handleButtonSelection = function (outer, inner) {
                     var controls = this.buttonGroup.controls[outer].controls.buttons.controls;
                     for (var c in controls) {
                         if (controls.hasOwnProperty(c)) {
@@ -59,6 +58,9 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     controls[inner].updateValue(true);
                     controls[inner].markAsTouched();
                     controls[inner].markAsDirty();
+                };
+                DailyForm.prototype.handleCheckboxSelection = function (outer) {
+                    console.log(outer);
                 };
                 DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
                     var _this = this;

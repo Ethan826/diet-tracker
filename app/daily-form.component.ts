@@ -38,10 +38,9 @@ export class DailyForm {
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
       "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
     });
-    console.log(this.dailyGroup);
   }
 
-  handleSelection(outer: string, inner: string) {
+  handleButtonSelection(outer: string, inner: string) {
     let controls = this.buttonGroup.controls[outer].controls.buttons.controls;
     for (let c in controls) {
       if (controls.hasOwnProperty(c)) {
@@ -51,6 +50,10 @@ export class DailyForm {
     controls[inner].updateValue(true);
     controls[inner].markAsTouched();
     controls[inner].markAsDirty();
+  }
+
+  handleCheckboxSelection(outer: string) {
+    console.log(outer);
   }
 
   private buttonGroupBuilder(

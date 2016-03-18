@@ -134,13 +134,10 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         .keys(objects)
                         .filter(function (object) { return objects.hasOwnProperty(object); });
                 };
-                DailyForm.prototype.buttonDataEntered = function (event) {
-                    var i = event["index"];
-                    this.buttonQuestions[i] = event;
-                };
-                DailyForm.prototype.checkboxDataEntered = function (event) {
-                    var i = event["index"];
-                    this.checkboxQuestions[i] = event;
+                DailyForm.prototype.checkShowText = function (outer) {
+                    var temp = this.dailyGroup.controls["checkboxGroup"];
+                    var control = temp.controls[outer].controls["checkboxPrompt"];
+                    return Boolean(control.value && temp.controls[outer].controls["textPrompt"]);
                 };
                 DailyForm = __decorate([
                     router_1.CanActivate(function (to, fr) {

@@ -143,14 +143,11 @@ export class DailyForm {
       .filter(object => { return objects.hasOwnProperty(object); });
   }
 
-  private buttonDataEntered(event: IButtonQuestion) {
-    let i = event["index"];
-    this.buttonQuestions[i] = event;
+  private checkShowText(outer: string) {
+    let temp: any = this.dailyGroup.controls["checkboxGroup"];
+    let control = temp.controls[outer].controls["checkboxPrompt"];
+    return Boolean(
+      control.value && temp.controls[outer].controls["textPrompt"]
+      );
   }
-
-  private checkboxDataEntered(event: ICheckboxQuestion) {
-    let i = event["index"];
-    this.checkboxQuestions[i] = event;
-  }
-
 }

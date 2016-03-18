@@ -40,6 +40,14 @@
              (click)="handleCheckboxSelection(outer)">
         &emsp; {{checkboxQuestions[outer]["checkboxPrompt"]}}
     </label>
+    <div *ngIf="checkShowText(outer)">
+      <div class="form-group">
+        <input [ngFormControl]="dailyGroup.controls.checkboxGroup.controls[outer].controls['textPrompt']"
+               placeholder="{{checkboxQuestions[outer].textPrompt}}"
+               class="form-control"
+               type="text">
+    </div>
+    </div>
   </div>
   <br>
 

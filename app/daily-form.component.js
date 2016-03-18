@@ -1,3 +1,6 @@
+/// <reference path="../typings/main/ambient/jquery/jquery.d.ts"/>
+/// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
+/// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
 System.register(["angular2/core", "angular2/common", "./question-data", "angular2/router", "angular2/http", "./login.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -51,15 +54,6 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 /**********************************************
                  * Event handlers and submits                 *
                  *********************************************/
-                DailyForm.prototype.ngOnInit = function () {
-                    var self = this;
-                    $("#date-picker").val();
-                    $("#date-picker").datepicker({
-                        onSelect: function () {
-                            // handle the date
-                        }
-                    });
-                };
                 DailyForm.prototype.handleButtonSelection = function (outer, inner) {
                     // Hack to suppress type error (temp is a Control)
                     var temp = this.dailyGroup.controls["buttonGroup"];
@@ -97,8 +91,10 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     var cc = temp.controls;
                     console.log(this.dailyGroup);
                     var result = {};
-                    // result["userid"] = this.dailyGroup.controls
-                    result["date"] = this.dailyGroup.controls["date"].value;
+                    // User ID will be added / checked server-side
+                    result["date"] = new Date(Date.parse(this.dailyGroup.controls["date"].value))
+                        .toISOString()
+                        .slice(0, 10);
                     result["hungerscore"] = this.getPoints(bc["hungerControl"]);
                     result["hungertext"] = bc["hungerControl"].value["textField"];
                     result["cravingscore"] = this.getPoints(bc["cravingControl"]);
@@ -111,13 +107,13 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     result["wellbeingtext"] = bc["wellBeing"].value["textField"];
                     result["carbsscore"] = this.getPoints(bc["processedCarbs"]);
                     result["carbstext"] = bc["processedCarbs"].value["textField"];
-                    // result["stressambool"] = this.dailyGroup.controls
-                    // result["stresspmbool"] = this.dailyGroup.controls
-                    // result["walksbool"] = this.dailyGroup.controls
-                    // result["movementbool"] = this.dailyGroup.controls
-                    // result["movementtext"] = this.dailyGroup.controls
-                    // result["bedtimebool"] = this.dailyGroup.controls
-                    // result["bedtimetext"] = this.dailyGroup.controls
+                    result["stressambool"] = cc["amStress"].value["checkboxPrompt"] ? 1 : 0;
+                    result["stresspmbool"] = cc["pmStress"].value["checkboxPrompt"] ? 1 : 0;
+                    result["walksbool"] = cc["walks"].value["checkboxPrompt"] ? 1 : 0;
+                    result["movementbool"] = cc["movement"].value["checkboxPrompt"] ? 1 : 0;
+                    result["movementtext"] = cc["movement"].value["textPrompt"];
+                    result["bedtimebool"] = cc["bedtime"].value["checkboxPrompt"] ? 1 : 0;
+                    result["bedtimetext"] = cc["bedtime"].value["textPrompt"];
                     console.log(result);
                 };
                 /**********************************************
@@ -193,19 +189,14 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     return Boolean(control.value && temp.controls[outer].controls["textPrompt"]);
                 };
                 DailyForm.prototype.getPoints = function (buttonGroup) {
-                    try {
-                        var keys = this.getKeys(buttonGroup.value["buttons"]);
-                        var result_1 = null;
-                        keys.forEach(function (key) {
-                            if (buttonGroup.value["buttons"][key]) {
-                                result_1 = Number(key);
-                            }
-                        });
-                        return result_1;
-                    }
-                    catch (e) {
-                        console.log("Error while evaluating " + buttonGroup + ": " + e);
-                    }
+                    var keys = this.getKeys(buttonGroup.value["buttons"]);
+                    var result = null;
+                    keys.forEach(function (key) {
+                        if (buttonGroup.value["buttons"][key]) {
+                            result = Number(key);
+                        }
+                    });
+                    return result;
                 };
                 DailyForm = __decorate([
                     router_1.CanActivate(function (to, fr) {

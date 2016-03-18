@@ -1,13 +1,14 @@
 /// <reference path="../typings/main/ambient/jquery/jquery.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 /// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
-import {Component, Injector, OnInit} from "angular2/core";
+
+import {Component, Injector} from "angular2/core";
 import {
-ControlGroup,
-FormBuilder,
-Control,
-AbstractControl,
-Validators
+  ControlGroup,
+  FormBuilder,
+  Control,
+  AbstractControl,
+  Validators
 } from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
@@ -94,7 +95,7 @@ import {checkAuth} from "./login.service";
   </form>
   `
 })
-export class DailyForm implements OnInit {
+export class DailyForm {
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: { [key: string]: ICheckboxQuestion };
   private testBool: boolean;
@@ -122,16 +123,6 @@ export class DailyForm implements OnInit {
    * Event handlers and submits                 *
    *********************************************/
 
-  ngOnInit() {
-    let self = this;
-    $("#date-picker").val();
-    $("#date-picker").datepicker({
-      onSelect: function() {
-        // handle the date
-      }
-    });
-  }
-
   private handleButtonSelection(outer: string, inner: string) {
     // Hack to suppress type error (temp is a Control)
     let temp: any = this.dailyGroup.controls["buttonGroup"];
@@ -151,6 +142,7 @@ export class DailyForm implements OnInit {
     // Hack to suppress type error (temp is a Control)
     let temp: any = this.dailyGroup.controls["checkboxGroup"];
     let control = temp.controls[outer].controls["checkboxPrompt"];
+
     control.updateValue(!control.value);
     control.markAsTouched();
     control.markAsDirty();
@@ -174,9 +166,13 @@ export class DailyForm implements OnInit {
 
     let result = {};
 
-    // result["userid"] = this.dailyGroup.controls
+    // User ID will be added / checked server-side
 
-    result["date"] = this.dailyGroup.controls["date"].value;
+    result["date"] = new Date(
+      Date.parse(this.dailyGroup.controls["date"].value)
+      )
+      .toISOString()
+      .slice(0, 10);
 
     result["hungerscore"] = this.getPoints(bc["hungerControl"]);
     result["hungertext"] = bc["hungerControl"].value["textField"];
@@ -191,13 +187,14 @@ export class DailyForm implements OnInit {
     result["carbsscore"] = this.getPoints(bc["processedCarbs"]);
     result["carbstext"] = bc["processedCarbs"].value["textField"];
 
-    // result["stressambool"] = this.dailyGroup.controls
-    // result["stresspmbool"] = this.dailyGroup.controls
-    // result["walksbool"] = this.dailyGroup.controls
-    // result["movementbool"] = this.dailyGroup.controls
-    // result["movementtext"] = this.dailyGroup.controls
-    // result["bedtimebool"] = this.dailyGroup.controls
-    // result["bedtimetext"] = this.dailyGroup.controls
+    result["stressambool"] = cc["amStress"].value["checkboxPrompt"] ? 1 : 0;
+    result["stresspmbool"] = cc["pmStress"].value["checkboxPrompt"] ? 1 : 0;
+    result["walksbool"] = cc["walks"].value["checkboxPrompt"] ? 1 : 0;
+    result["movementbool"] = cc["movement"].value["checkboxPrompt"] ? 1 : 0;
+    result["movementtext"] = cc["movement"].value["textPrompt"];
+    result["bedtimebool"] = cc["bedtime"].value["checkboxPrompt"] ? 1 : 0;
+    result["bedtimetext"] = cc["bedtime"].value["textPrompt"];
+
     console.log(result);
   }
 
@@ -288,18 +285,13 @@ export class DailyForm implements OnInit {
   }
 
   private getPoints(buttonGroup: ControlGroup | any): number {
-    try {
-      let keys = this.getKeys(buttonGroup.value["buttons"]);
-      let result: number = null;
-      keys.forEach(key => {
-        if (buttonGroup.value["buttons"][key]) {
-          result = Number(key);
-        }
-      });
-      return result;
-    }
-    catch (e) {
-      console.log(`Error while evaluating ${buttonGroup}: ${e}`);
-    }
+    let keys = this.getKeys(buttonGroup.value["buttons"]);
+    let result: number = null;
+    keys.forEach(key => {
+      if (buttonGroup.value["buttons"][key]) {
+        result = Number(key);
+      }
+    });
+    return result;
   }
 }

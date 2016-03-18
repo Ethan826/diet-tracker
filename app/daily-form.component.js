@@ -56,7 +56,6 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     controls[inner].updateValue(true);
                     controls[inner].markAsTouched();
                     controls[inner].markAsDirty();
-                    console.log(controls);
                 };
                 /**
                  * Helper method to convert questions associated with buttons into a

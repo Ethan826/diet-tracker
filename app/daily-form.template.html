@@ -10,10 +10,15 @@
   </div>
 </div> -->
 <form [ngFormModel]="questionGroup">
-  <h1>{{questionGroup.pristine}}</h1>
+  <!-- Header material -->
   <h1>Daily Tracker</h1>
   <br>
+
+  <!-- Date -->
   <legend>Date</legend>
+
+  <!-- Button Questions -->
+
   <div *ngFor="#outer of getKeys(buttonQuestions)">
     <legend>{{buttonQuestions[outer].legend}}</legend>
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
@@ -36,8 +41,14 @@
     </div>
     <br>
   </div>
+
+  <!-- Processed Carbs -->
+
+  <!-- Checkbox Questions -->
+
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+
 
 <!-- <form [ngFormModel]="questionGroup">
   <h1>Daily Tracker</h1>

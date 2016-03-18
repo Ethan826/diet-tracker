@@ -1,7 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var buttonQuestions, checkboxQuestions;
+    var buttonQuestions, processedCarbsQuestion, checkboxQuestions;
     return {
         setters:[],
         execute: function() {
@@ -65,8 +65,20 @@ System.register([], function(exports_1, context_1) {
                         3: "Above Average",
                         4: "High",
                     },
+                },
+                "processedCarbs": {
+                    legend: "Processed Carbs",
+                    placeholderText: "I had the following kinds of processed carbohydrates today",
+                    explanatoryText: "I had the following number of processed carbohydrates today",
+                    buttons: {
+                        0: "0 to 1 servings",
+                        1: "2 servings",
+                        2: "3 or more servings"
+                    }
                 }
             });
+            exports_1("processedCarbsQuestion", processedCarbsQuestion = {});
+            ;
             exports_1("checkboxQuestions", checkboxQuestions = [
                 {
                     checkboxPrompt: "I did my five-minute stress reduction in the AM",

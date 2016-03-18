@@ -48,7 +48,6 @@ export class DailyForm {
     controls[inner].updateValue(true);
     controls[inner].markAsTouched();
     controls[inner].markAsDirty();
-    console.log(controls);
   }
 
   /**

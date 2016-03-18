@@ -60,17 +60,21 @@ export let buttonQuestions: { [key: string]: IButtonQuestion } = {
       3: "Above Average",
       4: "High",
     },
-  } // ,
-  // "processedCarbs": {
-  //   legend: "Processed Carbs",
-  //   placeholderText: "I had the following kinds of processed carbohydrates today",
-  //   explanatoryText: "I had the following number of processed carbohydrates today",
-  //   buttons: {
-  //     { buttonText: "0 to 1 servings", buttonPoints: 0 },
-  //     { buttonText: "2 servings", buttonPoints: 0 },
-  //     { buttonText: "3 or more servings", buttonPoints: 0 }
-  //   },
-  // }
+  },
+  "processedCarbs": {
+    legend: "Processed Carbs",
+    placeholderText: "I had the following kinds of processed carbohydrates today",
+    explanatoryText: "I had the following number of processed carbohydrates today",
+    buttons: {
+      0: "0 to 1 servings",
+      1: "2 servings",
+      2: "3 or more servings"
+    }
+  }
+};
+
+export let processedCarbsQuestion = {
+  }
 };
 
 export let checkboxQuestions: ICheckboxQuestion[] = [

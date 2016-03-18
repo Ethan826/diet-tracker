@@ -102,14 +102,15 @@ export class DB {
                            ?, ?, ?,
                            ?, ?, ?)`,
       [
-        formOutput.bedtimebool, formOutput.bedtimetext, formOutput.carbsscore,
-        formOutput.carbstext, formOutput.cravingscore, formOutput.cravingtext,
-        formOutput.date, formOutput.energyscore, formOutput.energytext,
-        formOutput.hungerscore, formOutput.hungertext, formOutput.movementbool,
-        formOutput.movementtext, formOutput.satietyscore, formOutput.satietytext,
-        formOutput.stressambool, formOutput.stresspmbool, formOutput.userId,
-        formOutput.walksbool, formOutput.wellbeingscore, formOutput.wellbeingtext
-      ]
+        formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
+        formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
+        formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
+        formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
+        formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
+        formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
+        formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
+      ],
+      cb
       );
   }
 

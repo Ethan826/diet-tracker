@@ -124,6 +124,9 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 /**********************************************
                  * Set up form                                *
                  *********************************************/
+                DailyForm.prototype.ngOnInit = function () {
+                    $("#date-picker").datepicker();
+                };
                 DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
                     var _this = this;
                     // Accumulator of outer ControlGroup

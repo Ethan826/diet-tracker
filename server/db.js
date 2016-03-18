@@ -66,14 +66,14 @@ var DB = (function () {
         var db = new sqlite3_1.Database(DB_PATH);
         console.log(formOutput);
         db.run("\n      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,\n                           carbstext, cravingscore, cravingtext,\n                           date, energyscore, energytext,\n                           hungerscore, hungertext, movementbool,\n                           movementtext, satietyscore, satietytext,\n                           stressambool, stresspmbool, userId,\n                           walksbool, wellbeingscore, wellbeingtext)\n                   VALUES (?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?)", [
-            formOutput.bedtimebool, formOutput.bedtimetext, formOutput.carbsscore,
-            formOutput.carbstext, formOutput.cravingscore, formOutput.cravingtext,
-            formOutput.date, formOutput.energyscore, formOutput.energytext,
-            formOutput.hungerscore, formOutput.hungertext, formOutput.movementbool,
-            formOutput.movementtext, formOutput.satietyscore, formOutput.satietytext,
-            formOutput.stressambool, formOutput.stresspmbool, formOutput.userId,
-            formOutput.walksbool, formOutput.wellbeingscore, formOutput.wellbeingtext
-        ]);
+            formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
+            formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
+            formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
+            formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
+            formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
+            formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
+            formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
+        ], cb);
     };
     DB.getKeys = function (objects) {
         return Object

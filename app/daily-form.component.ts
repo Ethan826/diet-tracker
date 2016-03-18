@@ -2,7 +2,7 @@
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 /// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
 
-import {Component, Injector} from "angular2/core";
+import {Component, Injector, OnInit} from "angular2/core";
 import {
   ControlGroup,
   FormBuilder,
@@ -96,7 +96,7 @@ import {FormsService} from "./forms.service";
   </form>
   `
 })
-export class DailyForm {
+export class DailyForm implements OnInit {
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: { [key: string]: ICheckboxQuestion };
   private testBool: boolean;
@@ -203,6 +203,10 @@ export class DailyForm {
   /**********************************************
    * Set up form                                *
    *********************************************/
+
+  ngOnInit() {
+    $("#date-picker").datepicker();
+  }
 
   private buttonGroupBuilder(
     buttonQuestions: { [key: string]: IButtonQuestion }

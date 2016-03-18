@@ -24,7 +24,7 @@ export class DailyForm {
   private buttonQuestions: { [key: string]: IButtonQuestion };
   private checkboxQuestions: { [key: string]: ICheckboxQuestion };
   private testBool: boolean;
-  private questionGroup: ControlGroup;
+  private buttonGroup: ControlGroup;
   private checkboxGroup: ControlGroup;
 
   private dailyGroup: ControlGroup;
@@ -34,14 +34,15 @@ export class DailyForm {
   constructor(private fb: FormBuilder) {
     this.buttonQuestions = buttonQuestions;
     this.checkboxQuestions = checkboxQuestions;
-    let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
-    this.questionGroup = buttonGroup;
-    this.checkboxGroup = this.checkboxGroupBuilder(this.checkboxQuestions);
-    console.log(this.checkboxGroup);
+    this.dailyGroup = fb.group({
+      "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
+      "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
+    });
+    console.log(this.dailyGroup);
   }
 
   handleSelection(outer: string, inner: string) {
-    let controls = this.questionGroup.controls[outer].controls.buttons.controls;
+    let controls = this.buttonGroup.controls[outer].controls.buttons.controls;
     for (let c in controls) {
       if (controls.hasOwnProperty(c)) {
         controls[c].updateValue(false);
@@ -52,45 +53,33 @@ export class DailyForm {
     controls[inner].markAsDirty();
   }
 
-
-  /**
-   * Helper method to convert questions associated with buttons into a
-   * ControlGroup of ControlGroups.
-   *
-   * @param {Object} buttonQuestions - buttonQuestions is an object-based map of
-   * the name of each button and the IButtonQuestion.
-   *
-   * @returns {ControlGroup} - The return value is a ControlGroup containing multiple
-   * ControlGroups, each corresponding to a question; each question's
-   * ControlGroup contains a Control for one of the buttons.
-   */
   private buttonGroupBuilder(
-        buttonQuestions: { [key: string]: IButtonQuestion }
-        ): ControlGroup {
-        // Accumulator of outer ControlGroup
-        let finalResult = {};
+    buttonQuestions: { [key: string]: IButtonQuestion }
+    ): ControlGroup {
+    // Accumulator of outer ControlGroup
+    let finalResult = {};
 
-        // Loop over questions by key to build up outer ControlGroup
-        let questionKeys = this.getKeys(buttonQuestions);
-        questionKeys.forEach(questionKey => {
-          let intermediateResult = {};
-          let buttonQuestion = buttonQuestions[questionKey];
-          let buttonKeys = this.getKeys(buttonQuestion.buttons);
+    // Loop over questions by key to build up outer ControlGroup
+    let questionKeys = this.getKeys(buttonQuestions);
+    questionKeys.forEach(questionKey => {
+      let intermediateResult = {};
+      let buttonQuestion = buttonQuestions[questionKey];
+      let buttonKeys = this.getKeys(buttonQuestion.buttons);
 
-          // Loop over buttons to build inner ControlGroups
-          let tertiaryResult = {};
-          buttonKeys.forEach(buttonKey => {
-            tertiaryResult[buttonKey] = [false];
-          });
+      // Loop over buttons to build inner ControlGroups
+      let tertiaryResult = {};
+      buttonKeys.forEach(buttonKey => {
+        tertiaryResult[buttonKey] = [false];
+      });
 
-          // Add the text field
-          intermediateResult["buttons"] = this.fb.group(tertiaryResult);
-          intermediateResult["textField"] = [""];
-          finalResult[questionKey] = this.fb.group(intermediateResult);
-        });
-        console.log(finalResult);
-        return this.fb.group(finalResult);
-      }
+      // Add the text field
+      intermediateResult["buttons"] = this.fb.group(tertiaryResult);
+      intermediateResult["textField"] = [""];
+      finalResult[questionKey] = this.fb.group(intermediateResult);
+    });
+    console.log(finalResult);
+    return this.fb.group(finalResult);
+  }
 
   checkboxGroupBuilder(checkboxQuestions: { [key: string]: ICheckboxQuestion }) {
     let finalResult = {};
@@ -109,18 +98,18 @@ export class DailyForm {
   }
 
   private getKeys(objects: { [val: string]: any }) {
-        return Object
-          .keys(objects)
-          .filter(object => { return objects.hasOwnProperty(object) });
-      }
+    return Object
+      .keys(objects)
+      .filter(object => { return objects.hasOwnProperty(object); });
+  }
 
   private buttonDataEntered(event: IButtonQuestion) {
-        let i = event["index"];
-        this.buttonQuestions[i] = event;
-      }
+    let i = event["index"];
+    this.buttonQuestions[i] = event;
+  }
 
   private checkboxDataEntered(event: ICheckboxQuestion) {
-        let i = event["index"];
-        this.checkboxQuestions[i] = event;
-      }
+    let i = event["index"];
+    this.checkboxQuestions[i] = event;
+  }
 }

@@ -9,7 +9,7 @@
     </div>
   </div>
 </div> -->
-<form [ngFormModel]="questionGroup">
+<form [ngFormModel]="dailyGroup">
   <!-- Header material -->
   <h1>Daily Tracker</h1>
   <br>
@@ -24,25 +24,25 @@
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
     <br>
     <div class="btn-group" data-toggle="buttons">
-      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
-             class="btn btn-default"
-             (click)="handleSelection(outer, inner)">
-        <input type="radio"
-               name="{{outer}}">
-          {{buttonQuestions[outer].buttons[inner]}}
+      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)" class="btn btn-default" (click)="handleSelection(outer, inner)">
+        <input type="radio" name="{{outer}}"> {{buttonQuestions[outer].buttons[inner]}}
       </label>
     </div>
-    <br><br>
+    <br>
+    <br>
     <div class="form-group">
-      <input [ngFormControl]="questionGroup.controls[outer].controls['textField']"
-             placeholder="{{buttonQuestions[outer].placeholderText}}"
-             class="form-control"
-             type="text">
+      <input [ngFormControl]="dailyGroup.controls.buttonGroup.controls[outer].controls['textField']" placeholder="{{buttonQuestions[outer].placeholderText}}" class="form-control" type="text">
     </div>
     <br>
   </div>
 
   <!-- Checkbox Questions -->
+
+  <div *ngFor="#outer of getKeys(checkboxQuestions)">
+    {{outer}}
+  </div>
+
+  <!-- Form Submit -->
 
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>

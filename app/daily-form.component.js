@@ -43,13 +43,14 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     this.fb = fb;
                     this.buttonQuestions = question_data_1.buttonQuestions;
                     this.checkboxQuestions = question_data_1.checkboxQuestions;
-                    var buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
-                    this.questionGroup = buttonGroup;
-                    this.checkboxGroup = this.checkboxGroupBuilder(this.checkboxQuestions);
-                    console.log(this.checkboxGroup);
+                    this.dailyGroup = fb.group({
+                        "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
+                        "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
+                    });
+                    console.log(this.dailyGroup);
                 }
                 DailyForm.prototype.handleSelection = function (outer, inner) {
-                    var controls = this.questionGroup.controls[outer].controls.buttons.controls;
+                    var controls = this.buttonGroup.controls[outer].controls.buttons.controls;
                     for (var c in controls) {
                         if (controls.hasOwnProperty(c)) {
                             controls[c].updateValue(false);
@@ -59,17 +60,6 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     controls[inner].markAsTouched();
                     controls[inner].markAsDirty();
                 };
-                /**
-                 * Helper method to convert questions associated with buttons into a
-                 * ControlGroup of ControlGroups.
-                 *
-                 * @param {Object} buttonQuestions - buttonQuestions is an object-based map of
-                 * the name of each button and the IButtonQuestion.
-                 *
-                 * @returns {ControlGroup} - The return value is a ControlGroup containing multiple
-                 * ControlGroups, each corresponding to a question; each question's
-                 * ControlGroup contains a Control for one of the buttons.
-                 */
                 DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
                     var _this = this;
                     // Accumulator of outer ControlGroup

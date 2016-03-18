@@ -38,6 +38,19 @@ export class DailyForm {
     console.log(buttonGroup);
   }
 
+  handleSelection(outer: string, inner: string) {
+    let controls = this.questionGroup.controls[outer].controls.buttons.controls;
+    for (let c in controls) {
+      if (controls.hasOwnProperty(c)) {
+        controls[c].updateValue(false);
+      }
+    }
+    controls[inner].updateValue(true);
+    controls[inner].markAsTouched();
+    controls[inner].markAsDirty();
+    console.log(controls);
+  }
+
   /**
    * Helper method to convert questions associated with buttons into a
    * ControlGroup of ControlGroups.
@@ -63,7 +76,7 @@ export class DailyForm {
       let buttonKeys = this.getKeys(buttonQuestion.buttons);
 
       // Loop over buttons to build inner ControlGroups
-      let tertiaryResult = {}
+      let tertiaryResult = {};
       buttonKeys.forEach(buttonKey => {
         tertiaryResult[buttonKey] = [false];
       });

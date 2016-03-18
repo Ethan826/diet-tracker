@@ -46,6 +46,18 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                     this.questionGroup = buttonGroup;
                     console.log(buttonGroup);
                 }
+                DailyForm.prototype.handleSelection = function (outer, inner) {
+                    var controls = this.questionGroup.controls[outer].controls.buttons.controls;
+                    for (var c in controls) {
+                        if (controls.hasOwnProperty(c)) {
+                            controls[c].updateValue(false);
+                        }
+                    }
+                    controls[inner].updateValue(true);
+                    controls[inner].markAsTouched();
+                    controls[inner].markAsDirty();
+                    console.log(controls);
+                };
                 /**
                  * Helper method to convert questions associated with buttons into a
                  * ControlGroup of ControlGroups.

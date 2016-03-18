@@ -10,7 +10,7 @@
   </div>
 </div> -->
 <form [ngFormModel]="questionGroup">
-  <h1>{{questionGroup.controls.hungerControl.controls.values["0"]}}</h1>
+  <h1>{{questionGroup.pristine}}</h1>
   <h1>Daily Tracker</h1>
   <br>
   <legend>Date</legend>
@@ -19,8 +19,12 @@
     <label>{{buttonQuestions[outer].explanatoryText}}</label>
     <br>
     <div class="btn-group" data-toggle="buttons">
-      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)" class="btn btn-default">
-        <input type="radio" name="{{outer}}"> {{buttonQuestions[outer].buttons[inner]}}
+      <label *ngFor="#inner of getKeys(buttonQuestions[outer].buttons)"
+             class="btn btn-default"
+             (click)="handleSelection(outer, inner)">
+        <input type="radio"
+               name="{{outer}}">
+          {{buttonQuestions[outer].buttons[inner]}}
       </label>
     </div>
     <br><br>

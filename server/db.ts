@@ -92,16 +92,17 @@ export class DB {
       db.serialize(() => {
         db.run(`
           CREATE TABLE users (
-  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-  username TEXT NOT NULL UNIQUE,
-  salt TEXT NOT NULL,
-  hashedpwd TEXT NOT NULL,
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+            username TEXT NOT NULL UNIQUE,
+            salt TEXT NOT NULL,
+            hashedpwd TEXT NOT NULL,
             admin INTEGER NOT NULL DEFAULT 0
           );
        `);
         db.run(`
           CREATE TABLE entries (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+            date TEXT NOT NULL,
             hungerscore INTEGER NOT NULL,
             hungertext TEXT,
             cravingscore INTEGER NOT NULL,

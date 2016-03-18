@@ -8,7 +8,6 @@ AbstractControl,
 Validators
 } from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
-import {DatePicker} from "./date-picker.component";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
 import {AccountService} from "./account.service";
 import {CanActivate, ComponentInstruction} from "angular2/router";
@@ -20,7 +19,6 @@ import {checkAuth} from "./login.service";
 })
 @Component({
   selector: "daily-form",
-  directives: [DatePicker],
   providers: [HTTP_PROVIDERS],
   template: `
   <!-- Header material -->
@@ -110,8 +108,7 @@ export class DailyForm implements OnInit {
     let dateString = new Date().toLocaleDateString();
     this.dailyGroup = fb.group({
 
-      // This is a tradeoff: this permits validation, but does so at the cost
-      // of switching from date to string to date.
+      // Date is a string in sqlite, so nothing lost here
       "date": [dateString, Validators.required],
 
       "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
@@ -161,8 +158,40 @@ export class DailyForm implements OnInit {
     if (!this.dailyGroup.valid) {
       alert("You must click on at least one button in each set.");
     } else {
-      console.log(this.dailyGroup);
+      this.processForm();
     }
+  }
+
+  private processForm() {
+    // console.log(this.dailyGroup);
+    let bc = this.dailyGroup.controls["buttonGroup"].controls;
+    let cc = this.dailyGroup.controls["checkboxGroup"].controls;
+    let result = {};
+    this.getPoints(bc["hungerControl"]);
+    // result["userid"] = this.dailyGroup.controls
+
+    // result["date"] = this.dailyGroup.controls["date"].value;
+    //
+    // result["hungerscore"] = bc["hungerControl"]
+    // result["hungertext"] = this.dailyGroup.controls
+    // result["cravingscore"] = this.dailyGroup.controls
+    // result["cravingtext"] = this.dailyGroup.controls
+    // result["satietyscore"] = this.dailyGroup.controls
+    // result["satietytext"] = this.dailyGroup.controls
+    // result["energyscore"] = this.dailyGroup.controls
+    // result["energytext"] = this.dailyGroup.controls
+    // result["wellbeingscore"] = this.dailyGroup.controls
+    // result["wellbeingtext"] = this.dailyGroup.controls
+    // result["carbsscore"] = this.dailyGroup.controls
+    // result["carbstext"] = this.dailyGroup.controls
+    //
+    // result["stressambool"] = this.dailyGroup.controls
+    // result["stresspmbool"] = this.dailyGroup.controls
+    // result["walksbool"] = this.dailyGroup.controls
+    // result["movementbool"] = this.dailyGroup.controls
+    // result["movementtext"] = this.dailyGroup.controls
+    // result["bedtimebool"] = this.dailyGroup.controls
+    // result["bedtimetext"] = this.dailyGroup.controls
   }
 
   /**********************************************
@@ -249,5 +278,16 @@ export class DailyForm implements OnInit {
     return Boolean(
       control.value && temp.controls[outer].controls["textPrompt"]
       );
+  }
+
+  private getPoints(buttonGroup: ControlGroup | any): number {
+    let keys = this.getKeys(buttonGroup.value["buttons"]);
+    let result: number = null;
+    keys.forEach(key => {
+      if (buttonGroup.value["buttons"][key]) {
+        result = Number(key);
+      }
+    });
+    return result;
   }
 }

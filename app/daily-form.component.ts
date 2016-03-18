@@ -22,10 +22,10 @@ import {checkAuth} from "./login.service";
 export class DailyForm {
   private date: Date;
   private buttonQuestions: { [key: string]: IButtonQuestion };
-  private checkboxQuestions: ICheckboxQuestion[];
+  private checkboxQuestions: { [key: string]: ICheckboxQuestion };
   private testBool: boolean;
   private questionGroup: ControlGroup;
-  private testControl: Control;
+  private checkboxGroup: ControlGroup;
 
   private dailyGroup: ControlGroup;
 
@@ -33,9 +33,11 @@ export class DailyForm {
   // the data structure directly into the fb.group() call
   constructor(private fb: FormBuilder) {
     this.buttonQuestions = buttonQuestions;
+    this.checkboxQuestions = checkboxQuestions;
     let buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
     this.questionGroup = buttonGroup;
-    console.log(buttonGroup);
+    this.checkboxGroup = this.checkboxGroupBuilder(this.checkboxQuestions);
+    console.log(this.checkboxGroup);
   }
 
   handleSelection(outer: string, inner: string) {
@@ -50,6 +52,7 @@ export class DailyForm {
     controls[inner].markAsDirty();
   }
 
+
   /**
    * Helper method to convert questions associated with buttons into a
    * ControlGroup of ControlGroups.
@@ -62,46 +65,62 @@ export class DailyForm {
    * ControlGroup contains a Control for one of the buttons.
    */
   private buttonGroupBuilder(
-    buttonQuestions: { [key: string]: IButtonQuestion }
-    ): ControlGroup {
-    // Accumulator of outer ControlGroup
+        buttonQuestions: { [key: string]: IButtonQuestion }
+        ): ControlGroup {
+        // Accumulator of outer ControlGroup
+        let finalResult = {};
+
+        // Loop over questions by key to build up outer ControlGroup
+        let questionKeys = this.getKeys(buttonQuestions);
+        questionKeys.forEach(questionKey => {
+          let intermediateResult = {};
+          let buttonQuestion = buttonQuestions[questionKey];
+          let buttonKeys = this.getKeys(buttonQuestion.buttons);
+
+          // Loop over buttons to build inner ControlGroups
+          let tertiaryResult = {};
+          buttonKeys.forEach(buttonKey => {
+            tertiaryResult[buttonKey] = [false];
+          });
+
+          // Add the text field
+          intermediateResult["buttons"] = this.fb.group(tertiaryResult);
+          intermediateResult["textField"] = [""];
+          finalResult[questionKey] = this.fb.group(intermediateResult);
+        });
+        console.log(finalResult);
+        return this.fb.group(finalResult);
+      }
+
+  checkboxGroupBuilder(checkboxQuestions: { [key: string]: ICheckboxQuestion }) {
     let finalResult = {};
-
-    // Loop over questions by key to build up outer ControlGroup
-    let questionKeys = this.getKeys(buttonQuestions);
-    questionKeys.forEach(questionKey => {
+    this.getKeys(checkboxQuestions).forEach((outer) => {
       let intermediateResult = {};
-      let buttonQuestion = buttonQuestions[questionKey];
-      let buttonKeys = this.getKeys(buttonQuestion.buttons);
-
-      // Loop over buttons to build inner ControlGroups
-      let tertiaryResult = {};
-      buttonKeys.forEach(buttonKey => {
-        tertiaryResult[buttonKey] = [false];
+      this.getKeys(checkboxQuestions[outer]).forEach((inner) => {
+        if (inner === "textPrompt") {
+          intermediateResult[inner] = [""];
+        } else {
+          intermediateResult[inner] = [false];
+        }
       });
-
-      // Add the text field
-      intermediateResult["buttons"] = this.fb.group(tertiaryResult);
-      intermediateResult["textField"] = [""];
-      finalResult[questionKey] = this.fb.group(intermediateResult);
+      finalResult[outer] = this.fb.group(intermediateResult);
     });
-    console.log(finalResult);
     return this.fb.group(finalResult);
   }
 
-  private getKeys(objects: { [val: number]: any }) {
-    return Object
-      .keys(objects)
-      .filter(object => { return objects.hasOwnProperty(object) });
-  }
+  private getKeys(objects: { [val: string]: any }) {
+        return Object
+          .keys(objects)
+          .filter(object => { return objects.hasOwnProperty(object) });
+      }
 
   private buttonDataEntered(event: IButtonQuestion) {
-    let i = event["index"];
-    this.buttonQuestions[i] = event;
-  }
+        let i = event["index"];
+        this.buttonQuestions[i] = event;
+      }
 
   private checkboxDataEntered(event: ICheckboxQuestion) {
-    let i = event["index"];
-    this.checkboxQuestions[i] = event;
-  }
+        let i = event["index"];
+        this.checkboxQuestions[i] = event;
+      }
 }

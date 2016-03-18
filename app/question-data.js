@@ -1,7 +1,7 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var buttonQuestions, processedCarbsQuestion, checkboxQuestions;
+    var buttonQuestions, checkboxQuestions;
     return {
         setters:[],
         execute: function() {
@@ -77,30 +77,25 @@ System.register([], function(exports_1, context_1) {
                     }
                 }
             });
-            exports_1("processedCarbsQuestion", processedCarbsQuestion = {});
-            ;
-            exports_1("checkboxQuestions", checkboxQuestions = [
-                {
+            exports_1("checkboxQuestions", checkboxQuestions = {
+                "amStress": {
                     checkboxPrompt: "I did my five-minute stress reduction in the AM",
-                    checkboxInput: null
-                }, {
+                },
+                "pmStress": {
                     checkboxPrompt: "I did my five-minute stress reduction in the PM",
-                    checkboxInput: null
-                }, {
+                },
+                "walks": {
                     checkboxPrompt: "I did my after-meal walks",
-                    checkboxInput: null
-                }, {
+                },
+                "movement": {
                     checkboxPrompt: "I did my joyful movement",
-                    checkboxInput: null,
                     textPrompt: "What kind?",
-                    textInput: null
-                }, {
+                },
+                "bedtime": {
                     checkboxPrompt: "I did my pre-bedtime routine",
-                    checkboxInput: null,
                     textPrompt: "Describe",
-                    textInput: null
                 }
-            ]);
+            });
         }
     }
 });

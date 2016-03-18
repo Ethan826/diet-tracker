@@ -13,8 +13,6 @@ export interface IButtonQuestion {
 export interface ICheckboxQuestion {
   checkboxPrompt: string;
   textPrompt?: string;
-  checkboxInput: boolean;
-  textInput?: string;
 }
 
 export interface IAudiencesMap {

@@ -42,9 +42,11 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                 function DailyForm(fb) {
                     this.fb = fb;
                     this.buttonQuestions = question_data_1.buttonQuestions;
+                    this.checkboxQuestions = question_data_1.checkboxQuestions;
                     var buttonGroup = this.buttonGroupBuilder(this.buttonQuestions);
                     this.questionGroup = buttonGroup;
-                    console.log(buttonGroup);
+                    this.checkboxGroup = this.checkboxGroupBuilder(this.checkboxQuestions);
+                    console.log(this.checkboxGroup);
                 }
                 DailyForm.prototype.handleSelection = function (outer, inner) {
                     var controls = this.questionGroup.controls[outer].controls.buttons.controls;
@@ -89,6 +91,23 @@ System.register(["angular2/core", "angular2/common", "./date-picker.component", 
                         finalResult[questionKey] = _this.fb.group(intermediateResult);
                     });
                     console.log(finalResult);
+                    return this.fb.group(finalResult);
+                };
+                DailyForm.prototype.checkboxGroupBuilder = function (checkboxQuestions) {
+                    var _this = this;
+                    var finalResult = {};
+                    this.getKeys(checkboxQuestions).forEach(function (outer) {
+                        var intermediateResult = {};
+                        _this.getKeys(checkboxQuestions[outer]).forEach(function (inner) {
+                            if (inner === "textPrompt") {
+                                intermediateResult[inner] = [""];
+                            }
+                            else {
+                                intermediateResult[inner] = [false];
+                            }
+                        });
+                        finalResult[outer] = _this.fb.group(intermediateResult);
+                    });
                     return this.fb.group(finalResult);
                 };
                 DailyForm.prototype.getKeys = function (objects) {

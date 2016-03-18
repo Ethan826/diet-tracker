@@ -73,29 +73,22 @@ export let buttonQuestions: { [key: string]: IButtonQuestion } = {
   }
 };
 
-export let processedCarbsQuestion = {
+export let checkboxQuestions: { [key: string]: ICheckboxQuestion } = {
+  "amStress": {
+    checkboxPrompt: "I did my five-minute stress reduction in the AM",
+  },
+  "pmStress": {
+    checkboxPrompt: "I did my five-minute stress reduction in the PM",
+  },
+  "walks": {
+    checkboxPrompt: "I did my after-meal walks",
+  },
+  "movement": {
+    checkboxPrompt: "I did my joyful movement",
+    textPrompt: "What kind?",
+  },
+  "bedtime": {
+    checkboxPrompt: "I did my pre-bedtime routine",
+    textPrompt: "Describe",
   }
 };
-
-export let checkboxQuestions: ICheckboxQuestion[] = [
-  {
-    checkboxPrompt: "I did my five-minute stress reduction in the AM",
-    checkboxInput: null
-  }, {
-    checkboxPrompt: "I did my five-minute stress reduction in the PM",
-    checkboxInput: null
-  }, {
-    checkboxPrompt: "I did my after-meal walks",
-    checkboxInput: null
-  }, {
-    checkboxPrompt: "I did my joyful movement",
-    checkboxInput: null,
-    textPrompt: "What kind?",
-    textInput: null
-  }, {
-    checkboxPrompt: "I did my pre-bedtime routine",
-    checkboxInput: null,
-    textPrompt: "Describe",
-    textInput: null
-  }
-];

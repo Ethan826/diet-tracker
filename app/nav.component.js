@@ -30,6 +30,10 @@ System.register(["angular2/core", "angular2/router", "./account.service", "angul
                 login_service_1 = login_service_1_1;
             }],
         execute: function() {
+            /**
+             * Navigation component. Links show or hide based on logged in user. Displays
+             * a greeting to the signed in user.
+             */
             NavComponent = (function () {
                 function NavComponent(accountService, loginService) {
                     this.accountService = accountService;

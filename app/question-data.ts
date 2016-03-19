@@ -1,5 +1,9 @@
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 
+/* Quasi json object containing the data for the questions. TODO: define
+ * the TSON (TypeScript Object Notation) standard, ..., profit.
+ */
+
 export let buttonQuestions: { [key: string]: IButtonQuestion } = {
   "hungerControl": {
     legend: "Hunger Control",

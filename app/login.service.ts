@@ -21,6 +21,12 @@ export const checkLoggedOut = (): Promise<boolean> => {
   });
 };
 
+/**
+ * Service to maintain Event Listener on login events and to check permissions
+ * by comparing the logged in user to an array of permitted audiences. Could
+ * be integrated with `accountService`, but it is useful to maintain a
+ * singleton Event Emitter for injection elsewhere.
+ */
 @Injectable()
 export class LoginService {
   loginEvent: EventEmitter<Object>;
@@ -45,6 +51,11 @@ export class LoginService {
     this.loggedOut = this.loggedIn.map(b => !b);
   }
 
+  /**
+   * Given an array of permitted audiences, verify the audiences in the JWT
+   * in `localStorage`, returning a Promise<boolean> with whether the logged
+   * in user has the permission to access.
+   */
   isAuthorized(permittedAudiences: string[]): Promise<boolean> {
     // A jwtResult is at the ready
     if (this.jwtResult) {

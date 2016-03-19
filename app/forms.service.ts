@@ -10,6 +10,9 @@ import {Router, ComponentInstruction} from "angular2/router";
 let HEADERS = new Headers({ "Content-Type": "application/json" });
 let SUBMIT_DAILY_URL = "app/submitdaily";
 
+/**
+ * Service to facilitate submitting and retrieving form data from the server.
+ */
 @Injectable()
 export class FormsService {
   private HEADERS: Headers;
@@ -29,18 +32,21 @@ export class FormsService {
     }
   }
 
-  submitDaily(formOutput: Object): Promise<any> { // TODO: Change type
+  /**
+   * Submits the output of the DailyForm to the server, returns response.
+   */
+  submitDaily(formOutput: Object): Promise<Response> {
     let result = new Promise((resolve, reject) => {
       console.log(this.jwtResult);
       formOutput["userId"] = this.jwtResult.userId;
       console.log(JSON.stringify(formOutput));
       console.log("Submitting form in forms.service.ts");
-      this.http.post(
+      return this.http.post(
         this.SUBMIT_DAILY_URL,
         JSON.stringify(formOutput),
         { headers: this.HEADERS }
-        ).subscribe(res => console.log(res), err => console.log(err));
+      );
     });
-    return result;
+    return result; // TODO: robustly handle response in DailyForm.
   }
 }

@@ -5,6 +5,9 @@ System.register([], function(exports_1, context_1) {
     return {
         setters:[],
         execute: function() {
+            /* Quasi json object containing the data for the questions. TODO: define
+             * the TSON (TypeScript Object Notation) standard, ..., profit.
+             */
             exports_1("buttonQuestions", buttonQuestions = {
                 "hungerControl": {
                     legend: "Hunger Control",

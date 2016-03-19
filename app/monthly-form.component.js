@@ -24,11 +24,16 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
                 login_service_1 = login_service_1_1;
             }],
         execute: function() {
+            /**
+             * TODO. Currently implemented with dummy data. Also, google needs to be moved
+             * into a service to be a singleton because at least one of the methods
+             * throws an error if called more than once.
+             */
             MonthlyForm = (function () {
                 function MonthlyForm() {
                 }
                 MonthlyForm.prototype.ngOnInit = function () {
-                    google.charts.load("current", { "packages": ["corechart"] });
+                    google.charts.load("current", { "packages": ["corechart"] }); // TODO: This has to be a Singleton in a service
                     google.charts.setOnLoadCallback(this.drawChart);
                     window.onresize = this.drawChart;
                 };

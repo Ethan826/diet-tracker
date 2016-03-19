@@ -39,9 +39,15 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 forms_service_1 = forms_service_1_1;
             }],
         execute: function() {
+            /**
+             * Principal interactive component in the app. Imports questions from
+             * `question-data`, a quasi json set of data representing the questions asked
+             * by the app. The imported data is programatically converted into a deeply
+             * nested set of `ControlGroup`s. The imported data is also programatically
+             * converted into the template, which attaches the html to the relevant
+             * `Control`s.
+             */
             DailyForm = (function () {
-                // Consider reimplementing with Sweet.js macros to transform
-                // the data structure directly into the fb.group() call
                 function DailyForm(fb, formsService) {
                     this.fb = fb;
                     this.formsService = formsService;
@@ -58,6 +64,14 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 /**********************************************
                  * Event handlers and submits                 *
                  *********************************************/
+                /*
+                 * Although Angular 2 allows attaching a `Control` to a set of radio
+                 * buttons, it does not seem automatically to handle the `true` and
+                 * `false` states of the other buttons, nor to mark `dirty` or `touched`.
+                 */
+                /**
+                 * @internal
+                 */
                 DailyForm.prototype.handleButtonSelection = function (outer, inner) {
                     // Hack to suppress type error (temp is a Control)
                     var temp = this.dailyGroup.controls["buttonGroup"];
@@ -71,6 +85,9 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     controls[inner].markAsTouched();
                     controls[inner].markAsDirty();
                 };
+                /**
+                 * @internal
+                 */
                 DailyForm.prototype.handleCheckboxSelection = function (outer) {
                     // Hack to suppress type error (temp is a Control)
                     var temp = this.dailyGroup.controls["checkboxGroup"];
@@ -79,6 +96,9 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     control.markAsTouched();
                     control.markAsDirty();
                 };
+                /**
+                 * @internal
+                 */
                 DailyForm.prototype.submitForm = function () {
                     if (!this.dailyGroup.valid) {
                         alert("You must click on at least one button in each set.");
@@ -89,6 +109,9 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                         console.log("Submitting form in daily-form.component.ts");
                     }
                 };
+                /**
+                 * @internal
+                 */
                 DailyForm.prototype.processForm = function () {
                     // Shorten the names (plus hack to avoid type error)
                     var temp = this.dailyGroup.controls["buttonGroup"];
@@ -96,10 +119,12 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     temp = this.dailyGroup.controls["checkboxGroup"];
                     var cc = temp.controls;
                     var result = {};
-                    // User ID will be added / checked server-side
+                    // User ID will be added / checked in `formsService`
                     result["date"] = new Date(Date.parse(this.dailyGroup.controls["date"].value))
                         .toISOString()
                         .slice(0, 10);
+                    // TODO: define an interface to ensure type correctness here and on the
+                    // server-side code.
                     result["hungerscore"] = this.getPoints(bc["hungerControl"]);
                     result["hungertext"] = bc["hungerControl"].value["textField"];
                     result["cravingscore"] = this.getPoints(bc["cravingControl"]);
@@ -124,9 +149,16 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 /**********************************************
                  * Set up form                                *
                  *********************************************/
+                /**
+                 * Attach the JQueryUI calendar widget to the form.
+                 */
                 DailyForm.prototype.ngOnInit = function () {
                     $("#date-picker").datepicker();
                 };
+                /**
+                 * @internal  uses the imported `buttonQuestions` to build the `ControlGroup`
+                 *            that is used in the template.
+                 */
                 DailyForm.prototype.buttonGroupBuilder = function (buttonQuestions) {
                     var _this = this;
                     // Accumulator of outer ControlGroup
@@ -149,6 +181,10 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     });
                     return this.fb.group(finalResult);
                 };
+                /**
+                 * @internal  uses the imported `buttonQuestions` to build the `ControlGroup`
+                 *            that is used in the template.
+                 */
                 DailyForm.prototype.checkboxGroupBuilder = function (checkboxQuestions) {
                     var _this = this;
                     var finalResult = {};
@@ -170,7 +206,9 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                 /**********************************************
                  * Validators and helpers                     *
                  *********************************************/
-                // Validator
+                /**
+                 * @internal  Validator
+                 */
                 DailyForm.prototype.oneControlIsChecked = function (group) {
                     var counter = 0;
                     for (var key in group.controls) {
@@ -186,16 +224,26 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     }
                     ;
                 };
+                // This is a userful helper method and could be put in a service.
+                /**
+                 * @internal
+                 */
                 DailyForm.prototype.getKeys = function (objects) {
                     return Object
                         .keys(objects)
                         .filter(function (object) { return objects.hasOwnProperty(object); });
                 };
+                /**
+                 * @internal  Helper method used by the *ngIf to display text fields.
+                 */
                 DailyForm.prototype.checkShowText = function (outer) {
                     var temp = this.dailyGroup.controls["checkboxGroup"];
                     var control = temp.controls[outer].controls["checkboxPrompt"];
                     return Boolean(control.value && temp.controls[outer].controls["textPrompt"]);
                 };
+                /**
+                 * @internal  Helper method used in `submitForm`
+                 */
                 DailyForm.prototype.getPoints = function (buttonGroup) {
                     var keys = this.getKeys(buttonGroup.value["buttons"]);
                     var result = null;

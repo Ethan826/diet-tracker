@@ -9,6 +9,10 @@ import {Observable} from "rxjs/Observable";
 import {LoginService} from "./login.service";
 import {IJWT} from "./interfaces";
 
+/**
+ * Navigation component. Links show or hide based on logged in user. Displays
+ * a greeting to the signed in user.
+ */
 @Component({
   selector: "nav-component",
   directives: [ROUTER_DIRECTIVES],

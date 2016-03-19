@@ -30,6 +30,10 @@ System.register(["angular2/core", "angular2/common", "./account.service", "angul
                 router_1 = router_1_1;
             }],
         execute: function() {
+            /**
+             * Permits creating a new user. Uses AccountService to communicate with the
+             * server.
+             */
             CreateUser = (function () {
                 function CreateUser(fb, accountService, router, routeParams) {
                     var _this = this;
@@ -66,7 +70,7 @@ System.register(["angular2/core", "angular2/common", "./account.service", "angul
                         this.accountService.submitNewCreds(this.usernameControl.value, this.passwordControl.value)
                             .subscribe(function (data) {
                             console.log("Received response from handleSubmit " + data);
-                            _this.router.parent.navigate(["/Login"]); // <================================== Why you no work, ma fren?
+                            _this.router.parent.navigate(["/Login"]);
                         }, function (error) {
                             console.error(error);
                         });

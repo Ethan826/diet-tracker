@@ -42,6 +42,9 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                 router_1 = router_1_1;
             }],
         execute: function() {
+            /**
+             * Main app component. Sets the overall template, establishes routing.
+             */
             AppComponent = (function () {
                 function AppComponent(accountService) {
                     this.accountService = accountService;

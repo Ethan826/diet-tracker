@@ -18,6 +18,14 @@ import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
 
+/**
+ * Principal interactive component in the app. Imports questions from
+ * `question-data`, a quasi json set of data representing the questions asked
+ * by the app. The imported data is programatically converted into a deeply
+ * nested set of `ControlGroup`s. The imported data is also programatically
+ * converted into the template, which attaches the html to the relevant
+ * `Control`s.
+ */
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   return checkAuth(["standard", "admin"]);
 })
@@ -104,8 +112,6 @@ export class DailyForm implements OnInit {
   private checkboxGroup: ControlGroup;
   private dailyGroup: ControlGroup;
 
-  // Consider reimplementing with Sweet.js macros to transform
-  // the data structure directly into the fb.group() call
   constructor(private fb: FormBuilder, private formsService: FormsService) {
     this.buttonQuestions = buttonQuestions;
     this.checkboxQuestions = checkboxQuestions;
@@ -124,6 +130,15 @@ export class DailyForm implements OnInit {
    * Event handlers and submits                 *
    *********************************************/
 
+  /*
+   * Although Angular 2 allows attaching a `Control` to a set of radio
+   * buttons, it does not seem automatically to handle the `true` and
+   * `false` states of the other buttons, nor to mark `dirty` or `touched`.
+   */
+
+  /**
+   * @internal
+   */
   private handleButtonSelection(outer: string, inner: string) {
     // Hack to suppress type error (temp is a Control)
     let temp: any = this.dailyGroup.controls["buttonGroup"];
@@ -139,6 +154,9 @@ export class DailyForm implements OnInit {
     controls[inner].markAsDirty();
   }
 
+  /**
+   * @internal
+   */
   private handleCheckboxSelection(outer: string) {
     // Hack to suppress type error (temp is a Control)
     let temp: any = this.dailyGroup.controls["checkboxGroup"];
@@ -149,6 +167,9 @@ export class DailyForm implements OnInit {
     control.markAsDirty();
   }
 
+  /**
+   * @internal
+   */
   private submitForm() {
     if (!this.dailyGroup.valid) {
       alert("You must click on at least one button in each set.");
@@ -159,6 +180,9 @@ export class DailyForm implements OnInit {
     }
   }
 
+  /**
+   * @internal
+   */
   private processForm(): Object {
     // Shorten the names (plus hack to avoid type error)
     let temp: any = this.dailyGroup.controls["buttonGroup"];
@@ -168,7 +192,7 @@ export class DailyForm implements OnInit {
 
     let result = {};
 
-    // User ID will be added / checked server-side
+    // User ID will be added / checked in `formsService`
 
     result["date"] = new Date(
       Date.parse(this.dailyGroup.controls["date"].value)
@@ -176,6 +200,8 @@ export class DailyForm implements OnInit {
       .toISOString()
       .slice(0, 10);
 
+    // TODO: define an interface to ensure type correctness here and on the
+    // server-side code.
     result["hungerscore"] = this.getPoints(bc["hungerControl"]);
     result["hungertext"] = bc["hungerControl"].value["textField"];
     result["cravingscore"] = this.getPoints(bc["cravingControl"]);
@@ -204,10 +230,17 @@ export class DailyForm implements OnInit {
    * Set up form                                *
    *********************************************/
 
+   /**
+    * Attach the JQueryUI calendar widget to the form.
+    */
   ngOnInit() {
     $("#date-picker").datepicker();
   }
 
+  /**
+   * @internal  uses the imported `buttonQuestions` to build the `ControlGroup`
+   *            that is used in the template.
+   */
   private buttonGroupBuilder(
     buttonQuestions: { [key: string]: IButtonQuestion }
     ): ControlGroup {
@@ -238,6 +271,10 @@ export class DailyForm implements OnInit {
     return this.fb.group(finalResult);
   }
 
+  /**
+   * @internal  uses the imported `buttonQuestions` to build the `ControlGroup`
+   *            that is used in the template.
+   */
   private checkboxGroupBuilder(
     checkboxQuestions: { [key: string]: ICheckboxQuestion }
     ) {
@@ -261,7 +298,9 @@ export class DailyForm implements OnInit {
    * Validators and helpers                     *
    *********************************************/
 
-  // Validator
+  /**
+   * @internal  Validator
+   */
   private oneControlIsChecked(group: ControlGroup) {
     let counter = 0;
     for (let key in group.controls) {
@@ -276,12 +315,19 @@ export class DailyForm implements OnInit {
     };
   }
 
+  // This is a userful helper method and could be put in a service.
+  /**
+   * @internal
+   */
   private getKeys(objects: { [val: string]: any }) {
     return Object
       .keys(objects)
       .filter(object => { return objects.hasOwnProperty(object); });
   }
 
+  /**
+   * @internal  Helper method used by the *ngIf to display text fields.
+   */
   private checkShowText(outer: string) {
     let temp: any = this.dailyGroup.controls["checkboxGroup"];
     let control = temp.controls[outer].controls["checkboxPrompt"];
@@ -290,6 +336,9 @@ export class DailyForm implements OnInit {
       );
   }
 
+  /**
+   * @internal  Helper method used in `submitForm`
+   */
   private getPoints(buttonGroup: ControlGroup | any): number {
     let keys = this.getKeys(buttonGroup.value["buttons"]);
     let result: number = null;

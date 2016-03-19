@@ -27,6 +27,11 @@ System.register(["angular2/core", "angular2/http", "./login.service"], function(
             HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
             SUBMIT_CREDS_URL = "app/submitcreds";
             LOGIN_URL = "app/dologin";
+            /**
+             * Intermediary between components and other services to register users, log
+             * in, log out, and to send a server request to verify the user's JWT and
+             * fire an event handler.
+             */
             AccountService = (function () {
                 function AccountService(http, loginService) {
                     this.http = http;
@@ -37,27 +42,47 @@ System.register(["angular2/core", "angular2/http", "./login.service"], function(
                     this.JWT_CHECK_URL = "app/checkjwt";
                     this.doCheckJWT();
                 }
+                /**
+                 * Submits the JWT stored in local storage to the server and triggers the
+                 * `loginEvent` EventEmitter with the server's successful response,
+                 * otherwise logs the error to the console.
+                 */
                 AccountService.prototype.doCheckJWT = function () {
                     var _this = this;
                     var jwt = this.checkJWT();
-                    jwt.subscribe(function (jwt) {
-                        _this.loginService.loginEvent.emit(jwt);
-                    });
+                    jwt.subscribe(function (jwt) { return _this.loginService.loginEvent.emit(jwt); }, function (err) { return console.error(err); });
                 };
+                /**
+                 * Submits new credentials to the server, returns an Observable of the
+                 * server's response.
+                 */
                 AccountService.prototype.submitNewCreds = function (username, password) {
                     return this.submitHelper(username, password, this.SUBMIT_CREDS_URL);
                 };
+                /**
+                 * Submits an existing user's credentials to the server, returns an
+                 * Observable of the server's response.
+                 */
                 AccountService.prototype.submitLogin = function (username, password) {
                     return this.submitHelper(username, password, this.LOGIN_URL);
                 };
+                /**
+                 * @internal
+                 */
                 AccountService.prototype.checkJWT = function () {
                     return this.http.post(this.JWT_CHECK_URL, JSON.stringify({ jwt: localStorage.getItem("jwt") }), { headers: this.HEADERS })
                         .map(function (res) { return res.json(); });
                 };
+                /**
+                 * Logs the user out.
+                 */
                 AccountService.prototype.logout = function () {
                     localStorage.removeItem("jwt");
                     this.doCheckJWT();
                 };
+                /**
+                 * @internal
+                 */
                 AccountService.prototype.submitHelper = function (username, password, url) {
                     var creds = JSON.stringify({ username: username, password: password });
                     return this.http.post(url, creds, { headers: this.HEADERS });

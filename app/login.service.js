@@ -33,6 +33,12 @@ System.register(["angular2/core", "./app-injector"], function(exports_1, context
                     loginService.loggedOut.subscribe(function (loggedOut) { resolve(loggedOut); }, function (err) { reject(err); });
                 });
             });
+            /**
+             * Service to maintain Event Listener on login events and to check permissions
+             * by comparing the logged in user to an array of permitted audiences. Could
+             * be integrated with `accountService`, but it is useful to maintain a
+             * singleton Event Emitter for injection elsewhere.
+             */
             LoginService = (function () {
                 function LoginService() {
                     var _this = this;
@@ -50,6 +56,11 @@ System.register(["angular2/core", "./app-injector"], function(exports_1, context
                     // within a map function inside a template
                     this.loggedOut = this.loggedIn.map(function (b) { return !b; });
                 }
+                /**
+                 * Given an array of permitted audiences, verify the audiences in the JWT
+                 * in `localStorage`, returning a Promise<boolean> with whether the logged
+                 * in user has the permission to access.
+                 */
                 LoginService.prototype.isAuthorized = function (permittedAudiences) {
                     var _this = this;
                     // A jwtResult is at the ready

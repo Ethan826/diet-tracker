@@ -24,6 +24,9 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
                 login_service_1 = login_service_1_1;
             }],
         execute: function() {
+            /**
+             * TODO
+             */
             AdminComponent = (function () {
                 function AdminComponent() {
                 }

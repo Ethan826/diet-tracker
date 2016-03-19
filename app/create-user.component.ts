@@ -6,6 +6,10 @@ import {Router, RouterLink, RouteParams} from "angular2/router";
 
 declare let zxcvbn: any;
 
+/**
+ * Permits creating a new user. Uses AccountService to communicate with the
+ * server.
+ */
 @Injectable()
 @Component({
   selector: "create-user",
@@ -99,7 +103,7 @@ export class CreateUser {
         .subscribe(
         data => {
           console.log(`Received response from handleSubmit ${data}`);
-          this.router.parent.navigate(["/Login"]); // <================================== Why you no work, ma fren?
+          this.router.parent.navigate(["/Login"]);
         },
         error => {
           console.error(error);

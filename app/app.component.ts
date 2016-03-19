@@ -8,6 +8,9 @@ import {AccountService} from "./account.service";
 import {NavComponent} from "./nav.component";
 import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
 
+/**
+ * Main app component. Sets the overall template, establishes routing.
+ */
 @Injectable()
 @Component({
   selector: "app",

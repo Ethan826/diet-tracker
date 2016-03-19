@@ -33,6 +33,11 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                 login_service_1 = login_service_1_1;
             }],
         execute: function() {
+            // The CanActivate breaks rerouting from CreateUser. TODO: Fix.
+            // @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
+            //   let loggedOut = checkLoggedOut();
+            //   return loggedOut;
+            // })
             Login = (function () {
                 function Login(fb, accountService, router, loginService) {
                     this.accountService = accountService;
@@ -66,10 +71,6 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                     }
                 };
                 Login = __decorate([
-                    router_1.CanActivate(function (to, fr) {
-                        var loggedOut = login_service_1.checkLoggedOut();
-                        return loggedOut;
-                    }),
                     core_1.Component({
                         directives: [common_1.FORM_DIRECTIVES],
                         providers: [account_service_1.AccountService, http_1.HTTP_PROVIDERS],

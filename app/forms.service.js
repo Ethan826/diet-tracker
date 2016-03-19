@@ -29,6 +29,9 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
         execute: function() {
             HEADERS = new http_1.Headers({ "Content-Type": "application/json" });
             SUBMIT_DAILY_URL = "app/submitdaily";
+            /**
+             * Service to facilitate submitting and retrieving form data from the server.
+             */
             FormsService = (function () {
                 function FormsService(http, accountService, loginService) {
                     var _this = this;
@@ -42,6 +45,9 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                         this.accountService.doCheckJWT();
                     }
                 }
+                /**
+                 * Submits the output of the DailyForm to the server, returns response.
+                 */
                 FormsService.prototype.submitDaily = function (formOutput) {
                     var _this = this;
                     var result = new Promise(function (resolve, reject) {
@@ -49,9 +55,9 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                         formOutput["userId"] = _this.jwtResult.userId;
                         console.log(JSON.stringify(formOutput));
                         console.log("Submitting form in forms.service.ts");
-                        _this.http.post(_this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: _this.HEADERS }).subscribe(function (res) { return console.log(res); }, function (err) { return console.log(err); });
+                        return _this.http.post(_this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: _this.HEADERS });
                     });
-                    return result;
+                    return result; // TODO: robustly handle response in DailyForm.
                 };
                 FormsService = __decorate([
                     core_1.Injectable(), 

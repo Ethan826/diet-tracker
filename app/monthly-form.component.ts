@@ -4,6 +4,11 @@ import {checkAuth} from "./login.service";
 
 declare let google: any;
 
+/**
+ * TODO. Currently implemented with dummy data. Also, google needs to be moved
+ * into a service to be a singleton because at least one of the methods
+ * throws an error if called more than once.
+ */
 @CanActivate(
   (to: ComponentInstruction, fr: ComponentInstruction) => {
     return checkAuth(["standard", "admin"]);

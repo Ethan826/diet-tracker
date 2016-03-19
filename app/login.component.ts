@@ -6,10 +6,11 @@ import {HTTP_PROVIDERS, Response} from "angular2/http";
 import {Router, RouteParams, CanActivate, ComponentInstruction} from "angular2/router";
 import {LoginService, checkLoggedOut} from "./login.service";
 
-@CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
-  let loggedOut = checkLoggedOut();
-  return loggedOut;
-})
+// The CanActivate breaks rerouting from CreateUser. TODO: Fix.
+// @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
+//   let loggedOut = checkLoggedOut();
+//   return loggedOut;
+// })
 @Component({
   directives: [FORM_DIRECTIVES],
   providers: [AccountService, HTTP_PROVIDERS],

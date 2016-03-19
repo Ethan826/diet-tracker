@@ -74,6 +74,7 @@ var DB = (function () {
             formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
             formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
         ], cb);
+        db.close();
     };
     DB.getKeys = function (objects) {
         return Object
@@ -89,7 +90,7 @@ var DB = (function () {
         try {
             db.serialize(function () {
                 db.run("\n          CREATE TABLE users (\n            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n            username TEXT NOT NULL UNIQUE,\n            salt TEXT NOT NULL,\n            hashedpwd TEXT NOT NULL,\n            admin INTEGER NOT NULL DEFAULT 0\n          );\n       ");
-                db.run("\n          CREATE TABLE entries (\n            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n            date TEXT NOT NULL,\n            hungerscore INTEGER NOT NULL,\n            hungertext TEXT,\n            cravingscore INTEGER NOT NULL,\n            cravingtext TEXT,\n            satietyscore INTEGER NOT NULL,\n            satietytext TEXT,\n            energyscore INTEGER NOT NULL,\n            energytext TEXT,\n            wellbeingscore INTEGER NOT NULL,\n            wellbeingtext TEXT,\n            carbsscore INTEGER NOT NULL,\n            carbstext TEXT,\n            stressambool INTEGER NOT NULL,\n            stresspmbool INTEGER NOT NULL,\n            walksbool INTEGER NOT NULL,\n            movementbool INTEGER NOT NULL,\n            movementtext TEXT,\n            bedtimebool INTEGER NOT NULL,\n            bedtimetext TEXT,\n            userid INTEGER NOT NULL,\n            FOREIGN KEY(userid) REFERENCES user(id)\n          );\n       ");
+                db.run("\n          CREATE TABLE entries (\n            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n            date TEXT NOT NULL UNIQUE,\n            hungerscore INTEGER NOT NULL,\n            hungertext TEXT,\n            cravingscore INTEGER NOT NULL,\n            cravingtext TEXT,\n            satietyscore INTEGER NOT NULL,\n            satietytext TEXT,\n            energyscore INTEGER NOT NULL,\n            energytext TEXT,\n            wellbeingscore INTEGER NOT NULL,\n            wellbeingtext TEXT,\n            carbsscore INTEGER NOT NULL,\n            carbstext TEXT,\n            stressambool INTEGER NOT NULL,\n            stresspmbool INTEGER NOT NULL,\n            walksbool INTEGER NOT NULL,\n            movementbool INTEGER NOT NULL,\n            movementtext TEXT,\n            bedtimebool INTEGER NOT NULL,\n            bedtimetext TEXT,\n            userid INTEGER NOT NULL,\n            FOREIGN KEY(userid) REFERENCES user(id)\n          );\n       ");
             });
         }
         catch (err) {

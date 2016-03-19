@@ -85,7 +85,7 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     }
                     else {
                         var form = this.processForm();
-                        this.formsService.submitDaily(form).then().catch();
+                        this.formsService.submitDaily(form).then(function (res) { return console.log(res); }).catch(function (e) { return console.error(e); });
                         console.log("Submitting form in daily-form.component.ts");
                     }
                 };

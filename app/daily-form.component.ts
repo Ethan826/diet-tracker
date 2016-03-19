@@ -154,7 +154,7 @@ export class DailyForm implements OnInit {
       alert("You must click on at least one button in each set.");
     } else {
       let form = this.processForm();
-      this.formsService.submitDaily(form).then().catch();
+      this.formsService.submitDaily(form).then(res => console.log(res)).catch(e => console.error(e));
       console.log("Submitting form in daily-form.component.ts");
     }
   }

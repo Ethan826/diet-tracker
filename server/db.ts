@@ -112,6 +112,7 @@ export class DB {
       ],
       cb
       );
+    db.close();
   }
 
 
@@ -140,7 +141,7 @@ export class DB {
         db.run(`
           CREATE TABLE entries (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-            date TEXT NOT NULL,
+            date TEXT NOT NULL UNIQUE,
             hungerscore INTEGER NOT NULL,
             hungertext TEXT,
             cravingscore INTEGER NOT NULL,

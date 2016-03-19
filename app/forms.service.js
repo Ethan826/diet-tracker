@@ -31,26 +31,26 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
             SUBMIT_DAILY_URL = "app/submitdaily";
             FormsService = (function () {
                 function FormsService(http, accountService, loginService) {
+                    var _this = this;
                     this.http = http;
                     this.accountService = accountService;
                     this.loginService = loginService;
                     this.HEADERS = HEADERS;
                     this.SUBMIT_DAILY_URL = SUBMIT_DAILY_URL;
+                    if (!(this.jwtResult && this.jwtResult.userId)) {
+                        this.loginService.loginEvent.subscribe(function (j) { return _this.jwtResult = j; });
+                        this.accountService.doCheckJWT();
+                    }
                 }
                 FormsService.prototype.submitDaily = function (formOutput) {
                     var _this = this;
                     var result = new Promise(function (resolve, reject) {
-                        var handle = _this.loginService.loginEvent.subscribe(function (jwt) {
-                            if (!(jwt && jwt.userId)) {
-                                reject("Credential error");
-                            }
-                            formOutput["userId"] = jwt.userId;
-                            console.log(JSON.stringify(formOutput));
-                            console.log("Submitting form in forms.service.ts");
-                            _this.http.post(_this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: _this.HEADERS }).subscribe(function (x) { return console.log(x); }, function (err) { return console.log(err); });
-                        }, function (err) { return reject(err); });
+                        console.log(_this.jwtResult);
+                        formOutput["userId"] = _this.jwtResult.userId;
+                        console.log(JSON.stringify(formOutput));
+                        console.log("Submitting form in forms.service.ts");
+                        _this.http.post(_this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: _this.HEADERS }).subscribe(function (res) { return console.log(res); }, function (err) { return console.log(err); });
                     });
-                    this.accountService.doCheckJWT();
                     return result;
                 };
                 FormsService = __decorate([

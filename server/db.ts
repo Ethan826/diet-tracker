@@ -6,18 +6,21 @@ import {Database} from "sqlite3";
 import {Promise} from "es6-promise";
 import * as fs from "fs";
 import {Credentials} from "./credentials";
-import {ICredentials} from "./interfaces";
+import {ICredentials, IJWT} from "./interfaces";
 
 let DB_PATH = "./db.db";
 
+/**
+ * Static methods to manage database.
+ */
 export class DB {
   static DB_PATH: string;
 
-  constructor() {
-    DB_PATH = DB_PATH;
-  }
-
-  static addUser(username: string, password: string, cb: Function): void { // Some problem with db handle or callback
+  /**
+   * Given a username, password, and  callback, create a user. The password
+   * is not saved.
+   */
+  static addUser(username: string, password: string, cb: Function): void {
     let db = new Database(DB_PATH);
 
     Credentials.hashNewCredentials(username, password)
@@ -31,6 +34,10 @@ export class DB {
     });
   }
 
+  /**
+   * Given userId, returns a Promise<boolean> of whether the user is an
+   * admin.
+   */
   static isUserAdmin(userId: number): Promise<boolean> {
     let db = new Database(DB_PATH);
     return new Promise((resolve, reject) => {
@@ -49,7 +56,14 @@ export class DB {
     });
   }
 
-  static checkCredentials(username: string, password: string): Promise<Object> {
+  /**
+   * Given a username and password, return a Promise. TODO: refactor weird
+   * return type.
+   */
+  static checkCredentials(
+    username: string,
+    password: string
+    ): Promise<{ success: string, jwt: IJWT }> {
     console.log(username);
     let db = new Database(DB_PATH);
     return new Promise((resolve, reject) => {
@@ -81,6 +95,11 @@ export class DB {
     });
   }
 
+  /**
+   * Given the output of a daily form and a callback, insert the results into
+   * the database and call the callback with the results (with no arguments
+   * passed in on success and an error passed in for an error).
+   */
   static handleDailyForm(formOutput: JSON, cb: Function) {
     let db = new Database(DB_PATH);
     console.log(formOutput);
@@ -113,13 +132,18 @@ export class DB {
     db.close();
   }
 
-
-  static getKeys(objects: { [val: string]: any }) {
+  /**
+   * @internal  Identical to method used elsewhere. TODO: put in single file.
+   */
+  private static getKeys(objects: { [val: string]: any }) {
     return Object
       .keys(objects)
       .filter(object => { return objects.hasOwnProperty(object); });
   }
 
+  /**
+   * Caution: resets database.
+   */
   static setupDatabase() {
     try {
       fs.unlinkSync(DB_PATH);

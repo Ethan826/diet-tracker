@@ -16,8 +16,8 @@ insecure.listen(HTTP_PORT, function () {
     console.log("Listening on port " + HTTP_PORT);
 });
 var OPTIONS = {
-    key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-    cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+    key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
+    cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
 };
 app.use(bodyParser.json());
 app.use("/app", express.static(__dirname + "/../app"));
@@ -47,8 +47,8 @@ app.post("/app/dologin", function (req, res) {
         .catch(function (err) { return res.status(400).send(err); });
 });
 app.post("/app/checkjwt", function (req, res) {
-    var aud = credentials_1.Credentials.checkJWT(req.body.jwt);
-    res.send(aud);
+    var jwt = credentials_1.Credentials.checkJWT(req.body.jwt);
+    res.send(jwt);
 });
 app.post("/app/submitdaily", function (req, res) {
     db_1.DB.handleDailyForm(req.body, function (x) { return console.log(x); });

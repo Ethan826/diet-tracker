@@ -6,7 +6,6 @@ var credentials_1 = require("./credentials");
 var DB_PATH = "./db.db";
 var DB = (function () {
     function DB() {
-        DB_PATH = DB_PATH;
     }
     DB.addUser = function (username, password, cb) {
         var db = new sqlite3_1.Database(DB_PATH);

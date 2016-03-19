@@ -1,5 +1,6 @@
 /// <reference path="./typings/main/ambient/sqlite3/index.d.ts"/>
 /// <reference path="./typings/main/ambient/node/node.d.ts"/>
+
 import * as sqlite3 from "sqlite3";
 import {Database} from "sqlite3";
 import {Promise} from "es6-promise";

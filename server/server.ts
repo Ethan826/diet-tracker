@@ -24,10 +24,10 @@ insecure.listen(HTTP_PORT, () => {
 });
 
 let OPTIONS = {
-  // key: fs.readfilesync("../../secrets/flashbangsplat/privkey.pem"),
-  // cert: fs.readfilesync("../../secrets/flashbangsplat/cert.pem")
-  key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-  cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+  key: fs.readfilesync("../../secrets/flashbangsplat/privkey.pem"),
+  cert: fs.readfilesync("../../secrets/flashbangsplat/cert.pem")
+  // key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+  // cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 
 app.use(bodyParser.json());

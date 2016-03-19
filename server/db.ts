@@ -17,20 +17,17 @@ export class DB {
     DB_PATH = DB_PATH;
   }
 
-  static addUser(username: string, password: string, cb: Function) {
+  static addUser(username: string, password: string, cb: Function): void { // Some problem with db handle or callback
     let db = new Database(DB_PATH);
 
     Credentials.hashNewCredentials(username, password)
       .then(data => {
-      console.log(data);
       db.run(
         "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
         [data.username, data.salt, data.hash],
-        cb
+        cb // Null on success, single error parameter on success
         );
-    })
-      .catch(err => {
-      console.error(err);
+      db.close();
     });
   }
 

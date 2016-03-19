@@ -34,6 +34,8 @@ import {IJWT} from "./interfaces";
             </li>
             <li *ngIf="!isLoggedIn()">
               <a [routerLink]="['/Login']">Login</a>
+            <li *ngIf="!isLoggedIn()">
+              <a [routerLink]="['/CreateUser']">Create User</a>
             </li>
             <li *ngIf="isLoggedIn()">
               <a [routerLink]="['/Login']"

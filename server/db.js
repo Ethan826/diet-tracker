@@ -12,11 +12,8 @@ var DB = (function () {
         var db = new sqlite3_1.Database(DB_PATH);
         credentials_1.Credentials.hashNewCredentials(username, password)
             .then(function (data) {
-            console.log(data);
             db.run("insert into users (username, salt, hashedpwd) values (?, ?, ?)", [data.username, data.salt, data.hash], cb);
-        })
-            .catch(function (err) {
-            console.error(err);
+            db.close();
         });
     };
     DB.isUserAdmin = function (userId) {

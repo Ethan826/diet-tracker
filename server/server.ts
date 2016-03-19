@@ -24,10 +24,10 @@ insecure.listen(HTTP_PORT, () => {
 });
 
 let OPTIONS = {
-  key: fs.readfilesync("../../secrets/flashbangsplat/privkey.pem"),
-  cert: fs.readfilesync("../../secrets/flashbangsplat/cert.pem")
-  // key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-  // cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+  // key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
+  // cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+  key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+  cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 
 app.use(bodyParser.json());
@@ -45,9 +45,11 @@ app.get("/diet/*", (req, res) => {
 
 app.post("/app/submitcreds", (req, res) => {
   DB.addUser(req.body.username, req.body.password, (err) => {
-    if (err) {
+    if (err) { // called if an error occurs
+      console.error(err);
       res.status(400).send(err);
-    } else {
+    } else { // called if no error
+      console.log("I'm in server.ts /app/submitcreds working");
       res.sendStatus(201);
     }
   });

@@ -13,7 +13,7 @@ declare let zxcvbn: any;
   template: `
     <h1>Create User</h1>
     <br>
-    <form [ngFormModel]="createUserForm" (ngSubmit)="handleSubmit(createUserForm)">
+    <form [ngFormModel]="createUserForm" (ngSubmit)="handleSubmit(createUserForm.value)">
     <div class="form-group">
       <div [class.has-error]="!usernameControl.valid && usernameControl.touched"
            [class.has-success]="usernameControl.valid">
@@ -74,7 +74,7 @@ export class CreateUser {
   private createUserForm: ControlGroup;
   private usernameControl: AbstractControl;
   private passwordControl: AbstractControl;
-  private confirmPasswordControl: AbstractControl
+  private confirmPasswordControl: AbstractControl;
   private self: any;
 
   constructor(
@@ -93,15 +93,16 @@ export class CreateUser {
     this.confirmPasswordControl = this.createUserForm.controls["confirmPassword"];
   }
 
-  private handleSubmit(group: ControlGroup) {
-    if (group.valid) {
+  private handleSubmit() {
+    if (this.createUserForm.valid) {
       this.accountService.submitNewCreds(this.usernameControl.value, this.passwordControl.value)
         .subscribe(
         data => {
-          this.router.navigate(["/Login"]);
+          console.log(`Received response from handleSubmit ${data}`);
+          this.router.parent.navigate(["/Login"]); // <================================== Why you no work, ma fren?
         },
         error => {
-          // TODO: Handle server or database errors on registering a user.
+          console.error(error);
         });
     } else {
       alert("Correct the errors in the form, then resubmit.");
@@ -115,13 +116,13 @@ export class CreateUser {
       this.confirmPasswordControl.updateValueAndValidity();
     }
     if (zxcvbn(control.value).score < 2) {
-      return { weakPassword: true }
+      return { weakPassword: true };
     }
-  }
+  };
 
   private passwordsMatchValidator = (control: Control): { [s: string]: boolean } => {
     if (this.hasOwnProperty("passwordControl") && control.value !== this.passwordControl.value) {
       return { passwordMismatch: true };
     }
-  }
+  };
 }

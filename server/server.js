@@ -16,8 +16,8 @@ insecure.listen(HTTP_PORT, function () {
     console.log("Listening on port " + HTTP_PORT);
 });
 var OPTIONS = {
-    key: fs.readfilesync("../../secrets/flashbangsplat/privkey.pem"),
-    cert: fs.readfilesync("../../secrets/flashbangsplat/cert.pem")
+    key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+    cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 app.use(bodyParser.json());
 app.use("/app", express.static(__dirname + "/../app"));
@@ -32,9 +32,11 @@ app.get("/diet/*", function (req, res) {
 app.post("/app/submitcreds", function (req, res) {
     db_1.DB.addUser(req.body.username, req.body.password, function (err) {
         if (err) {
+            console.error(err);
             res.status(400).send(err);
         }
         else {
+            console.log("I'm in server.ts /app/submitcreds working");
             res.sendStatus(201);
         }
     });

@@ -11,7 +11,7 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, http_1, login_service_1, forms_service_1;
+    var core_1, router_1, http_1, login_service_1, forms_service_1, router_2;
     var Entries;
     return {
         setters:[
@@ -20,6 +20,7 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+                router_2 = router_1_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
@@ -32,17 +33,15 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
             }],
         execute: function() {
             Entries = (function () {
-                function Entries(formsService) {
+                function Entries(formsService, router) {
                     this.formsService = formsService;
-                    // this.entries = new Promise((res, rej) => {
+                    this.router = router;
                     this.entries = new Promise(function (resolve, _) {
                         var array = [];
                         formsService.getUserEntries()
                             .then(function (result) {
-                            console.log(result);
                             for (var r in result) {
                                 if (result.hasOwnProperty(r)) {
-                                    console.log(result[r]);
                                     array.push(result[r]);
                                 }
                             }
@@ -52,8 +51,11 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
                 }
                 Entries.prototype.handleDelete = function (event, id) {
                     event.preventDefault();
-                    this.formsService.deleteEntry(id);
-                    console.log(id);
+                    this.formsService.deleteEntry(id)
+                        .then(function () {
+                        location.reload();
+                    })
+                        .catch(function (e) { return console.error(e); });
                 };
                 Entries = __decorate([
                     router_1.CanActivate(function (to, fr) {
@@ -61,9 +63,10 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
                     }),
                     core_1.Component({
                         template: "\n    <h1>Entries</h1>\n    <table class=\"table table-responsive\">\n      <tr>\n        <th>Date</th>\n        <th>Score</th>\n        <th>Carbs</th>\n        <th></th>\n      </tr>\n      <tr *ngFor=\"#entry of entries | async\">\n        <td>{{entry.date}}</td>\n        <td>\n          {{entry.cravingscore + entry.energyscore + entry.hungerscore +\n            entry.satietyscore + entry.wellbeingscore}}\n        </td>\n        <td>{{entry.carbsscore}}</td>\n        <td><a (click)=\"handleDelete($event, entry.id)\" href=\"#\">Delete</a></td>\n      </tr>\n    </table>\n  ",
-                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService],
+                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService, router_2.ROUTER_PROVIDERS],
+                        directives: [router_2.ROUTER_DIRECTIVES]
                     }), 
-                    __metadata('design:paramtypes', [forms_service_1.FormsService])
+                    __metadata('design:paramtypes', [forms_service_1.FormsService, router_2.Router])
                 ], Entries);
                 return Entries;
             }());

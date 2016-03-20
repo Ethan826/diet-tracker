@@ -33,17 +33,17 @@ export class DB {
     });
   }
 
-  static getEntries(request: JSON) {
+  static getEntries(userId: number) {
     return new Promise((resolve, reject) => {
       let db = new Database(DB_PATH);
       return db.all(
         "SELECT * FROM entries WHERE userid = ? ORDER BY date",
-        [request["userId"]],
+        [userId],
         (err, rows) => {
           if (!rows) {
             reject(err);
           } else {
-            if (err) { console.log(err); }
+            if (err) { console.error(err); }
             resolve(rows);
           }
         }
@@ -51,8 +51,59 @@ export class DB {
     });
   }
 
-  static deleteEntry(id: number) {
+  static deleteEntry(entryId: number, actualUserId: number): Promise<{}> {
+    let db = new Database(DB_PATH);
+    let errors = [];
 
+    // Check that the logged in user is either an admin or the entry owner
+    let entry: Promise<{}> = new Promise((rej, res) => {
+      db.get(
+        "SELECT * FROM entries WHERE id = ? LIMIT 1",
+        [entryId],
+        (row, err) => {
+          if (row) { res(row); }
+          else { rej(err); }
+        });
+    });
+
+    let user: Promise<{}> = new Promise((rej, res) => {
+      db.get(
+        "SELECT * FROM users WHERE id = ? LIMIT 1",
+        [actualUserId],
+        (row, err) => { // node-sqlite3 docs seem wrong re order of params
+          if (row) { res(row); }
+          else { rej(err); }
+        });
+    });
+
+    let isAuth: Promise<boolean> = new Promise((res, rej) => {
+      user.then(u => {
+        entry.then(e => {
+          if (u["admin"] || e["userid"] === u["id"]) {
+            res(true);
+          }
+          else { res(false); }
+        }).catch(e => errors.push[e]);
+      }).catch(e => errors.push[e]);
+    });
+
+    return new Promise((res, rej) => {
+      isAuth.then(a => {
+        if (a) {
+          db.run(
+            "DELETE FROM entries WHERE id = ?",
+            [entryId],
+            (err) => {
+              if (err) {
+                errors.push(err);
+                rej(errors);
+              } else {
+                res();
+              }
+            });
+        }
+      });
+    });
   }
 
   /**
@@ -85,7 +136,6 @@ export class DB {
     username: string,
     password: string
     ): Promise<{ success: string, jwt: IJWT }> {
-    console.log(username);
     let db = new Database(DB_PATH);
     return new Promise((resolve, reject) => {
       db.get(
@@ -108,7 +158,7 @@ export class DB {
               reject({ success: false, error: credErr });
             });
           } else {
-            console.log(dbErr);
+            console.error(dbErr);
             reject({ success: false, error: "Username or database error" });
           }
         }
@@ -123,7 +173,6 @@ export class DB {
    */
   static handleDailyForm(formOutput: JSON): Promise<{} | void> {
     let db = new Database(DB_PATH);
-    console.log(formOutput);
     return new Promise((resolve, reject) => {
       db.run(`
       INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,

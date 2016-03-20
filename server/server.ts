@@ -92,14 +92,17 @@ app.post("/app/submitdaily", (req, res) => {
 });
 
 app.get("/app/entries", (req, res) => {
-  console.log("In GET app/entries");
-  DB.getEntries(req.body)
-  .then(results => res.status(200).send(results))
-  .catch(err => res.status(400).send(err));
+  DB.getEntries(Number(req.headers["userid"]))
+    .then(results => res.status(200).send(results))
+    .catch(err => res.status(400).send(err));
 });
 
 app.delete("/app/entries", (req, res) => {
-  console.log(req.body);
+  let entryId = Number(req.headers["entryid"]);
+  let userId = Number(req.headers["userid"]);
+  DB.deleteEntry(entryId, userId)
+    .then(() => res.sendStatus(204)) // TODO: Refactor to avoid refresh
+    .catch(e => res.status(400).send(e));
 });
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {

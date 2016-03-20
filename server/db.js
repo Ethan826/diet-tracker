@@ -15,23 +15,72 @@ var DB = (function () {
             db.close();
         });
     };
-    DB.getEntries = function (request) {
+    DB.getEntries = function (userId) {
         return new es6_promise_1.Promise(function (resolve, reject) {
             var db = new sqlite3_1.Database(DB_PATH);
-            return db.all("SELECT * FROM entries WHERE userid = ? ORDER BY date", [request["userId"]], function (err, rows) {
+            return db.all("SELECT * FROM entries WHERE userid = ? ORDER BY date", [userId], function (err, rows) {
                 if (!rows) {
                     reject(err);
                 }
                 else {
                     if (err) {
-                        console.log(err);
+                        console.error(err);
                     }
                     resolve(rows);
                 }
             });
         });
     };
-    DB.deleteEntry = function (id) {
+    DB.deleteEntry = function (entryId, actualUserId) {
+        var db = new sqlite3_1.Database(DB_PATH);
+        var errors = [];
+        var entry = new es6_promise_1.Promise(function (rej, res) {
+            db.get("SELECT * FROM entries WHERE id = ? LIMIT 1", [entryId], function (row, err) {
+                if (row) {
+                    res(row);
+                }
+                else {
+                    rej(err);
+                }
+            });
+        });
+        var user = new es6_promise_1.Promise(function (rej, res) {
+            db.get("SELECT * FROM users WHERE id = ? LIMIT 1", [actualUserId], function (row, err) {
+                if (row) {
+                    res(row);
+                }
+                else {
+                    rej(err);
+                }
+            });
+        });
+        var isAuth = new es6_promise_1.Promise(function (res, rej) {
+            user.then(function (u) {
+                entry.then(function (e) {
+                    if (u["admin"] || e["userid"] === u["id"]) {
+                        res(true);
+                    }
+                    else {
+                        res(false);
+                    }
+                }).catch(function (e) { return errors.push[e]; });
+            }).catch(function (e) { return errors.push[e]; });
+        });
+        return new es6_promise_1.Promise(function (res, rej) {
+            isAuth.then(function (a) {
+                if (a) {
+                    db.run("DELETE FROM entries WHERE id = ?", [entryId], function (err) {
+                        if (err) {
+                            errors.push(err);
+                            rej(errors);
+                        }
+                        else {
+                            res();
+                        }
+                    });
+                }
+            });
+        });
     };
     DB.isUserAdmin = function (userId) {
         var db = new sqlite3_1.Database(DB_PATH);
@@ -48,7 +97,6 @@ var DB = (function () {
         });
     };
     DB.checkCredentials = function (username, password) {
-        console.log(username);
         var db = new sqlite3_1.Database(DB_PATH);
         return new es6_promise_1.Promise(function (resolve, reject) {
             db.get("select * from users where username=? limit 1;", [username], function (dbErr, dbResults) {
@@ -70,7 +118,7 @@ var DB = (function () {
                     });
                 }
                 else {
-                    console.log(dbErr);
+                    console.error(dbErr);
                     reject({ success: false, error: "Username or database error" });
                 }
             });
@@ -78,7 +126,6 @@ var DB = (function () {
     };
     DB.handleDailyForm = function (formOutput) {
         var db = new sqlite3_1.Database(DB_PATH);
-        console.log(formOutput);
         return new es6_promise_1.Promise(function (resolve, reject) {
             db.run("\n      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,\n                           carbstext, cravingscore, cravingtext,\n                           date, energyscore, energytext,\n                           hungerscore, hungertext, movementbool,\n                           movementtext, satietyscore, satietytext,\n                           stressambool, stresspmbool, userId,\n                           walksbool, wellbeingscore, wellbeingtext)\n                   VALUES (?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?)", [
                 formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],

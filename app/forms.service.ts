@@ -57,10 +57,9 @@ export class FormsService {
   }
 
   deleteEntry(id: number): Promise<JSON> {
-    let request = { postId: id };
     return this.httpHelper(
       this.ENTRIES_URL,
-      { postId: id },
+      { entryid: id },
       (jwt: IJWT, request: Object) => {
         request["userId"] = jwt.userId;
         return request;
@@ -81,7 +80,7 @@ export class FormsService {
     method: RequestMethod
     ): Promise<JSON> {
     let result = new Promise((resolve, reject) => {
-      this.loginService.loginEvent.subscribe((jwt: IJWT) => {
+      let handle = this.loginService.loginEvent.subscribe((jwt: IJWT) => {
         let requestOptions: RequestOptionsArgs = {};
         requestOptions.method = method;
         if (method === RequestMethod.Post) {
@@ -91,9 +90,11 @@ export class FormsService {
           let headers = codeThatNeedsJWT(jwt, paramsOrBody);
           requestOptions.headers = new Headers(headers);
         }
+        console.log(requestOptions);
         this.http.request(url, requestOptions)
           .map((r: Response) => r.json())
           .subscribe((r: Response) => resolve(r), (err: any) => resolve(err));
+        handle.unsubscribe();
       });
     });
     this.accountService.doCheckJWT();

@@ -6,11 +6,11 @@ import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
+import {Router, ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from "angular2/router";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   return checkAuth(["standard", "admin"]);
 })
-
 @Component({
   template: `
     <h1>Entries</h1>
@@ -32,21 +32,19 @@ import {FormsService} from "./forms.service";
       </tr>
     </table>
   `,
-  providers: [HTTP_PROVIDERS, FormsService],
+  providers: [HTTP_PROVIDERS, FormsService, ROUTER_PROVIDERS],
+  directives: [ROUTER_DIRECTIVES]
 })
 export class Entries {
   private entries: Promise<Array<Object>>;
 
-  constructor(private formsService: FormsService) {
-    // this.entries = new Promise((res, rej) => {
+  constructor(private formsService: FormsService, private router: Router) {
     this.entries = new Promise((resolve, _) => {
       let array: Object[] = [];
       formsService.getUserEntries()
         .then(result => {
-        console.log(result);
         for (let r in result) {
           if (result.hasOwnProperty(r)) {
-            console.log(result[r]);
             array.push(result[r]);
           }
         }
@@ -57,7 +55,10 @@ export class Entries {
 
   handleDelete(event: Event, id: number) {
     event.preventDefault();
-    this.formsService.deleteEntry(id);
-    console.log(id);
+    this.formsService.deleteEntry(id)
+      .then(() => {
+        location.reload();
+      })
+      .catch((e) => console.error(e));
   }
 }

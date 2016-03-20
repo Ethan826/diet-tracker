@@ -56,13 +56,16 @@ app.post("/app/submitdaily", function (req, res) {
         .catch(function (err) { return res.send(err).status(400); });
 });
 app.get("/app/entries", function (req, res) {
-    console.log("In GET app/entries");
-    db_1.DB.getEntries(req.body)
+    db_1.DB.getEntries(Number(req.headers["userid"]))
         .then(function (results) { return res.status(200).send(results); })
         .catch(function (err) { return res.status(400).send(err); });
 });
 app.delete("/app/entries", function (req, res) {
-    console.log(req.body);
+    var entryId = Number(req.headers["entryid"]);
+    var userId = Number(req.headers["userid"]);
+    db_1.DB.deleteEntry(entryId, userId)
+        .then(function () { return res.sendStatus(204); })
+        .catch(function (e) { return res.status(400).send(e); });
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

@@ -58,8 +58,7 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                     }, http_1.RequestMethod.Get);
                 };
                 FormsService.prototype.deleteEntry = function (id) {
-                    var request = { postId: id };
-                    return this.httpHelper(this.ENTRIES_URL, { postId: id }, function (jwt, request) {
+                    return this.httpHelper(this.ENTRIES_URL, { entryid: id }, function (jwt, request) {
                         request["userId"] = jwt.userId;
                         return request;
                     }, http_1.RequestMethod.Delete);
@@ -72,7 +71,7 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                 FormsService.prototype.httpHelper = function (url, paramsOrBody, codeThatNeedsJWT, method) {
                     var _this = this;
                     var result = new Promise(function (resolve, reject) {
-                        _this.loginService.loginEvent.subscribe(function (jwt) {
+                        var handle = _this.loginService.loginEvent.subscribe(function (jwt) {
                             var requestOptions = {};
                             requestOptions.method = method;
                             if (method === http_1.RequestMethod.Post) {
@@ -83,9 +82,11 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                                 var headers = codeThatNeedsJWT(jwt, paramsOrBody);
                                 requestOptions.headers = new http_1.Headers(headers);
                             }
+                            console.log(requestOptions);
                             _this.http.request(url, requestOptions)
                                 .map(function (r) { return r.json(); })
                                 .subscribe(function (r) { return resolve(r); }, function (err) { return resolve(err); });
+                            handle.unsubscribe();
                         });
                     });
                     this.accountService.doCheckJWT();

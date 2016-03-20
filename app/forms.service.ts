@@ -23,6 +23,7 @@ export class FormsService {
     private accountService: AccountService,
     private loginService: LoginService
     ) {
+    this.SUBMIT_DAILY_URL = SUBMIT_DAILY_URL;
     this.ENTRIES_URL = ENTRIES_URL;
   }
 
@@ -90,7 +91,7 @@ export class FormsService {
           let headers = codeThatNeedsJWT(jwt, paramsOrBody);
           requestOptions.headers = new Headers(headers);
         }
-        console.log(requestOptions);
+        console.log(url);
         this.http.request(url, requestOptions)
           .map((r: Response) => r.json())
           .subscribe((r: Response) => resolve(r), (err: any) => resolve(err));

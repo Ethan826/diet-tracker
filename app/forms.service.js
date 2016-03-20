@@ -37,6 +37,7 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                     this.http = http;
                     this.accountService = accountService;
                     this.loginService = loginService;
+                    this.SUBMIT_DAILY_URL = SUBMIT_DAILY_URL;
                     this.ENTRIES_URL = ENTRIES_URL;
                 }
                 /**
@@ -82,7 +83,7 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                                 var headers = codeThatNeedsJWT(jwt, paramsOrBody);
                                 requestOptions.headers = new http_1.Headers(headers);
                             }
-                            console.log(requestOptions);
+                            console.log(url);
                             _this.http.request(url, requestOptions)
                                 .map(function (r) { return r.json(); })
                                 .subscribe(function (r) { return resolve(r); }, function (err) { return resolve(err); });

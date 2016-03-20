@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <base href="/">
   <title>Always Hungry Tracker</title>
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
@@ -17,6 +18,14 @@
   <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
   <script src="node_modules/angular2/bundles/router.dev.js"></script>
   <script src="node_modules/angular2/bundles/http.dev.js"></script>
+
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current', {
+      'packages': ['corechart']
+    });
+  </script>
+
   <script>
     System.config({
       packages: {
@@ -45,6 +54,5 @@
 <script src="node_modules/jqueryui/jquery-ui.min.js" charset="utf-8"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
 <script src="node_modules/zxcvbn/dist/zxcvbn.js"></script>
-<script src="https://www.gstatic.com/charts/loader.js"></script>
 
 </html>

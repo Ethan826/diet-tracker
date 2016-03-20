@@ -1,4 +1,4 @@
-System.register(["angular2/core", "angular2/router", "./login.service"], function(exports_1, context_1) {
+System.register(["angular2/core", "angular2/router", "./login.service", "./forms.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, router_1, login_service_1;
+    var core_1, router_1, login_service_1, forms_service_1;
     var MonthlyForm;
     return {
         setters:[
@@ -22,37 +22,31 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
             },
             function (login_service_1_1) {
                 login_service_1 = login_service_1_1;
+            },
+            function (forms_service_1_1) {
+                forms_service_1 = forms_service_1_1;
             }],
         execute: function() {
-            /**
-             * TODO. Currently implemented with dummy data. Also, google needs to be moved
-             * into a service to be a singleton because at least one of the methods
-             * throws an error if called more than once.
-             */
             MonthlyForm = (function () {
-                function MonthlyForm() {
+                function MonthlyForm(formsService) {
+                    this.formsService = formsService;
                 }
                 MonthlyForm.prototype.ngOnInit = function () {
-                    google.charts.load("current", { "packages": ["corechart"] }); // TODO: This has to be a Singleton in a service
-                    google.charts.setOnLoadCallback(this.drawChart);
-                    window.onresize = this.drawChart;
+                    var _this = this;
+                    this.processData().then(function (data) {
+                        data.unshift(["Date", "Score", { "type": "string", "role": "style" }]);
+                        google.charts.setOnLoadCallback(_this.drawChart(data));
+                        // $(window).resize($.debounce(250, () => this.drawChart(data)));
+                        $(window).resize(function () { return _this.drawChart(data); });
+                    });
                 };
-                MonthlyForm.prototype.drawChart = function () {
-                    var data = new google.visualization.DataTable();
-                    data.addColumn("date", "Date");
-                    data.addColumn("number", "Total Score");
-                    data.addRows([
-                        [new Date(2015, 5, 7), 4],
-                        [new Date(2015, 5, 8), 5],
-                        [new Date(2015, 5, 9), 8],
-                        [new Date(2015, 5, 10), 7],
-                        [new Date(2015, 5, 11), 1],
-                        [new Date(2015, 5, 12), 14],
-                        [new Date(2015, 5, 13), 8],
-                        [new Date(2015, 5, 14), 4]
-                    ]);
+                MonthlyForm.prototype.drawChart = function (data) {
+                    console.log(data);
+                    var table = new google.visualization.arrayToDataTable(data);
+                    var chart = new google.visualization.LineChart(document.getElementById("chart"));
                     var options = {
                         "title": "Diet Tracker",
+                        "pointSize": 7,
                         "vAxis": {
                             viewWindowMode: "explicit",
                             viewWindow: {
@@ -61,17 +55,48 @@ System.register(["angular2/core", "angular2/router", "./login.service"], functio
                             }
                         }
                     };
-                    var chart = new google.visualization.LineChart(document.getElementById("chart"));
-                    chart.draw(data, options);
+                    chart.draw(table, options);
+                };
+                MonthlyForm.prototype.processData = function () {
+                    var _this = this;
+                    return new Promise(function (res, rej) {
+                        _this.formsService.getUserEntries().then(function (data) {
+                            var dataArray = [];
+                            for (var i in data) {
+                                if (data.hasOwnProperty(i)) {
+                                    var datum = data[i];
+                                    var datestring = datum["date"];
+                                    var date = new Date(datestring.slice(0, 4), datestring.slice(5, 7), datestring.slice(8, 10));
+                                    var color = void 0;
+                                    console.log(datum["carbsscore"]);
+                                    switch (datum["carbsscore"]) {
+                                        case 0:
+                                            color = "#00ff00";
+                                            break;
+                                        case 1:
+                                            color = "#ffff00";
+                                            break;
+                                        case 2: color = "#ff0000";
+                                    }
+                                    var score = datum["cravingscore"] + datum["energyscore"] +
+                                        datum["hungerscore"] + datum["satietyscore"] +
+                                        datum["wellbeingscore"];
+                                    dataArray.push([date, score, ("point { size: 12; fill-color: " + color + "; }")]);
+                                }
+                            }
+                            res(dataArray);
+                        });
+                    });
                 };
                 MonthlyForm = __decorate([
                     router_1.CanActivate(function (to, fr) {
                         return login_service_1.checkAuth(["standard", "admin"]);
                     }),
                     core_1.Component({
+                        providers: [forms_service_1.FormsService],
                         template: "\n    <div id=\"chart-fixer\">\n      <div id=\"chart\"></div>\n    </div>\n  "
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [forms_service_1.FormsService])
                 ], MonthlyForm);
                 return MonthlyForm;
             }());

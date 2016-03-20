@@ -1,48 +1,42 @@
 import {Component, OnInit} from "angular2/core";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {checkAuth} from "./login.service";
+import {FormsService} from "./forms.service";
 
 declare let google: any;
 
-/**
- * TODO. Currently implemented with dummy data. Also, google needs to be moved
- * into a service to be a singleton because at least one of the methods
- * throws an error if called more than once.
- */
 @CanActivate(
   (to: ComponentInstruction, fr: ComponentInstruction) => {
     return checkAuth(["standard", "admin"]);
   })
 @Component({
+  providers: [FormsService],
   template: `
     <div id="chart-fixer">
       <div id="chart"></div>
     </div>
   `
 })
-export class MonthlyForm implements OnInit {
+export class MonthlyForm {
+
+  constructor(private formsService: FormsService) { }
+
   ngOnInit() {
-    google.charts.load("current", { "packages": ["corechart"] }); // TODO: This has to be a Singleton in a service
-    google.charts.setOnLoadCallback(this.drawChart);
-    window.onresize = this.drawChart;
+    this.processData().then((data: Array<Array<any>>) => {
+      data.unshift(["Date", "Score", { "type": "string", "role": "style" }]);
+      google.charts.setOnLoadCallback(this.drawChart(data));
+      // $(window).resize($.debounce(250, () => this.drawChart(data)));
+      $(window).resize(() => this.drawChart(data));
+    });
   }
 
-  private drawChart() {
-    let data = new google.visualization.DataTable();
-    data.addColumn("date", "Date");
-    data.addColumn("number", "Total Score");
-    data.addRows([
-      [new Date(2015, 5, 7), 4],
-      [new Date(2015, 5, 8), 5],
-      [new Date(2015, 5, 9), 8],
-      [new Date(2015, 5, 10), 7],
-      [new Date(2015, 5, 11), 1],
-      [new Date(2015, 5, 12), 14],
-      [new Date(2015, 5, 13), 8],
-      [new Date(2015, 5, 14), 4]
-    ]);
+  drawChart(data: Array<Array<any>>) {
+    console.log(data);
+    let table = new google.visualization.arrayToDataTable(data);
+    let chart = new google.visualization.LineChart(document.getElementById("chart"));
     let options = {
       "title": "Diet Tracker",
+      "pointSize": 7,
       "vAxis": {
         viewWindowMode: "explicit",
         viewWindow: {
@@ -51,7 +45,41 @@ export class MonthlyForm implements OnInit {
         }
       }
     };
-    let chart = new google.visualization.LineChart(document.getElementById("chart"));
-    chart.draw(data, options);
+    chart.draw(table, options);
+  }
+
+  private processData() {
+    return new Promise((res, rej) => {
+      this.formsService.getUserEntries().then(data => {
+        let dataArray: Array<Array<any>> = [];
+        for (let i in data) {
+          if (data.hasOwnProperty(i)) {
+            let datum = data[i];
+            let datestring = datum["date"];
+            let date = new Date(
+              datestring.slice(0, 4),
+              datestring.slice(5, 7),
+              datestring.slice(8, 10)
+              );
+            let color: string;
+            console.log(datum["carbsscore"]);
+            switch (datum["carbsscore"]) {
+              case 0:
+                color = "#00ff00";
+                break;
+              case 1:
+                color = "#ffff00";
+                break;
+              case 2: color = "#ff0000";
+            }
+            let score = datum["cravingscore"] + datum["energyscore"] +
+              datum["hungerscore"] + datum["satietyscore"] +
+              datum["wellbeingscore"];
+            dataArray.push([date, score, `point { size: 12; fill-color: ${color}; }`]);
+          }
+        }
+        res(dataArray);
+      });
+    });
   }
 }

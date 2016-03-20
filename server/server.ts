@@ -29,10 +29,10 @@ insecure.listen(HTTP_PORT, () => { // TODO: Add HSTS header.
 });
 
 let OPTIONS = { // Toggle top and bottom files for local and remote server.
-  // key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-  // cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
-  key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-  cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+  key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
+  cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+  // key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+  // cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 
 app.use(bodyParser.json());

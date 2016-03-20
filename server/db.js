@@ -15,6 +15,24 @@ var DB = (function () {
             db.close();
         });
     };
+    DB.getEntries = function (request) {
+        return new es6_promise_1.Promise(function (resolve, reject) {
+            var db = new sqlite3_1.Database(DB_PATH);
+            return db.all("SELECT * FROM entries WHERE userid = ? ORDER BY date", [request["userId"]], function (err, rows) {
+                if (!rows) {
+                    reject(err);
+                }
+                else {
+                    if (err) {
+                        console.log(err);
+                    }
+                    resolve(rows);
+                }
+            });
+        });
+    };
+    DB.deleteEntry = function (id) {
+    };
     DB.isUserAdmin = function (userId) {
         var db = new sqlite3_1.Database(DB_PATH);
         return new es6_promise_1.Promise(function (resolve, reject) {

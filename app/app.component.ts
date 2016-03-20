@@ -6,6 +6,7 @@ import {CreateUser} from "./create-user.component";
 import {AdminComponent} from "./admin.component";
 import {AccountService} from "./account.service";
 import {NavComponent} from "./nav.component";
+import {Entries} from "./entries.component";
 import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
 
 /**
@@ -26,6 +27,7 @@ import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router"
   { path: "/diet/monthly", name: "MonthlyForm", component: MonthlyForm },
   { path: "/diet/admin", name: "Admin", component: AdminComponent },
   { path: "/diet/login", name: "Login", component: Login },
+  { path: "/diet/entries", name: "Entries", component: Entries },
   { path: "/diet/createuser", name: "CreateUser", component: CreateUser }
 ])
 export class AppComponent {

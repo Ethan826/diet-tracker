@@ -112,14 +112,15 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     else {
                         var form = this.processForm();
                         this.formsService.submitDaily(form)
-                            .subscribe(function (result) {
+                            .then(function (result) {
                             if (result["errno"] && result["errno"] === 19) {
                                 alert("The database already contains an entry for " + _this.dailyGroup.controls["date"].value);
                             }
                             else {
                                 _this.router.navigate(["/MonthlyForm"]);
                             }
-                        }, function (e) { return console.error(e); });
+                        })
+                            .catch(function (e) { return console.error(e); });
                     }
                 };
                 /**

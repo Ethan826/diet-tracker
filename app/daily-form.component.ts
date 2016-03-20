@@ -185,14 +185,14 @@ export class DailyForm implements OnInit {
     } else {
       let form = this.processForm();
       this.formsService.submitDaily(form)
-        .subscribe((result) => {
+        .then((result) => {
         if (result["errno"] && result["errno"] === 19) {
           alert(`The database already contains an entry for ${this.dailyGroup.controls["date"].value}`);
         } else {
           this.router.navigate(["/MonthlyForm"]);
         }
-      },
-        e => console.error(e));
+      })
+        .catch(e => console.error(e));
     }
   }
 

@@ -52,14 +52,17 @@ app.post("/app/checkjwt", function (req, res) {
 });
 app.post("/app/submitdaily", function (req, res) {
     db_1.DB.handleDailyForm(req.body)
-        .then(function () {
-        console.log("I am in server.ts /app/submitdaily and I have no error.");
-        res.sendStatus(200);
-    })
-        .catch(function (err) {
-        console.error("I am in server.ts /app/submitdaily and I have error " + err);
-        res.send(err).status(400);
-    });
+        .then(function () { return res.sendStatus(200); })
+        .catch(function (err) { return res.send(err).status(400); });
+});
+app.get("/app/entries", function (req, res) {
+    console.log("In GET app/entries");
+    db_1.DB.getEntries(req.body)
+        .then(function (results) { return res.status(200).send(results); })
+        .catch(function (err) { return res.status(400).send(err); });
+});
+app.delete("/app/entries", function (req, res) {
+    console.log(req.body);
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

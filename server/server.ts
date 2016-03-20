@@ -87,14 +87,19 @@ app.post("/app/checkjwt", (req, res) => {
  */
 app.post("/app/submitdaily", (req, res) => {
   DB.handleDailyForm(req.body)
-    .then(() => {
-    console.log(`I am in server.ts /app/submitdaily and I have no error.`)
-    res.sendStatus(200);
-  })
-    .catch((err) => {
-    console.error(`I am in server.ts /app/submitdaily and I have error ${err}`);
-    res.send(err).status(400);
-  }
+    .then(() => res.sendStatus(200))
+    .catch(err => res.send(err).status(400));
+});
+
+app.get("/app/entries", (req, res) => {
+  console.log("In GET app/entries");
+  DB.getEntries(req.body)
+  .then(results => res.status(200).send(results))
+  .catch(err => res.status(400).send(err));
+});
+
+app.delete("/app/entries", (req, res) => {
+  console.log(req.body);
 });
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {

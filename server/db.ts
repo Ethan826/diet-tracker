@@ -27,11 +27,32 @@ export class DB {
       .then(data => {
       db.run(
         "insert into users (username, salt, hashedpwd) values (?, ?, ?)",
-        [data.username, data.salt, data.hash],
-        cb // Null on success, single error parameter on success
+        [data.username, data.salt, data.hash], cb // Null on success, single error parameter on success
         );
       db.close();
     });
+  }
+
+  static getEntries(request: JSON) {
+    return new Promise((resolve, reject) => {
+      let db = new Database(DB_PATH);
+      return db.all(
+        "SELECT * FROM entries WHERE userid = ? ORDER BY date",
+        [request["userId"]],
+        (err, rows) => {
+          if (!rows) {
+            reject(err);
+          } else {
+            if (err) { console.log(err); }
+            resolve(rows);
+          }
+        }
+        );
+    });
+  }
+
+  static deleteEntry(id: number) {
+
   }
 
   /**
@@ -100,7 +121,7 @@ export class DB {
    * the database and call the callback with the results (with no arguments
    * passed in on success and an error passed in for an error).
    */
-  static handleDailyForm(formOutput: JSON): Promise<string | void> {
+  static handleDailyForm(formOutput: JSON): Promise<{} | void> {
     let db = new Database(DB_PATH);
     console.log(formOutput);
     return new Promise((resolve, reject) => {

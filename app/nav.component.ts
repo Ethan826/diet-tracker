@@ -32,9 +32,11 @@ import {IJWT} from "./interfaces";
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li *ngIf="hasPermission(['standard', 'admin'])">
-              <a [routerLink]="['/MonthlyForm']">Monthly</a>
-            <li *ngIf="hasPermission(['standard', 'admin'])">
               <a [routerLink]="['/DailyForm']">Daily</a>
+            <li *ngIf="hasPermission(['standard', 'admin'])">
+              <a [routerLink]="['/Entries']">Entries</a>
+            <li *ngIf="hasPermission(['standard', 'admin'])">
+              <a [routerLink]="['/MonthlyForm']">Monthly</a>
             </li>
             <li *ngIf="!isLoggedIn()">
               <a [routerLink]="['/Login']">Login</a>

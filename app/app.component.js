@@ -1,4 +1,4 @@
-System.register(["angular2/core", "./daily-form.component", "./monthly-form.component", "./login.component", "./create-user.component", "./admin.component", "./account.service", "./nav.component", "angular2/router"], function(exports_1, context_1) {
+System.register(["angular2/core", "./daily-form.component", "./monthly-form.component", "./login.component", "./create-user.component", "./admin.component", "./account.service", "./nav.component", "./entries.component", "angular2/router"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -10,7 +10,7 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, daily_form_component_1, monthly_form_component_1, login_component_1, create_user_component_1, admin_component_1, account_service_1, nav_component_1, router_1;
+    var core_1, daily_form_component_1, monthly_form_component_1, login_component_1, create_user_component_1, admin_component_1, account_service_1, nav_component_1, entries_component_1, router_1;
     var AppComponent;
     return {
         setters:[
@@ -38,6 +38,9 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
             function (nav_component_1_1) {
                 nav_component_1 = nav_component_1_1;
             },
+            function (entries_component_1_1) {
+                entries_component_1 = entries_component_1_1;
+            },
             function (router_1_1) {
                 router_1 = router_1_1;
             }],
@@ -62,6 +65,7 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                         { path: "/diet/monthly", name: "MonthlyForm", component: monthly_form_component_1.MonthlyForm },
                         { path: "/diet/admin", name: "Admin", component: admin_component_1.AdminComponent },
                         { path: "/diet/login", name: "Login", component: login_component_1.Login },
+                        { path: "/diet/entries", name: "Entries", component: entries_component_1.Entries },
                         { path: "/diet/createuser", name: "CreateUser", component: create_user_component_1.CreateUser }
                     ]), 
                     __metadata('design:paramtypes', [account_service_1.AccountService])

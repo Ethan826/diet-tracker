@@ -8,7 +8,7 @@ import * as fs from "fs";
 import {Credentials} from "./credentials";
 import {ICredentials, IJWT} from "./interfaces";
 
-let DB_PATH = "./db.db";
+let DB_PATH = "/home/ethan/db.db";
 
 /**
  * Static methods to manage database.
@@ -100,10 +100,11 @@ export class DB {
    * the database and call the callback with the results (with no arguments
    * passed in on success and an error passed in for an error).
    */
-  static handleDailyForm(formOutput: JSON, cb: Function) {
+  static handleDailyForm(formOutput: JSON): Promise<string | void> {
     let db = new Database(DB_PATH);
     console.log(formOutput);
-    db.run(`
+    return new Promise((resolve, reject) => {
+      db.run(`
       INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,
                            carbstext, cravingscore, cravingtext,
                            date, energyscore, energytext,
@@ -118,18 +119,25 @@ export class DB {
                            ?, ?, ?,
                            ?, ?, ?,
                            ?, ?, ?)`,
-      [
-        formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
-        formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
-        formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
-        formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
-        formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
-        formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
-        formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
-      ],
-      cb
-      );
-    db.close();
+        [
+          formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
+          formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
+          formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
+          formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
+          formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
+          formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
+          formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
+        ],
+        (err) => {
+          db.close();
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        }
+        );
+    });
   }
 
   /**

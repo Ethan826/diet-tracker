@@ -16,8 +16,8 @@ insecure.listen(HTTP_PORT, function () {
     console.log("Listening on port " + HTTP_PORT);
 });
 var OPTIONS = {
-    key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-    cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+    key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+    cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 app.use(bodyParser.json());
 app.use("/app", express.static(__dirname + "/../app"));
@@ -51,7 +51,15 @@ app.post("/app/checkjwt", function (req, res) {
     res.send(jwt);
 });
 app.post("/app/submitdaily", function (req, res) {
-    db_1.DB.handleDailyForm(req.body, function (x) { return console.log(x); });
+    db_1.DB.handleDailyForm(req.body)
+        .then(function () {
+        console.log("I am in server.ts /app/submitdaily and I have no error.");
+        res.sendStatus(200);
+    })
+        .catch(function (err) {
+        console.error("I am in server.ts /app/submitdaily and I have error " + err);
+        res.send(err).status(400);
+    });
 });
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
     console.log("Listening on port " + HTTPS_PORT);

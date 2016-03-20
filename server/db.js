@@ -3,7 +3,7 @@ var sqlite3_1 = require("sqlite3");
 var es6_promise_1 = require("es6-promise");
 var fs = require("fs");
 var credentials_1 = require("./credentials");
-var DB_PATH = "./db.db";
+var DB_PATH = "/home/ethan/db.db";
 var DB = (function () {
     function DB() {
     }
@@ -58,19 +58,28 @@ var DB = (function () {
             });
         });
     };
-    DB.handleDailyForm = function (formOutput, cb) {
+    DB.handleDailyForm = function (formOutput) {
         var db = new sqlite3_1.Database(DB_PATH);
         console.log(formOutput);
-        db.run("\n      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,\n                           carbstext, cravingscore, cravingtext,\n                           date, energyscore, energytext,\n                           hungerscore, hungertext, movementbool,\n                           movementtext, satietyscore, satietytext,\n                           stressambool, stresspmbool, userId,\n                           walksbool, wellbeingscore, wellbeingtext)\n                   VALUES (?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?)", [
-            formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
-            formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
-            formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
-            formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
-            formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
-            formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
-            formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
-        ], cb);
-        db.close();
+        return new es6_promise_1.Promise(function (resolve, reject) {
+            db.run("\n      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,\n                           carbstext, cravingscore, cravingtext,\n                           date, energyscore, energytext,\n                           hungerscore, hungertext, movementbool,\n                           movementtext, satietyscore, satietytext,\n                           stressambool, stresspmbool, userId,\n                           walksbool, wellbeingscore, wellbeingtext)\n                   VALUES (?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?,\n                           ?, ?, ?)", [
+                formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
+                formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
+                formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
+                formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
+                formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
+                formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
+                formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
+            ], function (err) {
+                db.close();
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
     };
     DB.getKeys = function (objects) {
         return Object

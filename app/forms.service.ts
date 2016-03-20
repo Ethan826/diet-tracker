@@ -35,18 +35,14 @@ export class FormsService {
   /**
    * Submits the output of the DailyForm to the server, returns response.
    */
-  submitDaily(formOutput: Object): Promise<Response> {
-    let result = new Promise((resolve, reject) => {
-      console.log(this.jwtResult);
-      formOutput["userId"] = this.jwtResult.userId;
-      console.log(JSON.stringify(formOutput));
-      console.log("Submitting form in forms.service.ts");
-      return this.http.post(
-        this.SUBMIT_DAILY_URL,
-        JSON.stringify(formOutput),
-        { headers: this.HEADERS }
-      );
-    });
-    return result; // TODO: robustly handle response in DailyForm.
+  submitDaily(formOutput: Object): Observable<Response> {
+    formOutput["userId"] = this.jwtResult.userId;
+    console.log(JSON.stringify(formOutput));
+    console.log("Submitting form in forms.service.ts");
+    return this.http.post(
+      this.SUBMIT_DAILY_URL,
+      JSON.stringify(formOutput),
+      { headers: this.HEADERS }
+    ).map(r => r.json());
   }
 }

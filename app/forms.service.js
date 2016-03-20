@@ -49,15 +49,10 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                  * Submits the output of the DailyForm to the server, returns response.
                  */
                 FormsService.prototype.submitDaily = function (formOutput) {
-                    var _this = this;
-                    var result = new Promise(function (resolve, reject) {
-                        console.log(_this.jwtResult);
-                        formOutput["userId"] = _this.jwtResult.userId;
-                        console.log(JSON.stringify(formOutput));
-                        console.log("Submitting form in forms.service.ts");
-                        return _this.http.post(_this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: _this.HEADERS });
-                    });
-                    return result; // TODO: robustly handle response in DailyForm.
+                    formOutput["userId"] = this.jwtResult.userId;
+                    console.log(JSON.stringify(formOutput));
+                    console.log("Submitting form in forms.service.ts");
+                    return this.http.post(this.SUBMIT_DAILY_URL, JSON.stringify(formOutput), { headers: this.HEADERS }).map(function (r) { return r.json(); });
                 };
                 FormsService = __decorate([
                     core_1.Injectable(), 

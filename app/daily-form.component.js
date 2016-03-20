@@ -13,7 +13,7 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, common_1, question_data_1, router_1, http_1, login_service_1, forms_service_1;
+    var core_1, common_1, question_data_1, router_1, http_1, login_service_1, forms_service_1, router_2;
     var DailyForm;
     return {
         setters:[
@@ -28,6 +28,7 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
             },
             function (router_1_1) {
                 router_1 = router_1_1;
+                router_2 = router_1_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
@@ -48,19 +49,23 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
              * `Control`s.
              */
             DailyForm = (function () {
-                function DailyForm(fb, formsService) {
+                function DailyForm(fb, formsService, router) {
                     this.fb = fb;
                     this.formsService = formsService;
+                    this.router = router;
+                    this.buildForm();
+                }
+                DailyForm.prototype.buildForm = function () {
                     this.buttonQuestions = question_data_1.buttonQuestions;
                     this.checkboxQuestions = question_data_1.checkboxQuestions;
                     var dateString = new Date().toLocaleDateString();
-                    this.dailyGroup = fb.group({
+                    this.dailyGroup = this.fb.group({
                         // Date is a string in sqlite, so nothing lost here
                         "date": [dateString, common_1.Validators.required],
                         "buttonGroup": this.buttonGroupBuilder(this.buttonQuestions),
                         "checkboxGroup": this.checkboxGroupBuilder(this.checkboxQuestions)
                     });
-                }
+                };
                 /**********************************************
                  * Event handlers and submits                 *
                  *********************************************/
@@ -100,13 +105,21 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                  * @internal
                  */
                 DailyForm.prototype.submitForm = function () {
+                    var _this = this;
                     if (!this.dailyGroup.valid) {
                         alert("You must click on at least one button in each set.");
                     }
                     else {
                         var form = this.processForm();
-                        this.formsService.submitDaily(form).then(function (res) { return console.log(res); }).catch(function (e) { return console.error(e); });
-                        console.log("Submitting form in daily-form.component.ts");
+                        this.formsService.submitDaily(form)
+                            .subscribe(function (result) {
+                            if (result["errno"] && result["errno"] === 19) {
+                                alert("The database already contains an entry for " + _this.dailyGroup.controls["date"].value);
+                            }
+                            else {
+                                _this.router.navigate(["/MonthlyForm"]);
+                            }
+                        }, function (e) { return console.error(e); });
                     }
                 };
                 /**
@@ -153,7 +166,10 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                  * Attach the JQueryUI calendar widget to the form.
                  */
                 DailyForm.prototype.ngOnInit = function () {
-                    $("#date-picker").datepicker();
+                    var control = this.dailyGroup.controls["date"];
+                    $("#date-picker").datepicker({
+                        onSelect: function (date) { control.updateValue(date); }
+                    });
                 };
                 /**
                  * @internal  uses the imported `buttonQuestions` to build the `ControlGroup`
@@ -263,7 +279,7 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                         providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService],
                         template: "\n  <!-- Header material -->\n  <h1>Daily Tracker</h1>\n  <br>\n\n  <form [ngFormModel]=\"dailyGroup\">\n\n    <!-- Date -->\n    <legend>Date</legend>\n\n    <input type=\"text\"\n           [ngFormControl]=\"dailyGroup.controls['date']\"\n           readonly=\"readonly\"\n           id=\"date-picker\">\n    <br><br>\n\n    <!-- Button Questions -->\n\n    <div *ngFor=\"#outer of getKeys(buttonQuestions)\">\n      <legend>{{buttonQuestions[outer].legend}}</legend>\n      <label>{{buttonQuestions[outer].explanatoryText}}</label>\n      <br>\n      <div class=\"btn-group\" data-toggle=\"buttons\">\n        <label *ngFor=\"#inner of getKeys(buttonQuestions[outer].buttons)\"\n               class=\"btn btn-default\"\n               [class.error]=\"submitAttempted | async\"\n               (click)=\"handleButtonSelection(outer, inner)\">\n          <input type=\"radio\"\n                 name=\"{{outer}}\">\n            {{buttonQuestions[outer].buttons[inner]}}\n        </label>\n      </div>\n      <br>\n      <br>\n      <div class=\"form-group\">\n        <!-- This is getting a little hairy. Consider refactoring. -->\n        <input [ngFormControl]=\"dailyGroup.controls.buttonGroup.controls[outer].controls['textField']\"\n               placeholder=\"{{buttonQuestions[outer].placeholderText}}\"\n               class=\"form-control\"\n               type=\"text\">\n      </div>\n      <br>\n    </div>\n\n    <!-- Checkbox Questions -->\n\n    <div *ngFor=\"#outer of getKeys(checkboxQuestions)\">\n      <label>\n        <input type=\"checkbox\"\n               (click)=\"handleCheckboxSelection(outer)\">\n          &emsp; {{checkboxQuestions[outer][\"checkboxPrompt\"]}}\n      </label>\n      <div *ngIf=\"checkShowText(outer)\">\n        <div class=\"form-group\">\n          <input [ngFormControl]=\"dailyGroup.controls.checkboxGroup.controls[outer].controls['textPrompt']\"\n                 placeholder=\"{{checkboxQuestions[outer].textPrompt}}\"\n                 class=\"form-control\"\n                 type=\"text\">\n      </div>\n      </div>\n    </div>\n    <br>\n\n    <!-- Form Submit -->\n\n    <button type=\"submit\"\n            class=\"btn btn-primary\"\n            (click)=submitForm()\n            [class.disabled]=\"!dailyGroup.valid\">Submit</button>\n  </form>\n  "
                     }), 
-                    __metadata('design:paramtypes', [common_1.FormBuilder, forms_service_1.FormsService])
+                    __metadata('design:paramtypes', [common_1.FormBuilder, forms_service_1.FormsService, router_2.Router])
                 ], DailyForm);
                 return DailyForm;
             }());

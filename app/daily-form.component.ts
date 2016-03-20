@@ -4,11 +4,11 @@
 
 import {Component, Injector, OnInit} from "angular2/core";
 import {
-  ControlGroup,
-  FormBuilder,
-  Control,
-  AbstractControl,
-  Validators
+ControlGroup,
+FormBuilder,
+Control,
+AbstractControl,
+Validators
 } from "angular2/common";
 import {IButtonQuestion, ICheckboxQuestion} from "./interfaces";
 import {buttonQuestions, checkboxQuestions} from "./question-data";
@@ -17,6 +17,7 @@ import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
+import {Router} from "angular2/router";
 
 /**
  * Principal interactive component in the app. Imports questions from
@@ -112,11 +113,19 @@ export class DailyForm implements OnInit {
   private checkboxGroup: ControlGroup;
   private dailyGroup: ControlGroup;
 
-  constructor(private fb: FormBuilder, private formsService: FormsService) {
+  constructor(
+    private fb: FormBuilder,
+    private formsService: FormsService,
+    private router: Router
+    ) {
+    this.buildForm();
+  }
+
+  private buildForm() {
     this.buttonQuestions = buttonQuestions;
     this.checkboxQuestions = checkboxQuestions;
     let dateString = new Date().toLocaleDateString();
-    this.dailyGroup = fb.group({
+    this.dailyGroup = this.fb.group({
 
       // Date is a string in sqlite, so nothing lost here
       "date": [dateString, Validators.required],
@@ -175,8 +184,15 @@ export class DailyForm implements OnInit {
       alert("You must click on at least one button in each set.");
     } else {
       let form = this.processForm();
-      this.formsService.submitDaily(form).then(res => console.log(res)).catch(e => console.error(e));
-      console.log("Submitting form in daily-form.component.ts");
+      this.formsService.submitDaily(form)
+        .subscribe((result) => {
+        if (result["errno"] && result["errno"] === 19) {
+          alert(`The database already contains an entry for ${this.dailyGroup.controls["date"].value}`);
+        } else {
+          this.router.navigate(["/MonthlyForm"]);
+        }
+      },
+        e => console.error(e));
     }
   }
 
@@ -230,11 +246,14 @@ export class DailyForm implements OnInit {
    * Set up form                                *
    *********************************************/
 
-   /**
-    * Attach the JQueryUI calendar widget to the form.
-    */
+  /**
+   * Attach the JQueryUI calendar widget to the form.
+   */
   ngOnInit() {
-    $("#date-picker").datepicker();
+    let control: any = this.dailyGroup.controls["date"];
+    $("#date-picker").datepicker({
+      onSelect: (date) => { control.updateValue(date); }
+    });
   }
 
   /**

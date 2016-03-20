@@ -29,10 +29,10 @@ insecure.listen(HTTP_PORT, () => { // TODO: Add HSTS header.
 });
 
 let OPTIONS = { // Toggle top and bottom files for local and remote server.
-  key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-  cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
-  // key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-  // cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+  // key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
+  // cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+  key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
+  cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
 };
 
 app.use(bodyParser.json());
@@ -83,10 +83,18 @@ app.post("/app/checkjwt", (req, res) => {
 });
 
 /**
- * Endpoint for submitting daily form. TODO: Use callback.
+ * Endpoint for submitting daily form.
  */
 app.post("/app/submitdaily", (req, res) => {
-  DB.handleDailyForm(req.body, x => console.log(x));
+  DB.handleDailyForm(req.body)
+    .then(() => {
+    console.log(`I am in server.ts /app/submitdaily and I have no error.`)
+    res.sendStatus(200);
+  })
+    .catch((err) => {
+    console.error(`I am in server.ts /app/submitdaily and I have error ${err}`);
+    res.send(err).status(400);
+  }
 });
 
 https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {

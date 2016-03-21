@@ -16,8 +16,8 @@ insecure.listen(HTTP_PORT, function () {
     console.log("Listening on port " + HTTP_PORT);
 });
 var OPTIONS = {
-    key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-    cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+    key: fs.readFileSync("/home/ethan/Desktop/secrets/privkey.pem"),
+    cert: fs.readFileSync("/home/ethan/Desktop/secrets/cert.pem")
 };
 app.use(bodyParser.json());
 app.use("/app", express.static(__dirname + "/../app"));

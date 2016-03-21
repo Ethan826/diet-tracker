@@ -1,6 +1,6 @@
-/// <reference path="../typings/main/ambient/jquery/jquery.d.ts"/>
+/// <reference path="../typings/main/ambient/jquery/index.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
-/// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
+/// <reference path="../typings/main/ambient/jqueryui/index.d.ts"/>
 
 import {Component, Injector, OnInit} from "angular2/core";
 import {
@@ -17,7 +17,7 @@ import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
-import {Router} from "angular2/router";
+import {Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
 
 /**
  * Principal interactive component in the app. Imports questions from
@@ -32,7 +32,8 @@ import {Router} from "angular2/router";
 })
 @Component({
   selector: "daily-form",
-  providers: [HTTP_PROVIDERS, FormsService],
+  providers: [HTTP_PROVIDERS, FormsService, ROUTER_PROVIDERS],
+  directives: [ROUTER_DIRECTIVES],
   template: `
   <!-- Header material -->
   <h1>Daily Tracker</h1>
@@ -186,10 +187,10 @@ export class DailyForm implements OnInit {
       let form = this.processForm();
       this.formsService.submitDaily(form)
         .then((result) => {
-        if (result["errno"] && result["errno"] === 19) {
-          alert(`The database already contains an entry for ${this.dailyGroup.controls["date"].value}`);
-        } else {
-          this.router.navigate(["/MonthlyForm"]);
+        if (result && result["error"]) { alert(result["error"]); }
+        else {
+          alert("Success!");
+          location.reload();
         }
       })
         .catch(e => console.error(e));
@@ -252,7 +253,7 @@ export class DailyForm implements OnInit {
   ngOnInit() {
     let control: any = this.dailyGroup.controls["date"];
     $("#date-picker").datepicker({
-      onSelect: (date) => { control.updateValue(date); }
+      onSelect: (date: string) => { control.updateValue(date); }
     });
   }
 

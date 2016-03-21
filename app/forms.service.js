@@ -83,7 +83,6 @@ System.register(["angular2/core", "./account.service", "./login.service", "angul
                                 var headers = codeThatNeedsJWT(jwt, paramsOrBody);
                                 requestOptions.headers = new http_1.Headers(headers);
                             }
-                            console.log(url);
                             _this.http.request(url, requestOptions)
                                 .map(function (r) { return r.json(); })
                                 .subscribe(function (r) { return resolve(r); }, function (err) { return resolve(err); });

@@ -7,6 +7,7 @@ import {AdminComponent} from "./admin.component";
 import {AccountService} from "./account.service";
 import {NavComponent} from "./nav.component";
 import {Entries} from "./entries.component";
+import {FrontComponent} from "./front.component";
 import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
 
 /**
@@ -23,6 +24,8 @@ import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router"
   `
 })
 @RouteConfig([
+  { path: "/", redirectTo: ["/diet"] },
+  { path: "/diet/", name: "FrontComponent", component: FrontComponent },
   { path: "/diet/daily", name: "DailyForm", component: DailyForm },
   { path: "/diet/monthly", name: "MonthlyForm", component: MonthlyForm },
   { path: "/diet/admin", name: "Admin", component: AdminComponent },

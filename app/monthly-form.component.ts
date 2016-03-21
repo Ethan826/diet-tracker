@@ -1,4 +1,4 @@
-import {Component, OnInit} from "angular2/core";
+import {Component, AfterViewInit} from "angular2/core";
 import {CanActivate, ComponentInstruction} from "angular2/router";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
@@ -17,21 +17,20 @@ declare let google: any;
     </div>
   `
 })
-export class MonthlyForm {
+export class MonthlyForm implements AfterViewInit {
 
   constructor(private formsService: FormsService) { }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.processData().then((data: Array<Array<any>>) => {
       data.unshift(["Date", "Score", { "type": "string", "role": "style" }]);
       google.charts.setOnLoadCallback(this.drawChart(data));
-      // $(window).resize($.debounce(250, () => this.drawChart(data)));
+      // $(window).resize($.debounce(250, () => this.drawChart(data))); // No JQuery debounce!?
       $(window).resize(() => this.drawChart(data));
     });
   }
 
   drawChart(data: Array<Array<any>>) {
-    console.log(data);
     let table = new google.visualization.arrayToDataTable(data);
     let chart = new google.visualization.LineChart(document.getElementById("chart"));
     let options = {
@@ -62,7 +61,6 @@ export class MonthlyForm {
               datestring.slice(8, 10)
               );
             let color: string;
-            console.log(datum["carbsscore"]);
             switch (datum["carbsscore"]) {
               case 0:
                 color = "#00ff00";

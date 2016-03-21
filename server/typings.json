@@ -3,9 +3,9 @@
   "devDependencies": {},
   "ambientDependencies": {
     "body-parser": "registry:dt/body-parser#0.0.0+20160112113357",
-    "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#dd638012d63e069f2c99d06ef4dcc9616a943ee4",
+    "express": "registry:dt/express#4.0.0+20160317120654",
     "jwt-simple": "registry:dt/jwt-simple#0.2.0+20141211145313",
-    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#48c1e3c1d6baefa4f1a126f188c27c4fefd36bff",
+    "node": "registry:dt/node#4.0.0+20160319033040",
     "sqlite3": "registry:dt/sqlite3#2.2.3+20160224211008"
   }
 }

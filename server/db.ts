@@ -1,5 +1,5 @@
 /// <reference path="./typings/main/ambient/sqlite3/index.d.ts"/>
-/// <reference path="./typings/main/ambient/node/node.d.ts"/>
+/// <reference path="./typings/main/ambient/node/index.d.ts"/>
 
 import * as sqlite3 from "sqlite3";
 import {Database} from "sqlite3";
@@ -174,39 +174,51 @@ export class DB {
   static handleDailyForm(formOutput: JSON): Promise<{} | void> {
     let db = new Database(DB_PATH);
     return new Promise((resolve, reject) => {
-      db.run(`
-      INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,
-                           carbstext, cravingscore, cravingtext,
-                           date, energyscore, energytext,
-                           hungerscore, hungertext, movementbool,
-                           movementtext, satietyscore, satietytext,
-                           stressambool, stresspmbool, userId,
-                           walksbool, wellbeingscore, wellbeingtext)
-                   VALUES (?, ?, ?,
-                           ?, ?, ?,
-                           ?, ?, ?,
-                           ?, ?, ?,
-                           ?, ?, ?,
-                           ?, ?, ?,
-                           ?, ?, ?)`,
-        [
-          formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
-          formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
-          formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
-          formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
-          formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
-          formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
-          formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
-        ],
-        (err) => {
-          db.close();
+      db.get(
+        "SELECT COUNT(*) FROM entries WHERE userid = ? AND date = ?",
+        [formOutput["userId"], formOutput["date"]],
+        (err, rows) => {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            if (rows["COUNT(*)"] > 0) {
+              reject({ "error": `You have already entered data for ${formOutput["date"]}` });
+            } else {
+              db.run(`
+              INSERT INTO entries (bedtimebool, bedtimetext, carbsscore,
+                                   carbstext, cravingscore, cravingtext,
+                                   date, energyscore, energytext,
+                                   hungerscore, hungertext, movementbool,
+                                   movementtext, satietyscore, satietytext,
+                                   stressambool, stresspmbool, userId,
+                                   walksbool, wellbeingscore, wellbeingtext)
+                           VALUES (?, ?, ?,
+                                   ?, ?, ?,
+                                   ?, ?, ?,
+                                   ?, ?, ?,
+                                   ?, ?, ?,
+                                   ?, ?, ?,
+                                   ?, ?, ?)`,
+                [
+                  formOutput["bedtimebool"], formOutput["bedtimetext"], formOutput["carbsscore"],
+                  formOutput["carbstext"], formOutput["cravingscore"], formOutput["cravingtext"],
+                  formOutput["date"], formOutput["energyscore"], formOutput["energytext"],
+                  formOutput["hungerscore"], formOutput["hungertext"], formOutput["movementbool"],
+                  formOutput["movementtext"], formOutput["satietyscore"], formOutput["satietytext"],
+                  formOutput["stressambool"], formOutput["stresspmbool"], formOutput["userId"],
+                  formOutput["walksbool"], formOutput["wellbeingscore"], formOutput["wellbeingtext"]
+                ],
+                (err) => {
+                  db.close();
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
+                });
+            }
           }
-        }
-        );
+        });
     });
   }
 
@@ -241,7 +253,7 @@ export class DB {
         db.run(`
           CREATE TABLE entries (
             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-            date TEXT NOT NULL UNIQUE,
+            date TEXT NOT NULL,
             hungerscore INTEGER NOT NULL,
             hungertext TEXT,
             cravingscore INTEGER NOT NULL,

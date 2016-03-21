@@ -1,4 +1,4 @@
-/// <reference path="./typings/main/ambient/node/node.d.ts"/>
+/// <reference path="./typings/main/ambient/node/index.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 
 import * as express from "express";
@@ -29,10 +29,10 @@ insecure.listen(HTTP_PORT, () => { // TODO: Add HSTS header.
 });
 
 let OPTIONS = { // Toggle top and bottom files for local and remote server.
-  key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-  cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
-  // key: fs.readFileSync("/home/ethan/Desktop/temp/privkey.pem"),
-  // cert: fs.readFileSync("/home/ethan/Desktop/temp/cert.pem")
+  // key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
+  // cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
+  key: fs.readFileSync("/home/ethan/Desktop/secrets/privkey.pem"),
+  cert: fs.readFileSync("/home/ethan/Desktop/secrets/cert.pem")
 };
 
 app.use(bodyParser.json());

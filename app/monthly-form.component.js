@@ -31,17 +31,16 @@ System.register(["angular2/core", "angular2/router", "./login.service", "./forms
                 function MonthlyForm(formsService) {
                     this.formsService = formsService;
                 }
-                MonthlyForm.prototype.ngOnInit = function () {
+                MonthlyForm.prototype.ngAfterViewInit = function () {
                     var _this = this;
                     this.processData().then(function (data) {
                         data.unshift(["Date", "Score", { "type": "string", "role": "style" }]);
                         google.charts.setOnLoadCallback(_this.drawChart(data));
-                        // $(window).resize($.debounce(250, () => this.drawChart(data)));
+                        // $(window).resize($.debounce(250, () => this.drawChart(data))); // No JQuery debounce!?
                         $(window).resize(function () { return _this.drawChart(data); });
                     });
                 };
                 MonthlyForm.prototype.drawChart = function (data) {
-                    console.log(data);
                     var table = new google.visualization.arrayToDataTable(data);
                     var chart = new google.visualization.LineChart(document.getElementById("chart"));
                     var options = {
@@ -68,7 +67,6 @@ System.register(["angular2/core", "angular2/router", "./login.service", "./forms
                                     var datestring = datum["date"];
                                     var date = new Date(datestring.slice(0, 4), datestring.slice(5, 7), datestring.slice(8, 10));
                                     var color = void 0;
-                                    console.log(datum["carbsscore"]);
                                     switch (datum["carbsscore"]) {
                                         case 0:
                                             color = "#00ff00";

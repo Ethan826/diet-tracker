@@ -91,7 +91,6 @@ export class FormsService {
           let headers = codeThatNeedsJWT(jwt, paramsOrBody);
           requestOptions.headers = new Headers(headers);
         }
-        console.log(url);
         this.http.request(url, requestOptions)
           .map((r: Response) => r.json())
           .subscribe((r: Response) => resolve(r), (err: any) => resolve(err));

@@ -1,6 +1,6 @@
-/// <reference path="../typings/main/ambient/jquery/jquery.d.ts"/>
+/// <reference path="../typings/main/ambient/jquery/index.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
-/// <reference path="../typings/main/ambient/jqueryui/jqueryui.d.ts"/>
+/// <reference path="../typings/main/ambient/jqueryui/index.d.ts"/>
 System.register(["angular2/core", "angular2/common", "./question-data", "angular2/router", "angular2/http", "./login.service", "./forms.service"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -105,7 +105,6 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                  * @internal
                  */
                 DailyForm.prototype.submitForm = function () {
-                    var _this = this;
                     if (!this.dailyGroup.valid) {
                         alert("You must click on at least one button in each set.");
                     }
@@ -113,11 +112,12 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                         var form = this.processForm();
                         this.formsService.submitDaily(form)
                             .then(function (result) {
-                            if (result["errno"] && result["errno"] === 19) {
-                                alert("The database already contains an entry for " + _this.dailyGroup.controls["date"].value);
+                            if (result && result["error"]) {
+                                alert(result["error"]);
                             }
                             else {
-                                _this.router.navigate(["/MonthlyForm"]);
+                                alert("Success!");
+                                location.reload();
                             }
                         })
                             .catch(function (e) { return console.error(e); });
@@ -277,7 +277,8 @@ System.register(["angular2/core", "angular2/common", "./question-data", "angular
                     }),
                     core_1.Component({
                         selector: "daily-form",
-                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService],
+                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService, router_2.ROUTER_PROVIDERS],
+                        directives: [router_2.ROUTER_DIRECTIVES],
                         template: "\n  <!-- Header material -->\n  <h1>Daily Tracker</h1>\n  <br>\n\n  <form [ngFormModel]=\"dailyGroup\">\n\n    <!-- Date -->\n    <legend>Date</legend>\n\n    <input type=\"text\"\n           [ngFormControl]=\"dailyGroup.controls['date']\"\n           readonly=\"readonly\"\n           id=\"date-picker\">\n    <br><br>\n\n    <!-- Button Questions -->\n\n    <div *ngFor=\"#outer of getKeys(buttonQuestions)\">\n      <legend>{{buttonQuestions[outer].legend}}</legend>\n      <label>{{buttonQuestions[outer].explanatoryText}}</label>\n      <br>\n      <div class=\"btn-group\" data-toggle=\"buttons\">\n        <label *ngFor=\"#inner of getKeys(buttonQuestions[outer].buttons)\"\n               class=\"btn btn-default\"\n               [class.error]=\"submitAttempted | async\"\n               (click)=\"handleButtonSelection(outer, inner)\">\n          <input type=\"radio\"\n                 name=\"{{outer}}\">\n            {{buttonQuestions[outer].buttons[inner]}}\n        </label>\n      </div>\n      <br>\n      <br>\n      <div class=\"form-group\">\n        <!-- This is getting a little hairy. Consider refactoring. -->\n        <input [ngFormControl]=\"dailyGroup.controls.buttonGroup.controls[outer].controls['textField']\"\n               placeholder=\"{{buttonQuestions[outer].placeholderText}}\"\n               class=\"form-control\"\n               type=\"text\">\n      </div>\n      <br>\n    </div>\n\n    <!-- Checkbox Questions -->\n\n    <div *ngFor=\"#outer of getKeys(checkboxQuestions)\">\n      <label>\n        <input type=\"checkbox\"\n               (click)=\"handleCheckboxSelection(outer)\">\n          &emsp; {{checkboxQuestions[outer][\"checkboxPrompt\"]}}\n      </label>\n      <div *ngIf=\"checkShowText(outer)\">\n        <div class=\"form-group\">\n          <input [ngFormControl]=\"dailyGroup.controls.checkboxGroup.controls[outer].controls['textPrompt']\"\n                 placeholder=\"{{checkboxQuestions[outer].textPrompt}}\"\n                 class=\"form-control\"\n                 type=\"text\">\n      </div>\n      </div>\n    </div>\n    <br>\n\n    <!-- Form Submit -->\n\n    <button type=\"submit\"\n            class=\"btn btn-primary\"\n            (click)=submitForm()\n            [class.disabled]=\"!dailyGroup.valid\">Submit</button>\n  </form>\n  "
                     }), 
                     __metadata('design:paramtypes', [common_1.FormBuilder, forms_service_1.FormsService, router_2.Router])

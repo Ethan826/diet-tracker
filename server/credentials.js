@@ -2,13 +2,14 @@
 var crypto = require("crypto");
 var es6_promise_1 = require("es6-promise");
 var jwt = require("jwt-simple");
+var fs = require("fs");
 var CREDENTIAL_CONSTANTS = {
     HASH_LENGTH: 128,
     ITERATIONS: 50000,
     KEYLEN: 512,
     DIGEST: "sha512",
     JWT_DURATION: 86400,
-    SECRET: "Db4gG8tdLXlkvfetHAnkizXn72OulTj68BN1AbXxuKEZrxQexa0aApzPcNH0OvwFMK75ASTKDKpRUNupQjoW3r+rcyPeNf/jJ8nCnWU+033WfBwocMyL5preLR7XGbCIRjeSDrMENixyEYn5GmKqhBBzxkOmp6BBijfmLmDQyCc=",
+    SECRET: fs.readFileSync("/home/ethan/Desktop/secrets/hash.txt"),
     ISS: "https://flashbangsplat.com"
 };
 var Credentials = (function () {

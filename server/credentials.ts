@@ -5,6 +5,7 @@ import {Promise} from "es6-promise";
 import {ICredentials, IJWT} from "./interfaces";
 import {DB} from "./db";
 import * as jwt from "jwt-simple";
+import * as fs from "fs";
 
 let CREDENTIAL_CONSTANTS = {
   HASH_LENGTH: 128,
@@ -12,9 +13,7 @@ let CREDENTIAL_CONSTANTS = {
   KEYLEN: 512,
   DIGEST: "sha512",
   JWT_DURATION: 86400, // One day.
-
-  // TODO: Store externally. In the example app it doesn't matter.
-  SECRET: "Db4gG8tdLXlkvfetHAnkizXn72OulTj68BN1AbXxuKEZrxQexa0aApzPcNH0OvwFMK75ASTKDKpRUNupQjoW3r+rcyPeNf/jJ8nCnWU+033WfBwocMyL5preLR7XGbCIRjeSDrMENixyEYn5GmKqhBBzxkOmp6BBijfmLmDQyCc=",
+  SECRET: fs.readFileSync("/home/ethan/Desktop/secrets/hash.txt"),
   ISS: "https://flashbangsplat.com"
 };
 

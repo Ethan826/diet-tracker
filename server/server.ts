@@ -1,4 +1,6 @@
-/// <reference path="./typings/main/ambient/node/index.d.ts"/>
+/// <reference path="../node_modules/angular2/ts/typings/node/node.d.ts"/>
+/// <reference path="./typings/main/ambient/express/index.d.ts"/>
+/// <reference path="./typings/main/ambient/body-parser/index.d.ts"/>
 /// <reference path="../node_modules/angular2/typings/es6-promise/es6-promise.d.ts"/>
 
 import * as express from "express";

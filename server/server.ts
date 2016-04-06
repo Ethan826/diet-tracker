@@ -27,24 +27,24 @@ let HTTP_PORT = 8081;
 // });
 
 app.use(bodyParser.json());
-app.use("/app", express.static(`${__dirname}/../app`));
-app.use("/css", express.static(`${__dirname}/../css`));
-app.use("/node_modules", express.static(`${__dirname}/../node_modules`));
+app.use("/diet-tracker/app", express.static(`${__dirname}/../app`));
+app.use("/diet-tracker/css", express.static(`${__dirname}/../css`));
+app.use("/diet-tracker/node_modules", express.static(`${__dirname}/../node_modules`));
 
 /* This lets all /diet/ urls be resolved by the front end, while everything /
  * is resolved by the server. */
-app.get("/", (req, res) => {
-  res.redirect("/diet/");
+app.get("/diet-tracker/", (req, res) => {
+  res.redirect("/diet-tracker/diet/");
 });
 
-app.get("/diet/*", (req, res) => {
-  res.sendFile("/index.html", { "root": __dirname + "/../" });
+app.get("/diet-tracker/diet/*", (req, res) => {
+  res.sendFile("index.html", { "root": __dirname + "/../" });
 });
 
 /**
  * Endpoint for creating a new user.
  */
-app.post("/app/submitcreds", (req, res) => {
+app.post("/diet-tracker/app/submitcreds", (req, res) => {
   DB.addUser(req.body.username, req.body.password, (err) => {
     if (err) { // called if an error occurs
       console.error(err);
@@ -59,7 +59,7 @@ app.post("/app/submitcreds", (req, res) => {
 /**
  * Endpoint for logging in an existing user.
  */
-app.post("/app/dologin", (req, res) => {
+app.post("/diet-tracker/app/dologin", (req, res) => {
   DB.checkCredentials(req.body.username, req.body.password)
     .then(results => res.status(200).send(results))
     .catch(err => res.status(400).send(err));
@@ -68,7 +68,7 @@ app.post("/app/dologin", (req, res) => {
 /**
  * Endpoint for checking a JWT.
  */
-app.post("/app/checkjwt", (req, res) => {
+app.post("/diet-tracker/app/checkjwt", (req, res) => {
   let jwt = Credentials.checkJWT(req.body.jwt);
   res.send(jwt);
 });
@@ -76,19 +76,19 @@ app.post("/app/checkjwt", (req, res) => {
 /**
  * Endpoint for submitting daily form.
  */
-app.post("/app/submitdaily", (req, res) => {
+app.post("/diet-tracker/app/submitdaily", (req, res) => {
   DB.handleDailyForm(req.body)
     .then(() => res.sendStatus(200))
     .catch(err => res.send(err).status(400));
 });
 
-app.get("/app/entries", (req, res) => {
+app.get("/diet-tracker/app/entries", (req, res) => {
   DB.getEntries(Number(req.headers["userid"]))
     .then(results => res.status(200).send(results))
     .catch(err => res.status(400).send(err));
 });
 
-app.delete("/app/entries", (req, res) => {
+app.delete("/diet-tracker/app/entries", (req, res) => {
   let entryId = Number(req.headers["entryid"]);
   let userId = Number(req.headers["userid"]);
   DB.deleteEntry(entryId, userId)

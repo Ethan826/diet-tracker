@@ -60,7 +60,11 @@ System.register(["angular2/core", "./account.service", "angular2/common", "angul
                             localStorage.setItem("jwt", data.jwt);
                             _this.accountService.doCheckJWT();
                             _this.loginService.loginEvent.subscribe(function () {
-                                _this.router.parent.navigate(["/DailyForm"]);
+                                // https://github.com/angular/angular/issues/2965
+                                // Does not refresh the CanActivates. Necessary to
+                                // force a refresh.
+                                // this.router.navigate(['DailyForm']);
+                                window.location.href = "https://flashbangsplat.com/diet-tracker/diet/daily/"; // REALLY UGLY HACK
                             });
                         }, function (error) {
                             _this.error = error.json().error;

@@ -17,7 +17,7 @@ import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
-import {Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
+import {Router, RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 
 /**
  * Principal interactive component in the app. Imports questions from
@@ -32,7 +32,7 @@ import {Router, RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2
 })
 @Component({
   selector: "daily-form",
-  providers: [HTTP_PROVIDERS, FormsService, ROUTER_PROVIDERS],
+  providers: [HTTP_PROVIDERS, FormsService],
   directives: [ROUTER_DIRECTIVES],
   template: `
   <!-- Header material -->

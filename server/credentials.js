@@ -9,7 +9,7 @@ var CREDENTIAL_CONSTANTS = {
     KEYLEN: 512,
     DIGEST: "sha512",
     JWT_DURATION: 86400,
-    SECRET: fs.readFileSync("/home/ethan/Desktop/secrets/hash.txt"),
+    SECRET: fs.readFileSync("/var/www/secrets/diet/hash.txt"),
     ISS: "https://flashbangsplat.com"
 };
 var Credentials = (function () {

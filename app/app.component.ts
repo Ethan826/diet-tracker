@@ -8,7 +8,7 @@ import {AccountService} from "./account.service";
 import {NavComponent} from "./nav.component";
 import {Entries} from "./entries.component";
 import {FrontComponent} from "./front.component";
-import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router";
+import {RouteConfig, ROUTER_DIRECTIVES} from "angular2/router";
 
 /**
  * Main app component. Sets the overall template, establishes routing.
@@ -17,7 +17,7 @@ import {RouteConfig, ROUTER_DIRECTIVES, ROUTER_PROVIDERS} from "angular2/router"
 @Component({
   selector: "app",
   directives: [NavComponent, DailyForm, MonthlyForm, ROUTER_DIRECTIVES, CreateUser],
-  providers: [ROUTER_PROVIDERS, AccountService],
+  providers: [AccountService],
   template: `
     <nav-component></nav-component>
     <router-outlet></router-outlet>

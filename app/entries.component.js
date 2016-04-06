@@ -63,7 +63,7 @@ System.register(["angular2/core", "angular2/router", "angular2/http", "./login.s
                     }),
                     core_1.Component({
                         template: "\n    <h1>Entries</h1>\n    <table class=\"table table-responsive\">\n      <tr>\n        <th>Date</th>\n        <th>Score</th>\n        <th>Carbs</th>\n        <th></th>\n      </tr>\n      <tr *ngFor=\"#entry of entries | async\">\n        <td>{{entry.date}}</td>\n        <td>\n          {{entry.cravingscore + entry.energyscore + entry.hungerscore +\n            entry.satietyscore + entry.wellbeingscore}}\n        </td>\n        <td>{{entry.carbsscore}}</td>\n        <td><a (click)=\"handleDelete($event, entry.id)\" href=\"#\">Delete</a></td>\n      </tr>\n    </table>\n  ",
-                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService, router_2.ROUTER_PROVIDERS],
+                        providers: [http_1.HTTP_PROVIDERS, forms_service_1.FormsService],
                         directives: [router_2.ROUTER_DIRECTIVES]
                     }), 
                     __metadata('design:paramtypes', [forms_service_1.FormsService, router_2.Router])

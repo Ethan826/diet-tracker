@@ -60,7 +60,7 @@ System.register(["angular2/core", "./daily-form.component", "./monthly-form.comp
                     core_1.Component({
                         selector: "app",
                         directives: [nav_component_1.NavComponent, daily_form_component_1.DailyForm, monthly_form_component_1.MonthlyForm, router_1.ROUTER_DIRECTIVES, create_user_component_1.CreateUser],
-                        providers: [router_1.ROUTER_PROVIDERS, account_service_1.AccountService],
+                        providers: [account_service_1.AccountService],
                         template: "\n    <nav-component></nav-component>\n    <router-outlet></router-outlet>\n  "
                     }),
                     router_1.RouteConfig([

@@ -6,7 +6,7 @@ import {CanActivate, ComponentInstruction} from "angular2/router";
 import {HTTP_PROVIDERS, Http} from "angular2/http";
 import {checkAuth} from "./login.service";
 import {FormsService} from "./forms.service";
-import {Router, ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from "angular2/router";
+import {Router, ROUTER_DIRECTIVES} from "angular2/router";
 
 @CanActivate((to: ComponentInstruction, fr: ComponentInstruction) => {
   return checkAuth(["standard", "admin"]);
@@ -32,7 +32,7 @@ import {Router, ROUTER_PROVIDERS, ROUTER_DIRECTIVES} from "angular2/router";
       </tr>
     </table>
   `,
-  providers: [HTTP_PROVIDERS, FormsService, ROUTER_PROVIDERS],
+  providers: [HTTP_PROVIDERS, FormsService],
   directives: [ROUTER_DIRECTIVES]
 })
 export class Entries {

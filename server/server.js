@@ -1,24 +1,11 @@
 "use strict";
 var express = require("express");
-var https = require("https");
-var fs = require("fs");
+var http = require("http");
 var credentials_1 = require("./credentials");
 var db_1 = require("./db");
 var bodyParser = require("body-parser");
 var app = express();
-var insecure = express();
-var HTTPS_PORT = 8443;
-var HTTP_PORT = 8080;
-insecure.get("*", function (req, res) {
-    res.redirect("https://flashbangsplat.com" + req.url);
-});
-insecure.listen(HTTP_PORT, function () {
-    console.log("Listening on port " + HTTP_PORT);
-});
-var OPTIONS = {
-    key: fs.readFileSync("/home/ethan/Desktop/secrets/privkey.pem"),
-    cert: fs.readFileSync("/home/ethan/Desktop/secrets/cert.pem")
-};
+var HTTP_PORT = 8081;
 app.use(bodyParser.json());
 app.use("/app", express.static(__dirname + "/../app"));
 app.use("/css", express.static(__dirname + "/../css"));
@@ -67,6 +54,6 @@ app.delete("/app/entries", function (req, res) {
         .then(function () { return res.sendStatus(204); })
         .catch(function (e) { return res.status(400).send(e); });
 });
-https.createServer(OPTIONS, app).listen(HTTPS_PORT, function () {
-    console.log("Listening on port " + HTTPS_PORT);
+http.createServer(app).listen(HTTP_PORT, function () {
+    console.log("Listening on port " + HTTP_PORT);
 });

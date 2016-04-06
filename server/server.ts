@@ -13,29 +13,18 @@ import {DB} from "./db";
 import * as bodyParser from "body-parser";
 
 let app = express();
-let insecure = express();
+// let insecure = express();
 
-let HTTPS_PORT = 8443;
-let HTTP_PORT = 8080;
+// let HTTPS_PORT = 8443;
+let HTTP_PORT = 8081;
 
 /**
  * Called when any insecure get request is made. Redirects to the secure side
  * of the server.
  */
-insecure.get("*", (req, res) => {
-  res.redirect(`https://flashbangsplat.com${req.url}`);
-});
-
-insecure.listen(HTTP_PORT, () => { // TODO: Add HSTS header.
-  console.log(`Listening on port ${HTTP_PORT}`);
-});
-
-let OPTIONS = { // Toggle top and bottom files for local and remote server.
-  // key: fs.readFileSync("../../secrets/flashbangsplat/privkey.pem"),
-  // cert: fs.readFileSync("../../secrets/flashbangsplat/cert.pem")
-  key: fs.readFileSync("/home/ethan/Desktop/secrets/privkey.pem"),
-  cert: fs.readFileSync("/home/ethan/Desktop/secrets/cert.pem")
-};
+// insecure.get("*", (req, res) => {
+//   res.redirect(`https://flashbangsplat.com${req.url}`);
+// });
 
 app.use(bodyParser.json());
 app.use("/app", express.static(`${__dirname}/../app`));
@@ -107,6 +96,6 @@ app.delete("/app/entries", (req, res) => {
     .catch(e => res.status(400).send(e));
 });
 
-https.createServer(OPTIONS, app).listen(HTTPS_PORT, () => {
-  console.log(`Listening on port ${HTTPS_PORT}`);
+http.createServer(app).listen(HTTP_PORT, () => {
+  console.log(`Listening on port ${HTTP_PORT}`);
 });
